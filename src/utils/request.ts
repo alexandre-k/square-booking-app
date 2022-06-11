@@ -96,6 +96,7 @@ export const sendRequest = async (params: AxiosInterface) => {
       console.log(err);
     }
     // setError(err);
+      return null;
   } finally {
     // setLoaded(true);
   }
