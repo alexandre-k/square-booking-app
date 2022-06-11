@@ -1,0 +1,18 @@
+.businessNameCard {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    padding: 15px;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0,0,0,0.3);
+}
+
+.businessNameButton {
+    margin: 10px;
+}
+
+.figureCaption {
+    position: absolute;
+    bottom: 0;
+}
