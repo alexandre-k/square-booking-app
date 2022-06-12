@@ -5,7 +5,6 @@ import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
 import dayjs from "dayjs";
 import { DayOfWeek, LocationType, Period } from "types/Location";
 import { Availability } from "types/Booking";
@@ -108,11 +107,6 @@ const SquareBooking = (props: BookingProps) => {
 
   return (
     <>
-      <div style={{ margin: 15, display: "flex" }}>
-        <Typography variant="h4" color="inherit" component="div">
-          Pick a date
-        </Typography>
-      </div>
       <div
         style={{
           display: "flex",

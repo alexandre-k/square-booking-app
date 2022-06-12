@@ -18,6 +18,7 @@ interface TeamMembersProps {
   selectedMemberId: string | null;
   setSelectedMemberId: Dispatch<SetStateAction<string | null>>;
   searchTeamMembers: (params: AxiosInterface) => Promise<void>;
+    goNext: () => void;
 }
 
 const LocationTeamMembers = (props: TeamMembersProps) => {
@@ -28,7 +29,10 @@ const LocationTeamMembers = (props: TeamMembersProps) => {
         <ListItem>
           <ListItemButton
             selected={member.id === props.selectedMemberId}
-            onClick={() => props.setSelectedMemberId(member.id)}
+            onClick={() => {
+              props.setSelectedMemberId(member.id);
+                props.goNext();
+            }}
           >
             <div className="memberButton">
               <ListItemAvatar>
@@ -47,7 +51,6 @@ const LocationTeamMembers = (props: TeamMembersProps) => {
     ));
   return (
     <>
-      <Typography variant="h4">Select a team member</Typography>
       <List>
         <Grid container spacing={1}>
           {listItem}

@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Divider from "@mui/material/Divider";
@@ -12,23 +15,17 @@ import SquareBooking from "./SquareBooking";
 import SquareCustomer from "./SquareCustomer";
 import SquareServices from "./SquareServices";
 import LocationTeamMembers from "./SquareTeamMembers";
-import { Location, LocationType } from "types/Location";
+import { BusinessHours, LocationType } from "types/Location";
 import { TeamMember } from "types/Team";
 import { CatalogObject } from "types/Catalog";
 import { sendRequest, AxiosInterface } from "utils/request";
 // import * as Yup from "yup";
 
 interface AppointmentProps {
-  location: Location | undefined;
+  businessHours: BusinessHours;
   catalogObjects: Array<CatalogObject>;
   members: Array<TeamMember>;
   sendRequest: (params: AxiosInterface) => Promise<void>;
-}
-
-export interface Customer {
-  firstName: string;
-  lastName: string;
-  email: string;
 }
 
 const Appointment = (props: AppointmentProps) => {
@@ -36,18 +33,49 @@ const Appointment = (props: AppointmentProps) => {
   const [selectedServices, setSelectedServices] = useState<Array<string>>([]);
   const [selectedStartAt, onSelectStartAt] = useState<string | null>(null);
   const [customerId, setCustomerId] = useState<string>("");
+  const [activeStep, setActiveStep] = useState(0);
+    /* const [skipped, setSkipped] = useState(new Set<number>());
+     * const isStepOptional = (step: number) => {
+     *   return step === 1;
+     * };
 
-  /* const validateCustomer = Yup.object({
-     *     firstName: Yup.string()
-     *                   .max(30, "Must be 30 characters or less")
-     *                   .required("Required"),
-     *     lastName: Yup.string()
-     *                  .max(30, "Must be 30 characters or less")
-     *                  .required("Required"),
-     *     email: Yup.string().email("Invalid email address").required("Required"),
-     * })
+     * const isStepSkipped = (step: number) => {
+     *   return skipped.has(step);
+     * }; */
+    /* const handleNext = () => {
+     *   let newSkipped = skipped;
+     *   if (isStepSkipped(activeStep)) {
+     *     newSkipped = new Set(newSkipped.values());
+     *     newSkipped.delete(activeStep);
+     *   }
 
+     *   setActiveStep((prevActiveStep) => prevActiveStep + 1);
+     *   setSkipped(newSkipped);
+     * }; */
+
+    /* const handleBack = () => {
+     *   setActiveStep((prevActiveStep) => prevActiveStep - 1);
+     * }; */
+
+    /* const handleSkip = () => {
+     *   if (!isStepOptional(activeStep)) {
+     *     // You probably want to guard against something like this,
+     *     // it should never occur unless someone's actively trying to break something.
+     *     throw new Error("You can't skip a step that isn't optional.");
+     *   }
+
+     *   setActiveStep((prevActiveStep) => prevActiveStep + 1);
+     *   setSkipped((prevSkipped) => {
+     *     const newSkipped = new Set(prevSkipped.values());
+     *     newSkipped.add(activeStep);
+     *     return newSkipped;
+     *   });
+     * };
      */
+    /* const handleReset = () => {
+     *   setActiveStep(0);
+     * }; */
+
   const bookAppointment = async () => {
     const data = await sendRequest({
       url: "/bookings",
@@ -72,75 +100,91 @@ const Appointment = (props: AppointmentProps) => {
     });
     console.log("TODO: if error notify the user", data);
   };
+
+  const steps = [
+    {
+      label: "Select a team member",
+      component: (
+        <LocationTeamMembers
+          members={props.members}
+          selectedMemberId={selectedMemberId}
+          showOwner={false}
+          setSelectedMemberId={setSelectedMemberId}
+          goNext={() => setActiveStep(+1)}
+        />
+      ),
+    },
+    {
+      label: "Select a service",
+      component: (
+        <SquareServices
+          catalogObjects={props.catalogObjects}
+          selectedServices={selectedServices}
+          setSelectedServices={setSelectedServices}
+        />
+      ),
+    },
+    {
+      label: "Pick a date/time",
+      component: (
+        <SquareBooking
+          businessHours={props.businessHours.periods}
+          selectedServices={selectedServices}
+          memberId={selectedMemberId}
+          selectedStartAt={selectedStartAt}
+          onSelectStartAt={onSelectStartAt}
+        />
+      )
+    },
+    {
+      label: "Your information",
+      component: <SquareCustomer setCustomerId={setCustomerId} />,
+    },
+  ];
+
+  const changeRoute = useNavigate();
+  const navigate = (step: number) => {
+    const nextActiveStep = activeStep + step;
+    if (nextActiveStep === -1) {
+      changeRoute("/");
+    }
+    console.log("Next active step > ", nextActiveStep);
+    setActiveStep(nextActiveStep);
+  };
+
   return (
-    <>
-      <Paper sx={{ padding: 2, margin: 2 }} elevation={10} square>
-        <Grid container alignItems="center" justifyContent="center" spacing={5}>
-          <Grid item xs={1} md={1}>
-            <Link to="/" style={{ textDecoration: "none" }}>
-              <IconButton color="primary" size="large">
-                <ArrowBackIosNewIcon />
-              </IconButton>
-            </Link>
-          </Grid>
-          <Grid item xs={11} md={11}>
-            <Typography variant="h6" color="inherit" component="div">
-              Home
-            </Typography>
-          </Grid>
-          <Divider style={{ marginTop: 15, marginBottom: 15 }} />
+    <Paper sx={{ padding: 2, margin: 2 }} elevation={10} square>
+      <Grid container alignItems="center" justifyContent="center" spacing={5}>
+        <Grid item xs={1} md={1}>
+          <IconButton color="primary" size="large" onClick={() => navigate(-1)}>
+            <ArrowBackIosNewIcon />
+          </IconButton>
+        </Grid>
+        <Grid item xs={11} md={11}>
+          <Typography variant="h6" color="inherit" component="div">
+            {activeStep === 0 ? "Home" : steps[activeStep].label}
+          </Typography>
+        </Grid>
+        <Grid item xs={12} md={12}>
+          <Divider style={{ marginBottom: 15 }} />
+        </Grid>
 
-          <Grid item xs={10} md={10}>
-            <LocationTeamMembers
-              members={props.members}
-              selectedMemberId={selectedMemberId}
-              showOwner={false}
-              setSelectedMemberId={setSelectedMemberId}
-            />
-          </Grid>
+        <Grid item xs={12} md={12}>
+          <Stepper alternativeLabel activeStep={activeStep}>
+            {steps.map((step, index) => (
+              <Step key={index}>
+                <StepLabel style={{ marginBottom: 20 }}>{step.label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+        </Grid>
 
-          <Grid item xs={12} md={12}>
-            <Divider style={{ marginTop: 15, marginBottom: 15 }} />
-          </Grid>
-          <Grid item xs={10} md={10}>
-            <SquareServices
-              catalogObjects={props.catalogObjects}
-              selectedServices={selectedServices}
-              setSelectedServices={setSelectedServices}
-            />
-          </Grid>
+        <Grid item xs={10} md={8}>
+          {steps[activeStep].component}
+        </Grid>
 
-          <Grid item xs={12} md={12}>
-            <Divider style={{ marginTop: 15, marginBottom: 15 }} />
-          </Grid>
-
-          <Grid item xs={12} md={12}>
-            {props.location === undefined ? (
-              <div>Location not found</div>
-            ) : (
-              <SquareBooking
-                businessHours={props.location.business_hours.periods}
-                selectedServices={selectedServices}
-                memberId={selectedMemberId}
-                selectedStartAt={selectedStartAt}
-                onSelectStartAt={onSelectStartAt}
-              />
-            )}
-          </Grid>
-
-          <Grid item xs={12} md={12}>
-            <SquareCustomer setCustomerId={setCustomerId} />
-          </Grid>
-
-          <Grid item xs={12} md={12}>
-            <Divider style={{ marginTop: 15, marginBottom: 15 }} />
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            md={12}
-            style={{ marginBottom: 15, paddingBottom: 25 }}
-          >
+        <Grid item xs={12} md={12}>
+          {activeStep === steps.length - 1 ? (
             <Link to="/completed" style={{ textDecoration: "none" }}>
               <Button
                 className="businessNameButton"
@@ -152,10 +196,18 @@ const Appointment = (props: AppointmentProps) => {
                 Book
               </Button>
             </Link>
-          </Grid>
+          ) : (
+            <Button
+              variant="contained"
+              size="large"
+              onClick={() => navigate(+1)}
+            >
+              next
+            </Button>
+          )}
         </Grid>
-      </Paper>
-    </>
+      </Grid>
+    </Paper>
   );
 };
 

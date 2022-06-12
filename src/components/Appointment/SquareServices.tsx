@@ -1,6 +1,6 @@
 import React from "react";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
+import Checkbox from "@mui/material/Checkbox";
+import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import Typography from "@mui/material/Typography";
@@ -84,7 +84,7 @@ const SquareServices = (props: SquareServicesProps) => {
         <FormControlLabel
           key={service.id}
           value={service.id}
-          control={<Radio />}
+          control={<Checkbox />}
           label={label}
           labelPlacement="end"
         />
@@ -96,22 +96,18 @@ const SquareServices = (props: SquareServicesProps) => {
     props.setSelectedServices([target.value]);
   };
   return (
-    <>
-      <div style={{ margin: 15, display: "flex" }}>
-        <Typography variant="h4" color="inherit" component="div">
-          Select a service
-        </Typography>
-      </div>
+    <div style={{ width: "100%" }}>
+      {/* <div style={{ margin: 15, display: "flex" }}>
+            <Typography variant="h4" color="inherit" component="div">
+            Select a service
+            </Typography>
+            </div> */}
       <FormControl>
-        <RadioGroup
-          aria-labelledby="service-group-label"
-          name="service-buttons-group"
-          onChange={onChange}
-        >
+        <FormGroup onChange={onChange}>
           {serviceForms(formatCatalogObjects(props.catalogObjects))}
-        </RadioGroup>
+        </FormGroup>
       </FormControl>
-    </>
+    </div>
   );
 };
 

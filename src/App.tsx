@@ -14,7 +14,10 @@ import { TeamMember } from "types/Team";
 import { CatalogObject } from "types/Catalog";
 
 function App() {
-  const [location, setLocation] = useState<Location>();
+    // @ts-ignore
+  const [location, setLocation] = useState<Location>({
+    business_hours: { periods: [] },
+  });
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [catalogObjects, setCatalogObjects] = useState<CatalogObject[]>([]);
 
@@ -69,7 +72,7 @@ function App() {
             path="book"
             element={
               <Appointment
-                location={location}
+                businessHours={location.business_hours}
                 members={members}
                 catalogObjects={catalogObjects}
                 sendRequest={sendRequest}
