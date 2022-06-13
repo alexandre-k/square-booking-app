@@ -10,4 +10,3 @@ export type TeamMember = {
   updated_at: string;
   avatarUrl: string;
 }
-

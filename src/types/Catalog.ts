@@ -41,6 +41,7 @@ export type CatalogObjectItemVariation = {
 
 export type CatalogObjectItem = {
   name: string;
+  description: string;
   ordinal: number;
   variations: Array<CatalogObjectItemVariation>;
   product_type: string;

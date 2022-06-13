@@ -18,6 +18,7 @@ import LocationTeamMembers from "./SquareTeamMembers";
 import { BusinessHours, LocationType } from "types/Location";
 import { TeamMember } from "types/Team";
 import { CatalogObject } from "types/Catalog";
+import { Booking } from "types/Booking";
 import { sendRequest, AxiosInterface } from "utils/request";
 // import * as Yup from "yup";
 
@@ -26,6 +27,8 @@ interface AppointmentProps {
   catalogObjects: Array<CatalogObject>;
   members: Array<TeamMember>;
   sendRequest: (params: AxiosInterface) => Promise<void>;
+  booking: Booking|null;
+  setBooking: (booking: Booking) => void;
 }
 
 const Appointment = (props: AppointmentProps) => {
@@ -34,7 +37,7 @@ const Appointment = (props: AppointmentProps) => {
   const [selectedStartAt, onSelectStartAt] = useState<string | null>(null);
   const [customerId, setCustomerId] = useState<string>("");
   const [activeStep, setActiveStep] = useState(0);
-    /* const [skipped, setSkipped] = useState(new Set<number>());
+  /* const [skipped, setSkipped] = useState(new Set<number>());
      * const isStepOptional = (step: number) => {
      *   return step === 1;
      * };
@@ -42,7 +45,7 @@ const Appointment = (props: AppointmentProps) => {
      * const isStepSkipped = (step: number) => {
      *   return skipped.has(step);
      * }; */
-    /* const handleNext = () => {
+  /* const handleNext = () => {
      *   let newSkipped = skipped;
      *   if (isStepSkipped(activeStep)) {
      *     newSkipped = new Set(newSkipped.values());
@@ -53,11 +56,11 @@ const Appointment = (props: AppointmentProps) => {
      *   setSkipped(newSkipped);
      * }; */
 
-    /* const handleBack = () => {
-     *   setActiveStep((prevActiveStep) => prevActiveStep - 1);
-     * }; */
+  /* const handleBack = () => {
+   *   setActiveStep((prevActiveStep) => prevActiveStep - 1);
+   * }; */
 
-    /* const handleSkip = () => {
+  /* const handleSkip = () => {
      *   if (!isStepOptional(activeStep)) {
      *     // You probably want to guard against something like this,
      *     // it should never occur unless someone's actively trying to break something.
@@ -72,9 +75,9 @@ const Appointment = (props: AppointmentProps) => {
      *   });
      * };
      */
-    /* const handleReset = () => {
-     *   setActiveStep(0);
-     * }; */
+  /* const handleReset = () => {
+   *   setActiveStep(0);
+   * }; */
 
   const bookAppointment = async () => {
     const data = await sendRequest({
@@ -98,7 +101,11 @@ const Appointment = (props: AppointmentProps) => {
         },
       },
     });
-    console.log("TODO: if error notify the user", data);
+    if (data === -1 || !data.booking) {
+      console.log("TODO: if error notify the user", data);
+      return;
+    }
+    props.setBooking(data.booking);
   };
 
   const steps = [
@@ -134,7 +141,7 @@ const Appointment = (props: AppointmentProps) => {
           selectedStartAt={selectedStartAt}
           onSelectStartAt={onSelectStartAt}
         />
-      )
+      ),
     },
     {
       label: "Your information",
@@ -148,19 +155,18 @@ const Appointment = (props: AppointmentProps) => {
     if (nextActiveStep === -1) {
       changeRoute("/");
     }
-    console.log("Next active step > ", nextActiveStep);
     setActiveStep(nextActiveStep);
   };
 
   return (
     <Paper sx={{ padding: 2, margin: 2 }} elevation={10} square>
-      <Grid container alignItems="center" justifyContent="center" spacing={5}>
-        <Grid item xs={1} md={1}>
+      <Grid container alignItems="center" justifyContent="center" spacing={3}>
+        <Grid item xs={2} md={2}>
           <IconButton color="primary" size="large" onClick={() => navigate(-1)}>
             <ArrowBackIosNewIcon />
           </IconButton>
         </Grid>
-        <Grid item xs={11} md={11}>
+        <Grid item xs={10} md={10}>
           <Typography variant="h6" color="inherit" component="div">
             {activeStep === 0 ? "Home" : steps[activeStep].label}
           </Typography>
@@ -185,13 +191,16 @@ const Appointment = (props: AppointmentProps) => {
 
         <Grid item xs={12} md={12}>
           {activeStep === steps.length - 1 ? (
-            <Link to="/completed" style={{ textDecoration: "none" }}>
+            <Link
+              to={{ pathname: `/completed/${props.booking === null ? '' : props.booking.id}` }}
+              onClick={bookAppointment}
+              style={{ textDecoration: "none" }}
+            >
               <Button
                 className="businessNameButton"
                 variant="contained"
                 size="large"
                 endIcon={<CheckIcon />}
-                onClick={bookAppointment}
               >
                 Book
               </Button>

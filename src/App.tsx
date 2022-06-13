@@ -10,16 +10,18 @@ import Appointment from "components/Appointment";
 import TeamDashboard from "components/Dashboard";
 import { sendRequest } from "utils/request";
 import { Location } from "types/Location";
+import { Booking } from "types/Booking";
 import { TeamMember } from "types/Team";
 import { CatalogObject } from "types/Catalog";
 
 function App() {
-    // @ts-ignore
+  // @ts-ignore
   const [location, setLocation] = useState<Location>({
     business_hours: { periods: [] },
   });
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [catalogObjects, setCatalogObjects] = useState<CatalogObject[]>([]);
+  const [booking, setBooking] = useState<Booking|null>(null);
 
   const getTeamMembers = async () => {
     const data = await sendRequest({
@@ -76,10 +78,15 @@ function App() {
                 members={members}
                 catalogObjects={catalogObjects}
                 sendRequest={sendRequest}
+                booking={booking}
+                setBooking={setBooking}
               />
             }
           />
-          <Route path="completed" element={<Completed />} />
+         <Route
+            path="completed"
+            element={<Completed booking={booking} />}
+          />
           {/* <Route
               path="bookings"
               element={<ListBookings />}

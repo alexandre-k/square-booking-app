@@ -1,0 +1,8 @@
+.progressCircleContainer {
+    display: flex;
+    flex-direction: column;
+    margin-top: calc(100vh - 80vh);
+    height: 100vh;
+    min-height: 100%;
+    align-items: center;
+}
