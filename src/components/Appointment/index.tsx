@@ -27,7 +27,7 @@ interface AppointmentProps {
   catalogObjects: Array<CatalogObject>;
   members: Array<TeamMember>;
   sendRequest: (params: AxiosInterface) => Promise<void>;
-  booking: Booking|null;
+  booking: Booking | null;
   setBooking: (booking: Booking) => void;
 }
 
@@ -192,7 +192,11 @@ const Appointment = (props: AppointmentProps) => {
         <Grid item xs={12} md={12}>
           {activeStep === steps.length - 1 ? (
             <Link
-              to={{ pathname: `/completed/${props.booking === null ? '' : props.booking.id}` }}
+              to={{
+                pathname: `/completed/${
+                  props.booking === null ? "" : props.booking.id
+                }`,
+              }}
               onClick={bookAppointment}
               style={{ textDecoration: "none" }}
             >

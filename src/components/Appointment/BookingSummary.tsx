@@ -86,8 +86,8 @@ const BookingSummary = (props: BookingSummaryProps) => {
   };
 
   useEffect(() => {
-      // @ts-ignore
-      const booking = props.booking
+    // @ts-ignore
+    const booking = props.booking;
     if (booking && booking.appointment_segments.length > 0) {
       const appointment = booking.appointment_segments[0];
       retrieveTeamMemberProfile(appointment.team_member_id);
@@ -105,7 +105,7 @@ const BookingSummary = (props: BookingSummaryProps) => {
     >
       <Grid item xs={12} md={12}>
         <Card className="card">
-      <CardHeader title="Appointment"/>
+          <CardHeader title="Appointment" />
           {displayDateTime(props.booking.start_at)}
           <Chip
             label={props.booking.status.toLowerCase()}

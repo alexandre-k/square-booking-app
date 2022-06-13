@@ -9,17 +9,25 @@ interface CompletedProps {
 }
 
 const Completed = (props: CompletedProps) => {
-    const progressCircle = <div className="progressCircleContainer">
-        <CircularProgress size="100px" />
+  const progressCircle = (
+    <div className="progressCircleContainer">
+      <CircularProgress size="100px" />
     </div>
+  );
 
   return (
-      <>
-        <Typography variant="h4" color="inherit">
-          Appointment booked!
-        </Typography>
-      {props.booking !== null ? <BookingSummary booking={props.booking} />:progressCircle};
-      </>);
+    <>
+      <Typography variant="h4" color="inherit">
+        Appointment booked!
+      </Typography>
+      {props.booking !== null ? (
+        <BookingSummary booking={props.booking} />
+      ) : (
+        progressCircle
+      )}
+      ;
+    </>
+  );
 };
 
 export default Completed;
