@@ -10,15 +10,13 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Typography from "@mui/material/Typography";
 import "./SquareTeamMembers.css";
-import { AxiosInterface } from "utils/request";
 
 interface TeamMembersProps {
   members: Array<TeamMember>;
   showOwner: boolean;
   selectedMemberId: string | null;
   setSelectedMemberId: Dispatch<SetStateAction<string | null>>;
-  searchTeamMembers: (params: AxiosInterface) => Promise<void>;
-    goNext: () => void;
+  goNext: () => void;
 }
 
 const LocationTeamMembers = (props: TeamMembersProps) => {
@@ -31,7 +29,7 @@ const LocationTeamMembers = (props: TeamMembersProps) => {
             selected={member.id === props.selectedMemberId}
             onClick={() => {
               props.setSelectedMemberId(member.id);
-                props.goNext();
+              props.goNext();
             }}
           >
             <div className="memberButton">
@@ -64,7 +62,6 @@ LocationTeamMembers.defaultProps = {
   members: [],
   showOwner: false,
   selectedMemberId: null,
-  searchTeamMembers: () => console.log("Not implemented!"),
 };
 
 export default LocationTeamMembers;

@@ -56,7 +56,7 @@ const isSquareError = (errorData: any): errorData is SquareError => {
 //   const controllerRef = useRef(new AbortController());
 //   const cancel = () => controllerRef.current.abort();
 
-export const sendRequest = async (params: AxiosInterface) => {
+export const sendRequest = async (url: string, method: string, payload: object = {}) => {
   try {
     // const formData = new FormData();
     // for (let key of Object.keys(params.payload)) {
@@ -71,10 +71,10 @@ export const sendRequest = async (params: AxiosInterface) => {
     //   data: JSON.stringify(params.payload),
     // });
     const response = await axios.request({
-      url: params.url,
-      method: params.method,
+      url: url,
+      method: method,
       //@ts-ignore
-      data: params.payload,
+      data: payload,
       headers,
     });
     return response.data;

@@ -6,6 +6,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PhoneIcon from "@mui/icons-material/Phone";
+import "./SquareLocation.css";
 
 interface SquareLocationProps {
   locations: Array<Location>;
@@ -98,9 +99,16 @@ const SquareLocation = (props: SquareLocationProps) => {
   };
 
   const locations = (
-    <>
-      <Grid item xs={12} md={6}>
-        <Card style={{ margin: "10px" }}>
+      <Grid
+      container
+      direction="row"
+      alignItems="center"
+      justifyContent="space-evenly"
+      rowSpacing={5}
+      >
+      <Grid item xs={10} md={4}>
+
+      <Card className="card">
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
               {location.business_name}
@@ -109,8 +117,8 @@ const SquareLocation = (props: SquareLocationProps) => {
           </CardContent>
         </Card>
       </Grid>
-      <Grid item xs={12} md={6}>
-        <Card style={{ margin: "10px" }}>
+      <Grid item xs={10} md={4}>
+      <Card className="card">
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
               Opening hours
@@ -119,7 +127,7 @@ const SquareLocation = (props: SquareLocationProps) => {
           </CardContent>
         </Card>
       </Grid>
-    </>
+      </Grid>
     /* <LocationTeamMembers
           searchTeamMembers={sendRequest}
           members={members}

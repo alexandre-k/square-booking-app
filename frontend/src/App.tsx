@@ -4,13 +4,17 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Completed from "components/Appointment/Completed";
 // import ListBookings from "components/ListBookings";
 import Home from "components/Home";
+import Login from "components/Auth/Login";
+import Logout from "components/Auth/Logout";
+import Profile from "components/Auth/Profile";
 // import SquareCustomer from "components/SquareCustomer";
 import SquareLocation from "components/Home/SquareLocation";
 import Appointment from "components/Appointment";
 import TeamDashboard from "components/Dashboard";
+import BookingSummary from "components/Appointment/BookingSummary";
 import { sendRequest } from "utils/request";
 import { Location } from "types/Location";
-import { Booking } from "types/Booking";
+import { Booking, BookingStatus, CreatorType } from "types/Booking";
 import { TeamMember } from "types/Team";
 import { CatalogObject } from "types/Catalog";
 
@@ -21,14 +25,11 @@ function App() {
   });
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [catalogObjects, setCatalogObjects] = useState<CatalogObject[]>([]);
-  const [booking, setBooking] = useState<Booking|null>(null);
+  // @ts-ignore
+  const [booking, setBooking] = useState<Booking>({});
 
   const getTeamMembers = async () => {
-    const data = await sendRequest({
-      url: "/team-members/search",
-      method: "POST",
-      payload: {},
-    });
+    const data = await sendRequest("/team-members/search", "POST");
     const members = data.team_members.map(
       (member: TeamMember, index: number) => {
         return {
@@ -41,20 +42,15 @@ function App() {
   };
 
   const getLocation = async () => {
-    const data = await sendRequest({
-      url: "/locations/" + process.env.REACT_APP_SQUARE_LOCATION_ID,
-      method: "GET",
-      payload: {},
-    });
+    const data = await sendRequest(
+      "/locations/" + process.env.REACT_APP_SQUARE_LOCATION_ID,
+      "GET"
+    );
     setLocation(data.location);
   };
 
   const getCatalogObjects = async () => {
-    const data = await sendRequest({
-      url: "/catalog/list",
-      method: "GET",
-      payload: {},
-    });
+    const data = await sendRequest("/catalog/list", "GET");
     setCatalogObjects(data.objects);
   };
 
@@ -69,6 +65,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home location={location} />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/location" element={<SquareLocation />} />
           <Route
             path="book"
@@ -83,14 +82,11 @@ function App() {
               />
             }
           />
-         <Route
-            path="completed"
-            element={<Completed booking={booking} />}
+          <Route path="completed" element={<Completed booking={booking} />} />
+          <Route
+            path="booking/summary"
+            element={<BookingSummary booking={booking} />}
           />
-          {/* <Route
-              path="bookings"
-              element={<ListBookings />}
-              /> */}
           <Route path="dashboard" element={<TeamDashboard />} />
         </Routes>
       </BrowserRouter>

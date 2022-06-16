@@ -65,30 +65,26 @@ const SquareBooking = (props: BookingProps) => {
     }
     const endDate = dayjs(value).add(1, "day");
 
-    const data = await sendRequest({
-      url: "/bookings/availability/search",
-      method: "POST",
-      payload: {
-        query: {
-          filter: {
-            location_id: process.env.REACT_APP_SQUARE_LOCATION_ID,
-            start_at_range: {
-              end_at: `${endDate.year()}-${endDate.format(
-                "MM"
-              )}-${endDate.format("DD")}T${workingDay.start_local_time}.607Z`,
-              start_at: `${date.year()}-${date.format("MM")}-${date.format(
-                "DD"
-              )}T${workingDay.start_local_time}.607Z`,
-            },
-            segment_filters: [
-              {
-                service_variation_id: props.selectedServices[0],
-                team_member_id_filter: {
-                  any: [props.memberId],
-                },
-              },
-            ],
+    const data = await sendRequest("/bookings/availability/search", "POST", {
+      query: {
+        filter: {
+          location_id: process.env.REACT_APP_SQUARE_LOCATION_ID,
+          start_at_range: {
+            end_at: `${endDate.year()}-${endDate.format("MM")}-${endDate.format(
+              "DD"
+            )}T${workingDay.start_local_time}.607Z`,
+            start_at: `${date.year()}-${date.format("MM")}-${date.format(
+              "DD"
+            )}T${workingDay.start_local_time}.607Z`,
           },
+          segment_filters: [
+            {
+              service_variation_id: props.selectedServices[0],
+              team_member_id_filter: {
+                any: [props.memberId],
+              },
+            },
+          ],
         },
       },
     });

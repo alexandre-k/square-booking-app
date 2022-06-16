@@ -25,11 +25,10 @@ const BookingSummary = (props: BookingSummaryProps) => {
     null
   );
   const retrieveTeamMemberProfile = async (teamMemberId: string) => {
-    const data = await sendRequest({
-      url: "/bookings/team-member-booking-profiles/" + teamMemberId,
-      method: "GET",
-      payload: {},
-    });
+    const data = await sendRequest(
+      "/bookings/team-member-booking-profiles/" + teamMemberId,
+      "GET"
+    );
     if (data === -1) {
       console.log("TODO: if error notify the user", data);
       return;
@@ -38,18 +37,13 @@ const BookingSummary = (props: BookingSummaryProps) => {
   };
 
   const retrieveCatalogObject = async (serviceVariationId: string) => {
-    const data = await sendRequest({
-      url: "/catalog/object/" + serviceVariationId,
-      method: "GET",
-      payload: {},
-    }).then(async (itemVariation) => {
+    const data = await sendRequest(
+      "/catalog/object/" + serviceVariationId,
+      "GET"
+    ).then(async (itemVariation) => {
       const itemId = itemVariation?.object?.item_variation_data?.item_id;
       if (!itemId) return -1;
-      return await sendRequest({
-        url: "/catalog/object/" + itemId,
-        method: "GET",
-        payload: {},
-      });
+      return await sendRequest("/catalog/object/" + itemId, "GET");
     });
     if (data === -1) {
       console.log("TODO: if error notify the user", data);
