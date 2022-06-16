@@ -14,7 +14,7 @@ import TeamDashboard from "components/Dashboard";
 import BookingSummary from "components/Appointment/BookingSummary";
 import { sendRequest } from "utils/request";
 import { Location } from "types/Location";
-import { Booking, BookingStatus, CreatorType } from "types/Booking";
+import { Booking } from "types/Booking";
 import { TeamMember } from "types/Team";
 import { CatalogObject } from "types/Catalog";
 
