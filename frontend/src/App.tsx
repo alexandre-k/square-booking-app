@@ -20,9 +20,7 @@ import { CatalogObject } from "types/Catalog";
 
 function App() {
   // @ts-ignore
-  const [location, setLocation] = useState<Location>({
-    business_hours: { periods: [] },
-  });
+  const [location, setLocation] = useState<Location|null>(null);
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [catalogObjects, setCatalogObjects] = useState<CatalogObject[]>([]);
   // @ts-ignore
@@ -60,6 +58,8 @@ function App() {
     getCatalogObjects();
   }, []);
 
+    if (location === null) return <div>Loading...</div>
+
   return (
     <>
       <BrowserRouter>
@@ -68,7 +68,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/location" element={<SquareLocation />} />
+          <Route path="/location" element={<SquareLocation location={location} />} />
           <Route
             path="book"
             element={

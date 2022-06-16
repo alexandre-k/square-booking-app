@@ -13,11 +13,13 @@ import SquareLocation from "./SquareLocation";
 import { Location } from "types/Location";
 
 interface HomeProps {
-  location: Location | undefined;
+  location: Location;
 }
 
-const Home = (props: HomeProps) => {
+const Home = ({ location }: HomeProps) => {
   const { isAuthenticated } = useAuth0();
+
+  console.log("TODO: Properly handle undefined location");
   const loginButton = isAuthenticated ? (
     <Link to="logout">
       <Button>Logout</Button>
@@ -60,19 +62,10 @@ const Home = (props: HomeProps) => {
                 </Typography>
               </figcaption>
             </figure>
-            {props.location === undefined ? (
               <Card className="businessNameCard">
                 <CardContent className="cardContent">
                   <Typography color="white" variant="h4">
-                    Loading...
-                  </Typography>
-                </CardContent>
-              </Card>
-            ) : (
-              <Card className="businessNameCard">
-                <CardContent className="cardContent">
-                  <Typography color="white" variant="h4">
-                    {props.location.business_name}
+                    {location.business_name}
                   </Typography>
                   <Link to="book" style={{ textDecoration: "none" }}>
                     <Button
@@ -86,10 +79,9 @@ const Home = (props: HomeProps) => {
                   </Link>
                 </CardContent>
               </Card>
-            )}
           </div>
         </Grid>
-        <SquareLocation />
+        <SquareLocation location={location} />
       </Grid>
     </CssBaseline>
   );
