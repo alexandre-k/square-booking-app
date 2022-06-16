@@ -46,6 +46,7 @@ export type Booking = {
   all_day: boolean;
   appointment_segments: Array<AppointmentSegment>;
   transition_time_minutes: number;
+  customer_note: string;
   creator_details: {
     creator_type: CreatorType;
     team_member_id: string;

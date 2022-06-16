@@ -4,6 +4,7 @@
   "private": true,
   "proxy": "https://connect.squareupsandbox.com/v2",
   "dependencies": {
+    "@auth0/auth0-react": "^1.10.1",
     "@date-io/dayjs": "^2.14.0",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",

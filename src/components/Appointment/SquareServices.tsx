@@ -18,7 +18,6 @@ interface SquareServicesProps {
   catalogObjects: Array<CatalogObject>;
   selectedServices: Array<string>;
   setSelectedServices: (services: Array<string>) => void;
-  sendRequest: () => Promise<void>;
 }
 
 const SquareServices = (props: SquareServicesProps) => {
@@ -112,7 +111,6 @@ const SquareServices = (props: SquareServicesProps) => {
 };
 
 SquareServices.defaultProps = {
-  sendRequest: () => console.log("Not implemented!"),
   selectedServices: [],
   setSelectedServices: () => console.log("Not implemented!"),
   catalogObjects: [],

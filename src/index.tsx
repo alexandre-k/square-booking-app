@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
+import { Auth0Provider } from "@auth0/auth0-react";
 import reportWebVitals from "./reportWebVitals";
 // import SquareProvider from "./context/squareContext";
 
@@ -16,9 +17,15 @@ root.render(
         locationId={process.env.REACT_APP_SQUARE_LOCATION_ID}
         baseURL={baseURL}
         > */
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <Auth0Provider
+    domain="dev-7yf9ze2l.us.auth0.com"
+    clientId="oAbSKobGJu8X6NYGlXYfQnPKZBHEV2jP"
+    redirectUri="http://localhost:3000"
+  >
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  </Auth0Provider>
   /* </SquareProvider> */
 );
 

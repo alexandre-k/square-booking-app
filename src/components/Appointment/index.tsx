@@ -19,14 +19,14 @@ import { BusinessHours, LocationType } from "types/Location";
 import { TeamMember } from "types/Team";
 import { CatalogObject } from "types/Catalog";
 import { Booking } from "types/Booking";
-import { sendRequest, AxiosInterface } from "utils/request";
+import { sendRequest } from "utils/request";
 // import * as Yup from "yup";
 
 interface AppointmentProps {
   businessHours: BusinessHours;
   catalogObjects: Array<CatalogObject>;
   members: Array<TeamMember>;
-  sendRequest: (params: AxiosInterface) => Promise<void>;
+  sendRequest: (url: string, method: string, payload: object) => Promise<void>;
   booking: Booking | null;
   setBooking: (booking: Booking) => void;
 }
@@ -80,25 +80,21 @@ const Appointment = (props: AppointmentProps) => {
    * }; */
 
   const bookAppointment = async () => {
-    const data = await sendRequest({
-      url: "/bookings",
-      method: "POST",
-      payload: {
-        booking: {
-          customer_id: customerId,
-          customer_note: "",
-          location_id: process.env.REACT_APP_SQUARE_LOCATION_ID,
-          location_type: LocationType.BUSINESS_LOCATION,
-          seller_note: "",
-          start_at: selectedStartAt,
-          appointment_segments: selectedServices.map((service) => {
-            return {
-              service_variation_id: service,
-              team_member_id: selectedMemberId,
-              service_variation_version: 1,
-            };
-          }),
-        },
+    const data = await sendRequest("/bookings", "POST", {
+      booking: {
+        customer_id: customerId,
+        customer_note: "",
+        location_id: process.env.REACT_APP_SQUARE_LOCATION_ID,
+        location_type: LocationType.BUSINESS_LOCATION,
+        seller_note: "",
+        start_at: selectedStartAt,
+        appointment_segments: selectedServices.map((service) => {
+          return {
+            service_variation_id: service,
+            team_member_id: selectedMemberId,
+            service_variation_version: 1,
+          };
+        }),
       },
     });
     if (data === -1 || !data.booking) {

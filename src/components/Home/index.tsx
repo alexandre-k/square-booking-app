@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 import "./index.css";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
@@ -10,10 +11,20 @@ import SquareLocation from "./SquareLocation";
 import { Location } from "types/Location";
 
 interface HomeProps {
-  location: Location|undefined;
+  location: Location | undefined;
 }
 
 const Home = (props: HomeProps) => {
+  const { isAuthenticated } = useAuth0();
+  const loginButton = isAuthenticated ? (
+    <Link to="logout">
+      <Button>Logout</Button>
+    </Link>
+  ) : (
+    <Link to="login">
+      <Button>Login</Button>
+    </Link>
+  );
   return (
     <CssBaseline enableColorScheme>
       <Grid
@@ -22,6 +33,7 @@ const Home = (props: HomeProps) => {
         alignItems="center"
         justifyContent="space-around"
       >
+        <Grid item xs={12}>{loginButton}</Grid>
         <Grid item xs={12}>
           <div style={{ position: "relative" }}>
             <figure style={{ margin: 0 }}>
@@ -44,26 +56,29 @@ const Home = (props: HomeProps) => {
                 </Typography>
               </figcaption>
             </figure>
-            {props.location === undefined ? <div className="businessNameCard">
+            {props.location === undefined ? (
+              <div className="businessNameCard">
                 <Typography color="white" variant="h2">
-                    Loading...
+                  Loading...
                 </Typography>
-            </div>:<div className="businessNameCard">
-              <Typography color="white" variant="h2">
-                {props.location.business_name}
-              </Typography>
-              <Link to="book" style={{ textDecoration: "none" }}>
-                <Button
-                  className="businessNameButton"
-                  variant="contained"
-                  size="large"
-                  endIcon={<MoreTimeIcon />}
-                >
-                  Book Now
-                </Button>
-              </Link>
-            </div>
-            }
+              </div>
+            ) : (
+              <div className="businessNameCard">
+                <Typography color="white" variant="h2">
+                  {props.location.business_name}
+                </Typography>
+                <Link to="book" style={{ textDecoration: "none" }}>
+                  <Button
+                    className="businessNameButton"
+                    variant="contained"
+                    size="large"
+                    endIcon={<MoreTimeIcon />}
+                  >
+                    Book Now
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
         </Grid>
         <SquareLocation />
