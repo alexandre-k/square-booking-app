@@ -1,4 +1,3 @@
-version: "3.9"  # optional since v1.27.0
 services:
   frontend:
     container_name: "frontend"
@@ -6,18 +5,17 @@ services:
     user: "node"
     working_dir: "/frontend"
     volumes:
-      - .:/frontend
+      - ./frontend:/frontend
     command: "yarn start"
     ports:
       - "3000:3000"
     environment:
-      REACT_APP_SQUARE_ENVIRONMENT=$UNBOXED_SQUARE_ENVIRONMENT
-      REACT_APP_SQUARE_ACCESS_TOKEN=$UNBOXED_SQUARE_ACCESS_TOKEN
-      REACT_APP_SQUARE_LOCATION_ID=$UNBOXED_SQUARE_LOCATION_ID
-      REACT_APP_SQUARE_API_VERSION=$UNBOXED_SQUARE_API_VERSION
-
-      REACT_APP_OAUTH_ID=$UNBOXED_OAUTH_ID
-      REACT_APP_OAUTH_SECRET=$UNBOXED_OAUTH_SECRET
+      - REACT_APP_SQUARE_ENVIRONMENT=$UNBOXED_SQUARE_ENVIRONMENT
+      - REACT_APP_SQUARE_ACCESS_TOKEN=$UNBOXED_SQUARE_ACCESS_TOKEN
+      - REACT_APP_SQUARE_LOCATION_ID=$UNBOXED_SQUARE_LOCATION_ID
+      - REACT_APP_SQUARE_API_VERSION=$UNBOXED_SQUARE_API_VERSION
+      - REACT_APP_OAUTH_ID=$UNBOXED_OAUTH_ID
+      - REACT_APP_OAUTH_SECRET=$UNBOXED_OAUTH_SECRET
   database:
     container_name: "database"
     image: "mongo"
@@ -31,10 +29,11 @@ services:
   backend:
     container_name: "backend"
     image: "node:lts-alpine3.16"
-    ports: "8000:8000"
+    ports:
+      - "8000:8000"
     environment:
       - DB_HOST=mongodb
-      - DB_USER=$UNBOXED_MONGO_USER
+      - DB_USER=$UNBOXED_MONGODB_USER
       - DB_PASSWORD=$UNBOXED_MONGODB_PASSWORD
       - DB_NAME=$UNBOXED_MONGODB_DATABASE
       - DB_PORT=$UNBOXED_MONGODB_DOCKER_PORT
