@@ -3,6 +3,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import "./index.css";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -33,7 +35,9 @@ const Home = (props: HomeProps) => {
         alignItems="center"
         justifyContent="space-around"
       >
-        <Grid item xs={12}>{loginButton}</Grid>
+        <Grid item xs={12}>
+          {loginButton}
+        </Grid>
         <Grid item xs={12}>
           <div style={{ position: "relative" }}>
             <figure style={{ margin: 0 }}>
@@ -57,27 +61,31 @@ const Home = (props: HomeProps) => {
               </figcaption>
             </figure>
             {props.location === undefined ? (
-              <div className="businessNameCard">
-                <Typography color="white" variant="h2">
-                  Loading...
-                </Typography>
-              </div>
+              <Card className="businessNameCard">
+                <CardContent className="cardContent">
+                  <Typography color="white" variant="h4">
+                    Loading...
+                  </Typography>
+                </CardContent>
+              </Card>
             ) : (
-              <div className="businessNameCard">
-                <Typography color="white" variant="h2">
-                  {props.location.business_name}
-                </Typography>
-                <Link to="book" style={{ textDecoration: "none" }}>
-                  <Button
-                    className="businessNameButton"
-                    variant="contained"
-                    size="large"
-                    endIcon={<MoreTimeIcon />}
-                  >
-                    Book Now
-                  </Button>
-                </Link>
-              </div>
+              <Card className="businessNameCard">
+                <CardContent className="cardContent">
+                  <Typography color="white" variant="h4">
+                    {props.location.business_name}
+                  </Typography>
+                  <Link to="book" style={{ textDecoration: "none" }}>
+                    <Button
+                      className="businessNameButton"
+                      variant="contained"
+                      size="large"
+                      endIcon={<MoreTimeIcon />}
+                    >
+                      Book Now
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
             )}
           </div>
         </Grid>
