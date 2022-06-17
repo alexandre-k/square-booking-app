@@ -1,4 +1,3 @@
-import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import { Booking } from "types/Booking";
 import BookingSummary from "./BookingSummary";

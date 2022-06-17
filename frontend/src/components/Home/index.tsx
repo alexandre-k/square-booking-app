@@ -7,20 +7,20 @@ import Jumbotron from "./Jumbotron";
 import Login from "./Login";
 import SquareLocation from "./SquareLocation";
 import { Location } from "types/Location";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+// import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 interface HomeProps {
   location: Location;
 }
 
 console.log("TODO: Create custom theme color");
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#00A0E5",
-    },
-  },
-});
+/* const theme = createTheme({
+ *   palette: {
+ *     primary: {
+ *       main: "#00A0E5",
+ *     },
+ *   },
+ * }); */
 
 const Home = ({ location }: HomeProps) => {
   return (

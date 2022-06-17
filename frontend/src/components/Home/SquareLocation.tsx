@@ -1,9 +1,8 @@
-import { Address, Location } from "types/Location";
+import { Location } from "types/Location";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import "./SquareLocation.css";
 import Contact from "./Contact";
 import OpeningHours from "./OpeningHours";

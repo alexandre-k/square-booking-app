@@ -1,8 +1,3 @@
-export enum Capability {
-  CREDIT_CARD_PROCESSING = "CREDIT_CARD_PROCESSING",
-  AUTOMATIC_TRANSFERS = "AUTOMATIC_TRANSFERS",
-}
-
 export type Address = {
   address_line_1: string;
   locality: string;
