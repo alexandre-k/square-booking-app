@@ -1,0 +1,7 @@
+.env
+.env.sample
+.git
+backend/node_modules
+frontend/node_modules
+backend/yarn-error.log
+frontend/yarn-error.log

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Completed from "components/Appointment/Completed";
 // import ListBookings from "components/ListBookings";
+import EnvironmentError from "EnvironmentError";
 import Home from "components/Home";
 import Login from "components/Auth/Login";
 import Logout from "components/Auth/Logout";
@@ -26,6 +27,13 @@ function App() {
   const [catalogObjects, setCatalogObjects] = useState<CatalogObject[]>([]);
   // @ts-ignore
   const [booking, setBooking] = useState<Booking>({});
+  const requiredEnv = [
+    "REACT_APP_SQUARE_ACCESS_TOKEN",
+    "REACT_APP_SQUARE_API_VERSION",
+    "REACT_APP_SQUARE_ENVIRONMENT",
+    "REACT_APP_SQUARE_LOCATION_ID",
+  ];
+  const undefinedVariables = requiredEnv.filter(envVariable => process.env[envVariable] === undefined || process.env[envVariable] === null || process.env[envVariable] === "");
 
   const getTeamMembers = async () => {
     const data = await sendRequest("/team-members/search", "POST");
@@ -59,6 +67,7 @@ function App() {
     getCatalogObjects();
   }, []);
 
+  if (undefinedVariables.length > 0) return <EnvironmentError variables={undefinedVariables}/>
   if (location === null) return <Loading />;
 
   return (
