@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Completed from "components/Appointment/Completed";
 // import ListBookings from "components/ListBookings";
 import EnvironmentError from "EnvironmentError";
+import NetworkError from "NetworkError";
 import Home from "components/Home";
 import Login from "components/Auth/Login";
 import Logout from "components/Auth/Logout";
@@ -20,6 +21,10 @@ import { Booking } from "types/Booking";
 import { TeamMember } from "types/Team";
 import { CatalogObject } from "types/Catalog";
 
+type Error = {
+  message: string;
+};
+
 function App() {
   // @ts-ignore
   const [location, setLocation] = useState<Location | null>(null);
@@ -27,13 +32,19 @@ function App() {
   const [catalogObjects, setCatalogObjects] = useState<CatalogObject[]>([]);
   // @ts-ignore
   const [booking, setBooking] = useState<Booking>({});
+  const [error, setError] = useState<Error>({ message: "" });
   const requiredEnv = [
     "REACT_APP_SQUARE_ACCESS_TOKEN",
     "REACT_APP_SQUARE_API_VERSION",
     "REACT_APP_SQUARE_ENVIRONMENT",
     "REACT_APP_SQUARE_LOCATION_ID",
   ];
-  const undefinedVariables = requiredEnv.filter(envVariable => process.env[envVariable] === undefined || process.env[envVariable] === null || process.env[envVariable] === "");
+  const undefinedVariables = requiredEnv.filter(
+    (envVariable) =>
+      process.env[envVariable] === undefined ||
+      process.env[envVariable] === null ||
+      process.env[envVariable] === ""
+  );
 
   const getTeamMembers = async () => {
     const data = await sendRequest("/team-members/search", "POST");
@@ -49,11 +60,18 @@ function App() {
   };
 
   const getLocation = async () => {
-    const data = await sendRequest(
-      "/locations/" + process.env.REACT_APP_SQUARE_LOCATION_ID,
-      "GET"
-    );
-    setLocation(data.location);
+    try {
+      const data = await sendRequest(
+        "/location",
+        "GET"
+      );
+      if (data === -1) return;
+      setLocation(data.location);
+    } catch (error: any) {
+        // @ts-ignore
+      setError(error.message);
+      return;
+    }
   };
 
   const getCatalogObjects = async () => {
@@ -67,7 +85,9 @@ function App() {
     getCatalogObjects();
   }, []);
 
-  if (undefinedVariables.length > 0) return <EnvironmentError variables={undefinedVariables}/>
+  if (undefinedVariables.length > 0)
+    return <EnvironmentError variables={undefinedVariables} />;
+  if (error) return <NetworkError error={error} />;
   if (location === null) return <Loading />;
 
   return (

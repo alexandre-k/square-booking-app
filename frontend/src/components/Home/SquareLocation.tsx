@@ -44,12 +44,6 @@ const SquareLocation = ({ location }: SquareLocationProps) => {
       </Grid>
     </Grid>
   );
-  /* <LocationTeamMembers
-          searchTeamMembers={sendRequest}
-          members={members}
-          selectedMemberId={selectedMemberId}
-          setSelectedMemberId={setSelectedMemberId}
-          /> */
 };
 
 export default SquareLocation;

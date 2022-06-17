@@ -36,7 +36,11 @@ export interface AxiosInterface {
 }
 
 const isSquareError = (errorData: any): errorData is SquareError => {
-  if (Array.isArray(errorData.errors) && errorData.errors.length > 1) {
+  if (
+    errorData &&
+    Array.isArray(errorData.errors) &&
+    errorData.errors.length > 1
+  ) {
     const error = errorData.errors[0];
     return (
       "category" in error &&
@@ -56,7 +60,11 @@ const isSquareError = (errorData: any): errorData is SquareError => {
 //   const controllerRef = useRef(new AbortController());
 //   const cancel = () => controllerRef.current.abort();
 
-export const sendRequest = async (url: string, method: string, payload: object = {}) => {
+export const sendRequest = async (
+  url: string,
+  method: string,
+  payload: object = {}
+) => {
   try {
     // const formData = new FormData();
     // for (let key of Object.keys(params.payload)) {
@@ -71,8 +79,8 @@ export const sendRequest = async (url: string, method: string, payload: object =
     //   data: JSON.stringify(params.payload),
     // });
     const response = await axios.request({
-      url: url,
-      method: method,
+      url,
+      method,
       //@ts-ignore
       data: payload,
       headers,
@@ -80,6 +88,9 @@ export const sendRequest = async (url: string, method: string, payload: object =
     return response.data;
     // setData(response.data);
   } catch (err: any) {
+    if (axios.isAxiosError(err)) {
+      throw err;
+    }
     const errorData = err?.response?.data;
     if (isSquareError(errorData)) {
       errorData.errors.forEach((error) => {
@@ -91,12 +102,14 @@ export const sendRequest = async (url: string, method: string, payload: object =
         );
         console.debug(error.detail);
         console.log(error);
+        return null;
       });
     } else {
       console.log(err);
+      return null;
     }
     // setError(err);
-      return null;
+    return null;
   } finally {
     // setLoaded(true);
   }
