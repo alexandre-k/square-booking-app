@@ -15,7 +15,7 @@ const Completed = ({ booking }: CompletedProps) => {
       <Typography variant="h4" color="inherit">
         Appointment booked!
       </Typography>
-      <BookingSummary booking={props.booking} />
+      <BookingSummary booking={booking} />
     </>
   );
 };
