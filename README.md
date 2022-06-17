@@ -13,14 +13,22 @@ Under development but at the moment Auth0 is being used. Creating an account is 
 ### Database
 MongoDB is used as a database. A password should be randomly created. We suggest reusing passwords generated in Bitwarden, `pwgen` or any other password generator.
 
-## Run
-```
+## First run
+````
 docker-compose build
 docker-compose up
 ```
 
-Later  `docker-compose up` only will be needed.
+## Next time run
+```
+docker-compose up
+```
 
+## Run after installing a new package in package.json
+```
+ docker-compose down
+ docker-compose up --build
+```
 
 ## Access the React app
 
