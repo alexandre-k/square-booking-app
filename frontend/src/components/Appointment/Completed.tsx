@@ -2,30 +2,20 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import { Booking } from "types/Booking";
 import BookingSummary from "./BookingSummary";
-import "./Completed.css";
+import Loading from "components/Loading";
 
 interface CompletedProps {
   booking: Booking | null;
 }
 
-const Completed = (props: CompletedProps) => {
-  const progressCircle = (
-    <div className="progressCircleContainer">
-      <CircularProgress size="100px" />
-    </div>
-  );
-
+const Completed = ({ booking }: CompletedProps) => {
+  if (booking === null) return <Loading />;
   return (
     <>
       <Typography variant="h4" color="inherit">
         Appointment booked!
       </Typography>
-      {props.booking !== null ? (
-        <BookingSummary booking={props.booking} />
-      ) : (
-        progressCircle
-      )}
-      ;
+      <BookingSummary booking={props.booking} />
     </>
   );
 };

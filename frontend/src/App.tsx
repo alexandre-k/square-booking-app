@@ -11,6 +11,7 @@ import Profile from "components/Auth/Profile";
 import SquareLocation from "components/Home/SquareLocation";
 import Appointment from "components/Appointment";
 import TeamDashboard from "components/Dashboard";
+import Loading from "components/Loading";
 import BookingSummary from "components/Appointment/BookingSummary";
 import { sendRequest } from "utils/request";
 import { Location } from "types/Location";
@@ -20,7 +21,7 @@ import { CatalogObject } from "types/Catalog";
 
 function App() {
   // @ts-ignore
-  const [location, setLocation] = useState<Location|null>(null);
+  const [location, setLocation] = useState<Location | null>(null);
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [catalogObjects, setCatalogObjects] = useState<CatalogObject[]>([]);
   // @ts-ignore
@@ -58,7 +59,7 @@ function App() {
     getCatalogObjects();
   }, []);
 
-    if (location === null) return <div>Loading...</div>
+  if (location === null) return <Loading />;
 
   return (
     <>
@@ -68,7 +69,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/location" element={<SquareLocation location={location} />} />
+          <Route
+            path="/location"
+            element={<SquareLocation location={location} />}
+          />
           <Route
             path="book"
             element={
