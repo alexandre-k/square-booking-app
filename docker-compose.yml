@@ -1,6 +1,8 @@
 services:
   frontend:
     container_name: "unboxed_frontend"
+    hostname: unboxed_frontend
+    domainname: unboxed_frontend.local
     build: ./frontend
     volumes:
       - /usr/src/app/node_modules
@@ -17,7 +19,9 @@ services:
       - REACT_APP_OAUTH_SECRET=$UNBOXED_OAUTH_SECRET
       - PATH /frontend/node_modules/.bin:$PATH
   database:
-    container_name: "database"
+    container_name: "unboxed_database"
+    hostname: unboxed_database
+    domainname: unboxed_database.local
     image: "mongo"
     volumes:
       - ./database:/db
@@ -28,6 +32,8 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=$UNBOXED_MONGODB_PASSWORD
   backend:
     container_name: "unboxed_backend"
+    hostname: unboxed_backend
+    domainname: unboxed_backend.local
     build: ./backend
     volumes:
       - /usr/src/app/node_modules
