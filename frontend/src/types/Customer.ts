@@ -11,3 +11,9 @@ export type Customer = {
     updatedAt: string;
     version: number;
 }
+
+export type User = {
+    givenName: string;
+    familyName: string;
+    emailAddress: string;
+}

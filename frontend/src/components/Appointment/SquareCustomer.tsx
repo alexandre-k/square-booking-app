@@ -1,19 +1,14 @@
-import { useState } from "react";
 // import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import LoadingButton from "@mui/lab/LoadingButton";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import { sendRequest } from "utils/request";
+import { User } from "types/Customer";
 
 interface CustomerProps {
-  setCustomerId: (customerId: string) => void;
+  customer: User;
+  setCustomer: (customer: User) => void;
 }
 
-const SquareCustomer = (props: CustomerProps) => {
-  const [firstName, setFirstName] = useState<string>("");
-  const [lastName, setLastName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+const SquareCustomer = ({ customer, setCustomer }: CustomerProps) => {
   /* const validateCustomer = Yup.object({
    *   firstName: Yup.string()
    *     .max(30, "Must be 30 characters or less")
@@ -24,77 +19,46 @@ const SquareCustomer = (props: CustomerProps) => {
    *   email: Yup.string().email("Invalid email address").required("Required"),
    * }); */
 
-  const getCustomerByEmail = async (
-    givenName: string,
-    familyName: string,
-    emailAddress: string
-  ): Promise<string|null> => {
-    const data = await sendRequest("/customers/search", "POST", {
-            givenName, familyName, emailAddress
-    });
-    if (data.customerId) {
-      return data.customerId;
-    } else {
-        return null;
-    }
-  };
-
   const onSubmit = async (e: any) => {
     e.preventDefault();
-    setLoading(true);
-    // look for a customer already created, create if not already there
-    // TODO: use OAuth
-    const customerId = await getCustomerByEmail(firstName, lastName, email);
-
-    setLoading(false);
-    if (customerId !== null) {
-      props.setCustomerId(customerId);
-    } else {
-      console.log(
-        "TODO: show error. Unable to find or register. Verify email address."
-      );
-    }
+    // setCustomer({ givenName, familyName, emailAddress });
   };
   return (
     <form onSubmit={onSubmit}>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
-          <TextField
-            required
-            fullWidth
-            autoComplete="given-name"
-            label="First name"
-            helperText="First name"
-            value={firstName}
-            onChange={(e: any) => setFirstName(e.target.value)}
-          />
-          <TextField
-            required
-            fullWidth
-            autoComplete="family-name"
-            label="Last name"
-            helperText="Last name"
-            value={lastName}
-            onChange={(e: any) => setLastName(e.target.value)}
-          />
-          <TextField
-            required
-            fullWidth
-            autoComplete="email"
-            label="Email address"
-            helperText="Email address"
-            value={email}
-            onChange={(e: any) => setEmail(e.target.value)}
-          />
-          <LoadingButton
-            loading={loading}
-            variant="contained"
-            type="submit"
-            onClick={onSubmit}
-          >
-            Ok
-          </LoadingButton>
-        </Grid>
+      <Grid container>
+        <TextField
+          required
+          fullWidth
+          autoComplete="given-name"
+          label="First name"
+          helperText="First name"
+          value={customer.givenName}
+          onChange={(e: any) =>
+            setCustomer({ ...customer, givenName: e.target.value })
+          }
+        />
+        <TextField
+          required
+          fullWidth
+          autoComplete="family-name"
+          label="Last name"
+          helperText="Last name"
+          value={customer.familyName}
+          onChange={(e: any) =>
+            setCustomer({ ...customer, familyName: e.target.value })
+          }
+        />
+        <TextField
+          required
+          fullWidth
+          autoComplete="email"
+          label="Email address"
+          helperText="Email address"
+          value={customer.emailAddress}
+          onChange={(e: any) =>
+            setCustomer({ ...customer, emailAddress: e.target.value })
+          }
+        />
       </Grid>
     </form>
   );

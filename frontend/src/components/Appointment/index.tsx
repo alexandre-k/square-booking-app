@@ -13,6 +13,7 @@ import SquareBooking from "./SquareBooking";
 import SquareCustomer from "./SquareCustomer";
 import SquareServices from "./SquareServices";
 import LocationTeamMembers from "./SquareTeamMembers";
+import { User } from "types/Customer";
 import { BusinessHours } from "types/Location";
 import { TeamMember } from "types/Team";
 import { CatalogObject } from "types/Catalog";
@@ -34,7 +35,11 @@ const Appointment = (props: AppointmentProps) => {
   const [selectedStartAt, onSelectStartAt] = useState<string | null>(null);
   const [catalogObjects, setCatalogObjects] = useState<CatalogObject[]>([]);
   const [members, setMembers] = useState<TeamMember[]>([]);
-  const [customerId, setCustomerId] = useState<string>("");
+  const [customer, setCustomer] = useState<User>({
+    givenName: "",
+    familyName: "",
+    emailAddress: "",
+  });
   const [activeStep, setActiveStep] = useState(0);
   const getTeamMembers = async () => {
     const teamMembers = await sendRequest("/staff/search", "POST");
@@ -61,7 +66,7 @@ const Appointment = (props: AppointmentProps) => {
   const bookAppointment = async () => {
     const data = await sendRequest("/booking/create", "POST", {
       booking: {
-        customerId: customerId,
+        ...customer,
         customerNote: "",
         locationId: process.env.REACT_APP_SQUARE_LOCATION_ID,
         // locationType: LocationType.BUSINESS_LOCATION,
@@ -121,7 +126,9 @@ const Appointment = (props: AppointmentProps) => {
     },
     {
       label: "Your information",
-      component: <SquareCustomer setCustomerId={setCustomerId} />,
+      component: (
+        <SquareCustomer customer={customer} setCustomer={setCustomer} />
+      ),
     },
   ];
 
