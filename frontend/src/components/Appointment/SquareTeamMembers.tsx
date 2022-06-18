@@ -23,7 +23,7 @@ const LocationTeamMembers = (props: TeamMembersProps) => {
   const listItem = props.members
     .filter((member) => !member.isOwner || props.showOwner)
     .map((member) => (
-      <Grid item xs={3} md={2} key={member.id}>
+      <Grid item style={{ margin: '10px'}} xs={3} md={3} key={member.id}>
         <ListItem>
           <ListItemButton
             selected={member.id === props.selectedMemberId}

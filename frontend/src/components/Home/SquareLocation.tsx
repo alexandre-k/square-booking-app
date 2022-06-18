@@ -13,9 +13,13 @@ interface SquareLocationProps {
 
 const SquareLocation = ({ location }: SquareLocationProps) => {
   return (
-    <>
-      <Grid item xs={10} md={5}>
-        <Card className="card">
+    <Grid
+      className="locationContainer"
+      container
+      direction="row"
+    >
+      <Grid className="cardContainer" item xs={12} md={6}>
+        <Card>
           <CardHeader title={location.businessName} />
           <CardContent>
             <Contact
@@ -27,15 +31,15 @@ const SquareLocation = ({ location }: SquareLocationProps) => {
           </CardContent>
         </Card>
       </Grid>
-      <Grid item xs={10} md={5}>
-        <Card className="card">
+      <Grid className="cardContainer" item xs={12} md={6}>
+        <Card>
           <CardHeader title="Opening hours" />
           <CardContent>
-            <OpeningHours periods={location.businessHours.periods}/>
+            <OpeningHours periods={location.businessHours.periods} />
           </CardContent>
         </Card>
       </Grid>
-      </>
+    </Grid>
   );
 };
 

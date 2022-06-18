@@ -1,6 +1,7 @@
 html {
     height: 100%;
 }
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -11,6 +12,7 @@ body {
   background-color: #fafafa;
   min-height: 100%;
   width: 100%;
+  background-color: #f5ffff;
 }
 
 code {
@@ -20,4 +22,6 @@ code {
 
 #root {
     height: 100vh;
+    display: flex;
+    justify-content: center;
 }

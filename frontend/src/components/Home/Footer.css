@@ -1,8 +1,8 @@
 #footer {
-  margin-top: 20px;
+  bottom: 0px;
   background-color: #e2e5e4;
 }
 
 #footer-content {
-  padding: 20px;
+    margin-left: 10px;
 }

@@ -3,7 +3,6 @@ import { useState } from "react";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import { Customer } from "types/Customer";
 import { sendRequest } from "utils/request";
 
 interface CustomerProps {
@@ -40,18 +39,6 @@ const SquareCustomer = (props: CustomerProps) => {
     }
   };
 
-  const createCustomer = async (
-    givenName: string,
-    familyName: string,
-    emailAddress: string
-  ) => {
-    const data = await sendRequest("/customers", "POST", {
-      givenName,
-      familyName,
-      emailAddress,
-    });
-    return data.customer ? data.customer : null;
-  };
   const onSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);

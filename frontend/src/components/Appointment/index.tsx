@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import Stepper from "@mui/material/Stepper";
@@ -6,20 +6,19 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import CheckIcon from "@mui/icons-material/Check";
 import SquareBooking from "./SquareBooking";
 import SquareCustomer from "./SquareCustomer";
 import SquareServices from "./SquareServices";
 import LocationTeamMembers from "./SquareTeamMembers";
-import { BusinessHours, LocationType } from "types/Location";
+import { BusinessHours } from "types/Location";
 import { TeamMember } from "types/Team";
 import { CatalogObject } from "types/Catalog";
 import { Booking } from "types/Booking";
 import { sendRequest } from "utils/request";
+import "./index.css";
 // import * as Yup from "yup";
 
 interface AppointmentProps {
@@ -59,7 +58,7 @@ const Appointment = (props: AppointmentProps) => {
 
     if (catalogObjects.length === 0) getCatalogObjects();
   }, []);
-    const bookAppointment = async () => {
+  const bookAppointment = async () => {
     const data = await sendRequest("/booking/create", "POST", {
       booking: {
         customerId: customerId,
@@ -136,68 +135,64 @@ const Appointment = (props: AppointmentProps) => {
   };
 
   return (
-    <Paper sx={{ padding: 2, margin: 2 }} elevation={10} square>
-      <Grid container alignItems="center" justifyContent="center" spacing={3}>
-        <Grid item xs={2} md={2}>
-          <IconButton color="primary" size="large" onClick={() => navigate(-1)}>
-            <ArrowBackIosNewIcon />
-          </IconButton>
-        </Grid>
-        <Grid item xs={10} md={10}>
-          <Typography variant="h6" color="inherit" component="div">
-            {activeStep === 0 ? "Home" : steps[activeStep].label}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} md={12}>
-          <Divider style={{ marginBottom: 15 }} />
-        </Grid>
+    <Grid
+      id="bookingGrid"
+      container
+      alignItems="start"
+      justifyContent="space-evenly"
+    >
+      <Grid item xs={1} md={1}>
+        <IconButton color="primary" size="large" onClick={() => navigate(-1)}>
+          <ArrowBackIosNewIcon />
+        </IconButton>
+      </Grid>
+      <Grid item xs={10} md={10}>
+        <Typography variant="h6" color="inherit" component="div">
+          {activeStep === 0 ? "Home" : steps[activeStep].label}
+        </Typography>
+      </Grid>
 
-        <Grid item xs={12} md={12}>
-          <Stepper alternativeLabel activeStep={activeStep}>
-            {steps.map((step, index) => (
-              <Step key={index}>
-                <StepLabel style={{ marginBottom: 20 }}>{step.label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-        </Grid>
+      <Grid item xs={12} md={12}>
+        <Stepper alternativeLabel activeStep={activeStep}>
+          {steps.map((step, index) => (
+            <Step key={index}>
+              <StepLabel style={{ marginBottom: 20 }}>{step.label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+      </Grid>
 
-        <Grid item xs={10} md={8}>
-          {steps[activeStep].component}
-        </Grid>
+      <Grid item xs={12} md={12}>
+        {steps[activeStep].component}
+      </Grid>
 
-        <Grid item xs={12} md={12}>
-          {activeStep === steps.length - 1 ? (
-            <Link
-              to={{
-                pathname: `/completed/${
-                  props.booking === null ? "" : props.booking.id
-                }`,
-              }}
-              onClick={bookAppointment}
-              style={{ textDecoration: "none" }}
-            >
-              <Button
-                className="businessNameButton"
-                variant="contained"
-                size="large"
-                endIcon={<CheckIcon />}
-              >
-                Book
-              </Button>
-            </Link>
-          ) : (
+      <Grid item xs={12} md={12}>
+        {activeStep === steps.length - 1 ? (
+          <Link
+            to={{
+              pathname: `/completed/${
+                props.booking === null ? "" : props.booking.id
+              }`,
+            }}
+            onClick={bookAppointment}
+            style={{ textDecoration: "none" }}
+          >
             <Button
+              className="businessNameButton"
               variant="contained"
               size="large"
-              onClick={() => navigate(+1)}
+              endIcon={<CheckIcon />}
             >
-              next
+              Book
             </Button>
-          )}
-        </Grid>
+          </Link>
+        ) : (
+          <Button variant="contained" size="large" onClick={() => navigate(+1)}>
+            next
+          </Button>
+        )}
       </Grid>
-    </Paper>
+    </Grid>
   );
 };
 

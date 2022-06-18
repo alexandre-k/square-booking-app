@@ -7,12 +7,12 @@ interface FooterProps {
 }
 const Footer = ({ routes }: FooterProps) => {
   return (
-    <Grid id="footer" xs={12} md={12}>
+    <Grid id="footer" item xs={12} md={12}>
       <Divider />
       <div id="footer-content">
         Footer... work in progress
         {routes.map((route) => (
-          <p>{route}</p>
+          <p key={route}>{route}</p>
         ))}
       </div>
     </Grid>

@@ -6,6 +6,8 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Stack from "@mui/material/Stack";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import { DayOfWeek, LocationType, Period } from "types/Location";
 import { Availability } from "types/Booking";
 import { sendRequest } from "utils/request";
@@ -40,6 +42,11 @@ interface BookingProps {
 const SquareBooking = (props: BookingProps) => {
   const [availabilities, setAvailabilities] = useState<Array<Availability>>([]);
   const [value, onChange] = useState(new Date());
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
+  const userTimeZone = dayjs.tz.guess();
+
+  dayjs.tz.setDefault(userTimeZone);
 
   const onDateSelected = async (value: Date) => {
     onChange(value);
@@ -119,7 +126,7 @@ const SquareBooking = (props: BookingProps) => {
       <div>
         {availabilities && (
           <List
-            style={{ overflowX: "scroll" }}
+            style={{ width: "300px", overflowX: "scroll" }}
             component={Stack}
             direction="row"
           >

@@ -1,3 +1,9 @@
-.card {
-    padding: 10px;
+.locationContainer {
+  padding: 10px;
+}
+.cardContainer {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  background-color: #eaeced;
 }
