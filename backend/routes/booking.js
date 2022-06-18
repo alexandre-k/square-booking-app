@@ -44,10 +44,10 @@ router.post("/create", async (req, res, next) => {
   const startAt = req.body.booking.startAt;
   const sellerNote = req.body.booking.sellerNote;
   const customerNote = req.body.booking.customerNote;
-  // const emailAddress = req.body.booking.emailAddress;
+  const emailAddress = req.body.booking.emailAddress;
   const customerId = req.body.booking.customerId;
-  // const familyName = req.body.booking.familyName;
-  // const givenName = req.body.booking.givenName;
+  const familyName = req.body.booking.familyName;
+  const givenName = req.body.booking.givenName;
 
     try {
   //   // Retrieve catalog object by the variation ID
@@ -64,8 +64,7 @@ router.post("/create", async (req, res, next) => {
     } = await bookingsApi.createBooking({
       booking: {
         appointmentSegments,
-          customerId,
-        // customerId: await getCustomerID(givenName, familyName, emailAddress),
+        customerId: await getCustomerID(givenName, familyName, emailAddress),
 
         // locationType: LocationType.BUSINESS_LOCATION,
           // sellerNote,
