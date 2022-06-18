@@ -11,6 +11,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+const Booking = require("../models/Booking");
 const dateHelpers = require("../util/date-helpers");
 const express = require("express");
 const JSONBig = require("json-bigint");
@@ -87,6 +88,55 @@ router.post("/search", async (req, res, next) => {
   const { givenName, familyName, emailAddress } = req.body;
   const customerId = await getCustomerID(givenName, familyName, emailAddress);
   res.send({ customerId });
+});
+
+/**
+ * GET /customer/booking
+ *
+ * Get availability for the service variation & team member of the
+ * existing booking so the user can reschedule the booking
+ */
+router.get("/booking", async (req, res, next) => {
+    console.log('BOOKING >')
+    try {
+        // const {
+        //     result: { availabilities },
+        // } = await bookingsApi.searchAvailability(req.body);
+        // res.send(JSONBig.parse(JSONBig.stringify({ availabilities })));
+        const email = req.query['email'];
+        if (email) {
+            const bookings = await Booking.findOne({ email });
+            return res.send(bookings);
+        } else {
+            throw('Requires an email query parameter found!');
+        }
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+/**
+ * POST /customer/booking
+ *
+ * Get availability for the service variation & team member of the
+ * existing booking so the user can reschedule the booking
+ */
+router.post("/booking", async (req, res, next) => {
+    try {
+        const booking = new Booking({
+            email: req.body.email,
+            customerId: req.body.customerId,
+            orderId: req.body.orderId,
+            bookingId: req.body.bookingId,
+            status: req.body.status,
+        })
+        await booking.save();
+        return res.send(booking);
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
 });
 
 module.exports = router;
