@@ -41,3 +41,7 @@
   min-height: 300px;
   width: 100%;
 }
+
+#rootGrid {
+    background-color: #EAECED;
+}

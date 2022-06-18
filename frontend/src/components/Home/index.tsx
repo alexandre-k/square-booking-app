@@ -3,6 +3,7 @@ import "./index.css";
 import AppBar from "@mui/material/AppBar";
 import Grid from "@mui/material/Grid";
 import CssBaseline from "@mui/material/CssBaseline";
+import Footer from "./Footer";
 import Jumbotron from "./Jumbotron";
 import Login from "./Login";
 import SquareLocation from "./SquareLocation";
@@ -23,20 +24,24 @@ console.log("TODO: Create custom theme color");
  * }); */
 
 const Home = ({ location }: HomeProps) => {
+    const routes = ["home", "bookings", "appointment"];
+
   return (
-    <CssBaseline enableColorScheme>
-        {/* <ThemeProvider theme={theme}> */}
-        <Grid container alignItems="center" justifyContent="space-around">
-          <Grid item xs={12}>
-            <AppBar position="static">
-              <Login />
-            </AppBar>
-          </Grid>
-          <Jumbotron location={location} />
-          <SquareLocation location={location} />
-        </Grid>
-        {/* </ThemeProvider> */}
-    </CssBaseline>
+    <Grid
+      id="rootGrid"
+      container
+      alignItems="center"
+      justifyContent="space-evenly"
+    >
+      <Grid item xs={12}>
+        <AppBar position="static">
+          <Login />
+        </AppBar>
+      </Grid>
+      <Jumbotron location={location} />
+      <SquareLocation location={location} />
+      <Footer routes={routes} />
+    </Grid>
   );
 };
 

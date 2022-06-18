@@ -13,8 +13,8 @@ export enum LocationType {
 }
 
 export enum Capability {
-  CREDIT_CARD = "CREDIT_CARD_PROCESSING",
-  TRANSFER = "AUTOMATIC_TRANSFERS",
+  CREDIT_CARD_PROCESSING = "CREDIT_CARD_PROCESSING",
+  AUTOMATIC_TRANSFERS = "AUTOMATIC_TRANSFERS",
 }
 
 export enum DayOfWeek {

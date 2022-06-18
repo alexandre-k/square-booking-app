@@ -5,6 +5,7 @@ import MailIcon from "@mui/icons-material/Mail";
 import PaymentIcon from "@mui/icons-material/Payment";
 import PhoneIcon from "@mui/icons-material/Phone";
 import Typography from "@mui/material/Typography";
+import { getCapability } from "utils/capability";
 import { Address, Capability } from "types/Location";
 
 interface ContactProps {
@@ -85,7 +86,7 @@ const Contact = ({
             underline="none"
             style={{ overflowWrap: "anywhere" }}
           >
-            <Typography variant="body2">{business_email}</Typography>
+            <Typography variant="body2">Send an email</Typography>
           </Link>
         </td>
       </tr>
@@ -96,11 +97,12 @@ const Contact = ({
           </IconButton>
         </td>
         <td>
-          {capabilities.map((capability) => (
-            <Typography variant="body2" key={capability}>
-              {capability}
-            </Typography>
-          ))}
+          <Typography variant="body2">
+            Pay by {capabilities.map((capability, index) => {
+              const divider = index < capabilities.length - 1 ? " / " : "";
+              return getCapability(capability) + divider;
+            })}
+          </Typography>
         </td>
       </tr>
     </tbody>
