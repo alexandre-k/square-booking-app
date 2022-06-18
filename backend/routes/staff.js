@@ -13,15 +13,12 @@ limitations under the License.
 
 const express = require("express");
 const router = express.Router();
+const JSONBig = require("json-bigint");
 require("dotenv").config();
 
 const locationId = process.env["SQUARE_LOCATION_ID"];
 
-const {
-  bookingsApi,
-  catalogApi,
-  teamApi
-} = require("../util/square-client");
+const { bookingsApi, catalogApi, teamApi } = require("../util/square-client");
 
 /**
  * GET /staff/:serviceId?version
@@ -39,37 +36,98 @@ router.get("/:serviceId", async (req, res, next) => {
   const serviceVersion = req.query.version;
   try {
     // Send request to get the service associated with the given item variation ID, and related objects.
-    const retrieveServicePromise = catalogApi.retrieveCatalogObject(serviceId, true);
+    const retrieveServicePromise = catalogApi.retrieveCatalogObject(
+      serviceId,
+      true
+    );
 
     // Send request to list staff booking profiles for the current location.
-    const listBookingProfilesPromise = bookingsApi.listTeamMemberBookingProfiles(true, undefined, undefined, locationId);
+    const listBookingProfilesPromise =
+      bookingsApi.listTeamMemberBookingProfiles(
+        true,
+        undefined,
+        undefined,
+        locationId
+      );
 
     // Send request to list all active team members for this merchant at this location.
     const listActiveTeamMembersPromise = teamApi.searchTeamMembers({
       query: {
         filter: {
-          locationIds: [ locationId ],
-          status: "ACTIVE"
-        }
-      }
+          locationIds: [locationId],
+          status: "ACTIVE",
+        },
+      },
     });
 
     // Wait until all API calls have completed.
-    const [ { result: services }, { result: { teamMemberBookingProfiles } }, { result: { teamMembers } } ] =
-      await Promise.all([ retrieveServicePromise, listBookingProfilesPromise, listActiveTeamMembersPromise ]);
+    const [
+      { result: services },
+      {
+        result: { teamMemberBookingProfiles },
+      },
+      {
+        result: { teamMembers },
+      },
+    ] = await Promise.all([
+      retrieveServicePromise,
+      listBookingProfilesPromise,
+      listActiveTeamMembersPromise,
+    ]);
 
     // We want to filter teamMemberBookingProfiles by checking that the teamMemberId associated with the profile is in our serviceTeamMembers.
     // We also want to verify that each team member is ACTIVE.
     const serviceVariation = services.object;
-    const serviceItem = services.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0];
+    const serviceItem = services.relatedObjects.filter(
+      (relatedObject) => relatedObject.type === "ITEM"
+    )[0];
 
-    const serviceTeamMembers = serviceVariation.itemVariationData.teamMemberIds || [];
-    const activeTeamMembers = teamMembers.map(teamMember => teamMember.id);
+    const serviceTeamMembers =
+      serviceVariation.itemVariationData.teamMemberIds || [];
+    const activeTeamMembers = teamMembers.map((teamMember) => teamMember.id);
 
-    const bookableStaff = teamMemberBookingProfiles
-      .filter(profile => serviceTeamMembers.includes(profile.teamMemberId) && activeTeamMembers.includes(profile.teamMemberId));
+    const bookableStaff = teamMemberBookingProfiles.filter(
+      (profile) =>
+        serviceTeamMembers.includes(profile.teamMemberId) &&
+        activeTeamMembers.includes(profile.teamMemberId)
+    );
 
-    res.render("pages/select-staff", { bookableStaff, serviceItem, serviceVariation, serviceVersion });
+    res.render("pages/select-staff", {
+      bookableStaff,
+      serviceItem,
+      serviceVariation,
+      serviceVersion,
+    });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+/**
+ * GET /staff/search
+ *
+ * This endpoint is in charge of retrieving all the staff associated with a specific service variation at a specific version.
+ * It needs to do the following:
+ * 1. Get the service variation from the serviceId provided in the path.
+ * 2. Get the booking profiles for all staff members in the current location (that are bookable).
+ * 3. Get all team members that are active.
+ * 4. By cross referencing 1,2,3, we can find those team members who are associated with the service variation,
+ *    are active, and bookable at the current location. These are the actual available staff members for the booking.
+ */
+router.post("/search", async (req, res, next) => {
+  try {
+    // Send request to list all active team members for this merchant at this location.
+    const { result, ...httpResponse } = await teamApi.searchTeamMembers({
+      query: {
+        filter: {
+          locationIds: [locationId],
+          status: "ACTIVE",
+        },
+      },
+    });
+    const teamMembers = result.teamMembers;
+    return res.send(JSONBig.parse(JSONBig.stringify(teamMembers)));
   } catch (error) {
     console.error(error);
     next(error);
