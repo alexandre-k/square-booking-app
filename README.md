@@ -33,3 +33,16 @@ docker-compose up
 ## Access the React app
 
 Go to your browser and enter `http://localhost:5000` in the URL. Any other port can be used instead if 5000 is already being used. See the default in `docker-compose.yml`.
+
+## Add and pull remote backend repository
+
+```
+git remote add -f backend git@github.com:alexandre-k/bookings-api-sample-app.git
+git subtree pull --prefix backend backend master --squash
+```
+
+To only pull the subtree:
+
+```
+git subtree pull --prefix backend backend master --squash
+```
