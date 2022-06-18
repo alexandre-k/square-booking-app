@@ -14,17 +14,20 @@ Under development but at the moment Auth0 is being used. Creating an account is 
 MongoDB is used as a database. A password should be randomly created. We suggest reusing passwords generated in Bitwarden, `pwgen` or any other password generator.
 
 ## First run
-````
+
+```
 docker-compose build
 docker-compose up
 ```
 
 ## Next time run
+
 ```
 docker-compose up
 ```
 
 ## Run after installing a new package in package.json
+
 ```
  docker-compose down
  docker-compose up --build
