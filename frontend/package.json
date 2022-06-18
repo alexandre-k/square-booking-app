@@ -2,7 +2,7 @@
   "name": "square-booking-app",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:8000",
+  "proxy": "http://unboxed_backend:8000",
   "dependencies": {
     "@auth0/auth0-react": "^1.10.1",
     "@date-io/dayjs": "^2.14.0",

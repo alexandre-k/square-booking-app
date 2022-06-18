@@ -15,28 +15,28 @@ export type Price = {
 };
 
 export type CatalogObjectItemVariationData = {
-  item_id: string;
+  itemId: string;
   name: string;
-  price_money: Price;
-  pricing_type: string;
-  service_duration: number;
-  price_description: string;
-  available_for_booking: boolean;
+  priceMoney: Price;
+  pricingType: string;
+  serviceDuration: number;
+  priceDescription: string;
+  availableForBooking: boolean;
   sellable: boolean;
   stockable: boolean;
-  transition_time: number;
-  team_member_ids: Array<string>;
+  transitionTime: number;
+  team_memberIds: Array<string>;
 };
 
 export type CatalogObjectItemVariation = {
   type: CatalogObjectType;
   id: string;
-  updated_at: string;
-  created_at: string;
+  updatedAt: string;
+  createdAt: string;
   version: number;
-  is_deleted: boolean;
-  present_at_all_locations: boolean;
-  item_variation_data: CatalogObjectItemVariationData;
+  isDeleted: boolean;
+  presentAtAllLocations: boolean;
+  itemVariationData: CatalogObjectItemVariationData;
 };
 
 export type CatalogObjectItem = {
@@ -44,18 +44,18 @@ export type CatalogObjectItem = {
   description: string;
   ordinal: number;
   variations: Array<CatalogObjectItemVariation>;
-  product_type: string;
+  productType: string;
 };
 
 export type CatalogObject = {
   type: CatalogObjectType;
   id: string;
-  item_data: CatalogObjectItem;
-  updated_at: string;
-  created_at: string;
+  itemData: CatalogObjectItem;
+  updatedAt: string;
+  createdAt: string;
   version: number;
-  is_deleted: boolean;
-  present_at_all_locations: boolean;
-  subscription_plan_data?: object;
-  discount_data?: object;
+  isDeleted: boolean;
+  presentAtAllLocations: boolean;
+  subscriptionPlanData?: object;
+  discountData?: object;
 };

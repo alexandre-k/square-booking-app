@@ -1,8 +1,8 @@
 export type Address = {
-  address_line_1: string;
+  addressLine1: string;
   locality: string;
-  administrative_district_level_1: string;
-  postal_code: string;
+  administrativeDistrictLevel1: string;
+  postalCode: string;
   country: string;
 };
 
@@ -26,9 +26,9 @@ export enum DayOfWeek {
 }
 
 export type Period = {
-  day_of_week: DayOfWeek;
-  start_local_time: string;
-  end_local_time: string;
+  dayOfWeek: DayOfWeek;
+  startLocalTime: string;
+  endLocalTime: string;
 };
 
 export type BusinessHours = {
@@ -42,15 +42,15 @@ export type Location = {
   timezone: string;
   capabilities: Array<Capability>;
   status: string;
-  created_at: string;
-  merchant_id: string;
+  createdAt: string;
+  merchantId: string;
   country: string;
-  language_code: string;
+  languageCode: string;
   currency: string;
-  phone_number: string;
-  business_name: string;
+  phoneNumber: string;
+  businessName: string;
   type: string;
-  business_hours: BusinessHours;
-  business_email: string;
+  businessHours: BusinessHours;
+  businessEmail: string;
   mcc: string;
 };

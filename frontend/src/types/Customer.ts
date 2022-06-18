@@ -1,13 +1,13 @@
 export type Customer = {
-    created_at: string;
-    creation_source: string;
-    email_address: string;
-    given_name: string;
+    createdAt: string;
+    creationSource: string;
+    emailAddress: string;
+    givenName: string;
     id: string;
     preferences: {
-        email_unsubscribed: boolean;
+        emailUnsubscribed: boolean;
     },
-    segment_ids: Array<string>;
-    updated_at: string;
+    segmentIds: Array<string>;
+    updatedAt: string;
     version: number;
 }

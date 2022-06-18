@@ -85,7 +85,7 @@ export const sendRequest = async (
       data: payload,
       headers,
     });
-    return response.data;
+      return response.data
     // setData(response.data);
   } catch (err: any) {
     if (axios.isAxiosError(err)) {

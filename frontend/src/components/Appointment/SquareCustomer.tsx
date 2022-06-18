@@ -26,35 +26,29 @@ const SquareCustomer = (props: CustomerProps) => {
    * }); */
 
   const getCustomerByEmail = async (
-    given_name: string,
-    family_name: string,
-    email_address: string
-  ): Promise<Customer> => {
+    givenName: string,
+    familyName: string,
+    emailAddress: string
+  ): Promise<string|null> => {
     const data = await sendRequest("/customers/search", "POST", {
-      query: {
-        filter: {
-          email_address: {
-            exact: email_address,
-          },
-        },
-      },
+            givenName, familyName, emailAddress
     });
-    if (data.customers && data.customers.length > 0) {
-      return data.customers[0];
+    if (data.customerId) {
+      return data.customerId;
     } else {
-      return await createCustomer(given_name, family_name, email_address);
+        return null;
     }
   };
 
   const createCustomer = async (
-    given_name: string,
-    family_name: string,
-    email_address: string
+    givenName: string,
+    familyName: string,
+    emailAddress: string
   ) => {
     const data = await sendRequest("/customers", "POST", {
-      given_name,
-      family_name,
-      email_address,
+      givenName,
+      familyName,
+      emailAddress,
     });
     return data.customer ? data.customer : null;
   };
@@ -63,10 +57,11 @@ const SquareCustomer = (props: CustomerProps) => {
     setLoading(true);
     // look for a customer already created, create if not already there
     // TODO: use OAuth
-    const customer = await getCustomerByEmail(firstName, lastName, email);
+    const customerId = await getCustomerByEmail(firstName, lastName, email);
+
     setLoading(false);
-    if (customer !== null) {
-      props.setCustomerId(customer.id);
+    if (customerId !== null) {
+      props.setCustomerId(customerId);
     } else {
       console.log(
         "TODO: show error. Unable to find or register. Verify email address."

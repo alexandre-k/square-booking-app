@@ -1,16 +1,16 @@
 export type AppointmentSegment = {
-  duration_minutes: number;
-  team_member_id: string;
-  service_variation_id: string;
-  service_variation_version: number;
-  any_team_member: boolean;
-  intermission_minutes: number;
+  durationMinutes: number;
+  teamMemberId: string;
+  serviceVariationId: string;
+  serviceVariationVersion: number;
+  anyTeamMember: boolean;
+  intermissionMinutes: number;
 };
 
 export type Availability = {
-  start_at: string;
-  location_id: string;
-  appointment_segments: Array<AppointmentSegment>;
+  startAt: string;
+  locationId: string;
+  appointmentSegments: Array<AppointmentSegment>;
 };
 
 export enum BookingStatus {
@@ -38,25 +38,25 @@ export type Booking = {
   id: string;
   version: number;
   status: BookingStatus;
-  created_at: string;
-  updated_at: string;
-  location_id: string;
-  customer_id: string;
-  start_at: string;
-  all_day: boolean;
-  appointment_segments: Array<AppointmentSegment>;
-  transition_time_minutes: number;
-  customer_note: string;
-  creator_details: {
-    creator_type: CreatorType;
-    team_member_id: string;
+  createdAt: string;
+  updatedAt: string;
+  locationId: string;
+  customerId: string;
+  startAt: string;
+  allDay: boolean;
+  appointmentSegments: Array<AppointmentSegment>;
+  transitionTimeMinutes: number;
+  customerNote: string;
+  creatorDetails: {
+    creatorType: CreatorType;
+    teamMemberId: string;
   };
   source: string;
-  location_type: string;
+  locationType: string;
 };
 
 export type TeamMemberBookingProfile = {
-    team_member_id: string;
-    display_name: string;
-    is_bookable: boolean;
+    teamMemberId: string;
+    displayName: string;
+    isBookable: boolean;
 }

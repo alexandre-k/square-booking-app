@@ -23,13 +23,13 @@ const SquareLocation = ({ location }: SquareLocationProps) => {
     >
       <Grid item xs={10} md={6}>
         <Card className="card">
-          <CardHeader title={location.business_name} />
+          <CardHeader title={location.businessName} />
           <CardContent>
             <Contact
               address={location.address}
               capabilities={location.capabilities}
-              phone_number={location.phone_number}
-              business_email={location.business_email}
+              phone_number={location.phoneNumber}
+              business_email={location.businessEmail}
             />
           </CardContent>
         </Card>
@@ -38,7 +38,7 @@ const SquareLocation = ({ location }: SquareLocationProps) => {
         <Card className="card">
           <CardHeader title="Opening hours" />
           <CardContent>
-            <OpeningHours periods={location.business_hours.periods}/>
+            <OpeningHours periods={location.businessHours.periods}/>
           </CardContent>
         </Card>
       </Grid>

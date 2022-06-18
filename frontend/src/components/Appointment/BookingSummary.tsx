@@ -33,7 +33,7 @@ const BookingSummary = (props: BookingSummaryProps) => {
       console.log("TODO: if error notify the user", data);
       return;
     }
-    setMemberProfile(data.team_member_booking_profile);
+    setMemberProfile(data.teamMemberBookingProfile);
   };
 
   const retrieveCatalogObject = async (serviceVariationId: string) => {
@@ -41,7 +41,7 @@ const BookingSummary = (props: BookingSummaryProps) => {
       "/catalog/object/" + serviceVariationId,
       "GET"
     ).then(async (itemVariation) => {
-      const itemId = itemVariation?.object?.item_variation_data?.item_id;
+      const itemId = itemVariation?.object?.itemVariationData?.itemId;
       if (!itemId) return -1;
       return await sendRequest("/catalog/object/" + itemId, "GET");
     });
@@ -53,8 +53,8 @@ const BookingSummary = (props: BookingSummaryProps) => {
   };
 
   const displayName = (appointment: AppointmentSegment) => {
-    if (appointment.any_team_member) return "Any";
-    if (memberProfile !== null) return memberProfile.display_name;
+    if (appointment.anyTeamMember) return "Any";
+    if (memberProfile !== null) return memberProfile.displayName;
     return "";
   };
 
@@ -82,10 +82,10 @@ const BookingSummary = (props: BookingSummaryProps) => {
   useEffect(() => {
     // @ts-ignore
     const booking = props.booking;
-    if (booking && booking.appointment_segments.length > 0) {
-      const appointment = booking.appointment_segments[0];
-      retrieveTeamMemberProfile(appointment.team_member_id);
-      retrieveCatalogObject(appointment.service_variation_id);
+    if (booking && booking.appointmentSegments.length > 0) {
+      const appointment = booking.appointmentSegments[0];
+      retrieveTeamMemberProfile(appointment.teamMemberId);
+      retrieveCatalogObject(appointment.serviceVariationId);
     }
   }, [props.booking]);
 
@@ -100,7 +100,7 @@ const BookingSummary = (props: BookingSummaryProps) => {
       <Grid item xs={12} md={12}>
         <Card className="card">
           <CardHeader title="Appointment" />
-          {displayDateTime(props.booking.start_at)}
+          {displayDateTime(props.booking.startAt)}
           <Chip
             label={props.booking.status.toLowerCase()}
             color="primary"
@@ -109,7 +109,7 @@ const BookingSummary = (props: BookingSummaryProps) => {
         </Card>
       </Grid>
       {props.booking !== null &&
-        props.booking.appointment_segments.map((appointment, index) => (
+        props.booking.appointmentSegments.map((appointment, index) => (
           <React.Fragment key={index}>
             <Grid item xs={12} md={12}>
               <Card className="card">
@@ -124,8 +124,8 @@ const BookingSummary = (props: BookingSummaryProps) => {
                 <CardContent>
                   {catalogObject === null
                     ? ""
-                    : displayCatalogObject(catalogObject.item_data)}
-                  Duration {appointment.duration_minutes}min.
+                    : displayCatalogObject(catalogObject.itemData)}
+                  Duration {appointment.durationMinutes}min.
                 </CardContent>
               </Card>
             </Grid>

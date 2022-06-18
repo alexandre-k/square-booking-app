@@ -36,7 +36,7 @@ const Jumbotron = ({ location }: JumbotronProps) => (
       <Card className="businessNameCard">
         <CardContent className="cardContent">
           <Typography color="white" variant="h4">
-            {location.business_name}
+            {location.businessName}
           </Typography>
           <Link to="book" style={{ textDecoration: "none" }}>
             <Button

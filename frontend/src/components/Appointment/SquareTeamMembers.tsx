@@ -21,7 +21,7 @@ interface TeamMembersProps {
 
 const LocationTeamMembers = (props: TeamMembersProps) => {
   const listItem = props.members
-    .filter((member) => !member.is_owner || props.showOwner)
+    .filter((member) => !member.isOwner || props.showOwner)
     .map((member) => (
       <Grid item xs={3} md={2} key={member.id}>
         <ListItem>
@@ -38,8 +38,8 @@ const LocationTeamMembers = (props: TeamMembersProps) => {
               </ListItemAvatar>
               <ListItemText>
                 <div className="memberButton">
-                  <Typography mt={1}>{member.given_name}</Typography>
-                  <Typography>{member.family_name}</Typography>
+                  <Typography mt={1}>{member.givenName}</Typography>
+                  <Typography>{member.familyName}</Typography>
                 </div>
               </ListItemText>
             </div>

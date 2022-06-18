@@ -51,7 +51,7 @@ const SquareBooking = (props: BookingProps) => {
     }
     const dayOfWeek = date.toString().substring(0, 3).toUpperCase();
     const workingDay = props.businessHours.find(
-      (obj) => obj.day_of_week === dayOfWeek
+      (obj) => obj.dayOfWeek === dayOfWeek
     );
     if (workingDay === undefined) {
       console.log(
@@ -65,22 +65,22 @@ const SquareBooking = (props: BookingProps) => {
     }
     const endDate = dayjs(value).add(1, "day");
 
-    const data = await sendRequest("/bookings/availability/search", "POST", {
+    const data = await sendRequest("/booking/availability/search", "POST", {
       query: {
         filter: {
-          location_id: process.env.REACT_APP_SQUARE_LOCATION_ID,
-          start_at_range: {
-            end_at: `${endDate.year()}-${endDate.format("MM")}-${endDate.format(
+          locationId: process.env.REACT_APP_SQUARE_LOCATION_ID,
+          startAtRange: {
+            endAt: `${endDate.year()}-${endDate.format("MM")}-${endDate.format(
               "DD"
-            )}T${workingDay.start_local_time}.607Z`,
-            start_at: `${date.year()}-${date.format("MM")}-${date.format(
+            )}T${workingDay.startLocalTime}.607Z`,
+            startAt: `${date.year()}-${date.format("MM")}-${date.format(
               "DD"
-            )}T${workingDay.start_local_time}.607Z`,
+            )}T${workingDay.startLocalTime}.607Z`,
           },
-          segment_filters: [
+          segmentFilters: [
             {
-              service_variation_id: props.selectedServices[0],
-              team_member_id_filter: {
+              serviceVariationId: props.selectedServices[0],
+              teamMemberIdFilter: {
                 any: [props.memberId],
               },
             },
@@ -97,7 +97,7 @@ const SquareBooking = (props: BookingProps) => {
     const dayjsDate = dayjs(date);
     if (now.diff(dayjsDate, "s") > 86400) return true;
     const dayOfWeek = dayjsDate.format("ddd").toUpperCase();
-    const workingDays = props.businessHours.map((obj) => obj.day_of_week);
+    const workingDays = props.businessHours.map((obj) => obj.dayOfWeek);
     return !workingDays.includes(dayOfWeek as DayOfWeek);
   };
 
@@ -124,17 +124,17 @@ const SquareBooking = (props: BookingProps) => {
             direction="row"
           >
             {availabilities.map((availability) => {
-              const startAt = dayjs(availability.start_at);
+              const startAt = dayjs(availability.startAt);
               return (
-                <ListItem key={availability.start_at}>
+                <ListItem key={availability.startAt}>
                   <Button
                     variant={
-                      availability.start_at === props.selectedStartAt
+                      availability.startAt === props.selectedStartAt
                         ? "contained"
                         : "outlined"
                     }
                     onClick={() => {
-                      props.onSelectStartAt(availability.start_at);
+                      props.onSelectStartAt(availability.startAt);
                     }}
                   >
                     {startAt.format("HH:mm")}

@@ -33,7 +33,7 @@ const Contact = ({
           </IconButton>
         </td>
         <td>
-          <Typography variant="body1">{address.address_line_1}</Typography>
+          <Typography variant="body1">{address.addressLine1}</Typography>
         </td>
       </tr>
 
@@ -41,8 +41,8 @@ const Contact = ({
         <td></td>
         <td>
           <Typography variant="body1">
-            {address.postal_code} {address.locality}{" "}
-            {address.administrative_district_level_1}
+            {address.postalCode} {address.locality}{" "}
+            {address.administrativeDistrictLevel1}
           </Typography>
         </td>
       </tr>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import Stepper from "@mui/material/Stepper";
@@ -24,8 +24,6 @@ import { sendRequest } from "utils/request";
 
 interface AppointmentProps {
   businessHours: BusinessHours;
-  catalogObjects: Array<CatalogObject>;
-  members: Array<TeamMember>;
   sendRequest: (url: string, method: string, payload: object) => Promise<void>;
   booking: Booking | null;
   setBooking: (booking: Booking) => void;
@@ -35,64 +33,47 @@ const Appointment = (props: AppointmentProps) => {
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
   const [selectedServices, setSelectedServices] = useState<Array<string>>([]);
   const [selectedStartAt, onSelectStartAt] = useState<string | null>(null);
+  const [catalogObjects, setCatalogObjects] = useState<CatalogObject[]>([]);
+  const [members, setMembers] = useState<TeamMember[]>([]);
   const [customerId, setCustomerId] = useState<string>("");
   const [activeStep, setActiveStep] = useState(0);
-  /* const [skipped, setSkipped] = useState(new Set<number>());
-     * const isStepOptional = (step: number) => {
-     *   return step === 1;
-     * };
+  const getTeamMembers = async () => {
+    const teamMembers = await sendRequest("/staff/search", "POST");
+    const members = teamMembers
+      .filter((m: TeamMember) => !m.isOwner)
+      .map((member: TeamMember, index: number) => {
+        return {
+          ...member,
+          avatarUrl: `https://randomuser.me/api/portraits/women/${index}.jpg`,
+        };
+      });
+    setMembers(members);
+  };
+  const getCatalogObjects = async () => {
+    const services = await sendRequest("/services/objects", "GET");
+    setCatalogObjects(services);
+  };
 
-     * const isStepSkipped = (step: number) => {
-     *   return skipped.has(step);
-     * }; */
-  /* const handleNext = () => {
-     *   let newSkipped = skipped;
-     *   if (isStepSkipped(activeStep)) {
-     *     newSkipped = new Set(newSkipped.values());
-     *     newSkipped.delete(activeStep);
-     *   }
+  useEffect(() => {
+    if (members.length === 0) getTeamMembers();
 
-     *   setActiveStep((prevActiveStep) => prevActiveStep + 1);
-     *   setSkipped(newSkipped);
-     * }; */
-
-  /* const handleBack = () => {
-   *   setActiveStep((prevActiveStep) => prevActiveStep - 1);
-   * }; */
-
-  /* const handleSkip = () => {
-     *   if (!isStepOptional(activeStep)) {
-     *     // You probably want to guard against something like this,
-     *     // it should never occur unless someone's actively trying to break something.
-     *     throw new Error("You can't skip a step that isn't optional.");
-     *   }
-
-     *   setActiveStep((prevActiveStep) => prevActiveStep + 1);
-     *   setSkipped((prevSkipped) => {
-     *     const newSkipped = new Set(prevSkipped.values());
-     *     newSkipped.add(activeStep);
-     *     return newSkipped;
-     *   });
-     * };
-     */
-  /* const handleReset = () => {
-   *   setActiveStep(0);
-   * }; */
-
-  const bookAppointment = async () => {
-    const data = await sendRequest("/bookings", "POST", {
+    if (catalogObjects.length === 0) getCatalogObjects();
+  }, []);
+    const bookAppointment = async () => {
+    const data = await sendRequest("/booking/create", "POST", {
       booking: {
-        customer_id: customerId,
-        customer_note: "",
-        location_id: process.env.REACT_APP_SQUARE_LOCATION_ID,
-        location_type: LocationType.BUSINESS_LOCATION,
-        seller_note: "",
-        start_at: selectedStartAt,
-        appointment_segments: selectedServices.map((service) => {
+        customerId: customerId,
+        customerNote: "",
+        locationId: process.env.REACT_APP_SQUARE_LOCATION_ID,
+        // locationType: LocationType.BUSINESS_LOCATION,
+        // sellerNote: "",
+        startAt: selectedStartAt,
+        appointmentSegments: selectedServices.map((service) => {
           return {
-            service_variation_id: service,
-            team_member_id: selectedMemberId,
-            service_variation_version: 1,
+            durationMinutes: 30,
+            serviceVariationId: service,
+            teamMemberId: selectedMemberId,
+            serviceVariationVersion: 1,
           };
         }),
       },
@@ -109,7 +90,7 @@ const Appointment = (props: AppointmentProps) => {
       label: "Select a team member",
       component: (
         <LocationTeamMembers
-          members={props.members}
+          members={members}
           selectedMemberId={selectedMemberId}
           showOwner={false}
           setSelectedMemberId={setSelectedMemberId}
@@ -121,7 +102,7 @@ const Appointment = (props: AppointmentProps) => {
       label: "Select a service",
       component: (
         <SquareServices
-          catalogObjects={props.catalogObjects}
+          catalogObjects={catalogObjects}
           selectedServices={selectedServices}
           setSelectedServices={setSelectedServices}
         />

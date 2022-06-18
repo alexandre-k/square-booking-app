@@ -15,11 +15,11 @@ const OpeningHours = ({ periods }: OpeningHoursProps) => (
     <tbody>
       {periods.map((period) => {
         return (
-          <tr key={period.day_of_week}>
-            <td>{formatDayOfWeek(period.day_of_week)} </td>
+          <tr key={period.dayOfWeek}>
+            <td>{formatDayOfWeek(period.dayOfWeek)} </td>
             <td>
-              {formatTime(period.start_local_time)} -
-              {formatTime(period.end_local_time)}
+              {formatTime(period.startLocalTime)} -
+              {formatTime(period.endLocalTime)}
             </td>
           </tr>
         );

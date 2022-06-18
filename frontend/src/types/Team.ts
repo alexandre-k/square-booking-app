@@ -1,12 +1,12 @@
 export type TeamMember = {
   id: string;
-  is_owner: boolean;
+  isOwner: boolean;
   status: string;
-  given_name: string;
-  family_name: string;
-  email_address: string;
-  phone_number: string;
-  created_at: string;
-  updated_at: string;
+  givenName: string;
+  familyName: string;
+  emailAddress: string;
+  phoneNumber: string;
+  createdAt: string;
+  updatedAt: string;
   avatarUrl: string;
 }

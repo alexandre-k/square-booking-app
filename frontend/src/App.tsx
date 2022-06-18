@@ -18,8 +18,6 @@ import BookingSummary from "components/Appointment/BookingSummary";
 import { sendRequest } from "utils/request";
 import { Location } from "types/Location";
 import { Booking } from "types/Booking";
-import { TeamMember } from "types/Team";
-import { CatalogObject } from "types/Catalog";
 
 type Error = {
   message: string;
@@ -28,11 +26,9 @@ type Error = {
 function App() {
   // @ts-ignore
   const [location, setLocation] = useState<Location | null>(null);
-  const [members, setMembers] = useState<TeamMember[]>([]);
-  const [catalogObjects, setCatalogObjects] = useState<CatalogObject[]>([]);
   // @ts-ignore
   const [booking, setBooking] = useState<Booking>({});
-  const [error, setError] = useState<Error>({ message: "" });
+  const [error, setError] = useState<Error|null>();
   const requiredEnv = [
     "REACT_APP_SQUARE_ACCESS_TOKEN",
     "REACT_APP_SQUARE_API_VERSION",
@@ -46,47 +42,25 @@ function App() {
       process.env[envVariable] === ""
   );
 
-  const getTeamMembers = async () => {
-    const data = await sendRequest("/team-members/search", "POST");
-    const members = data.team_members.map(
-      (member: TeamMember, index: number) => {
-        return {
-          ...member,
-          avatarUrl: `https://randomuser.me/api/portraits/women/${index}.jpg`,
-        };
-      }
-    );
-    setMembers(members);
-  };
-
   const getLocation = async () => {
     try {
-      const data = await sendRequest(
-        "/location",
-        "GET"
-      );
+      const data = await sendRequest("/location", "GET");
       if (data === -1) return;
-      setLocation(data.location);
+      setLocation(data);
     } catch (error: any) {
-        // @ts-ignore
+      // @ts-ignore
       setError(error.message);
       return;
     }
   };
 
-  const getCatalogObjects = async () => {
-    const data = await sendRequest("/catalog/list", "GET");
-    setCatalogObjects(data.objects);
-  };
-
   useEffect(() => {
     getLocation();
-    getTeamMembers();
-    getCatalogObjects();
   }, []);
 
   if (undefinedVariables.length > 0)
     return <EnvironmentError variables={undefinedVariables} />;
+    console.log('Error ', error)
   if (error) return <NetworkError error={error} />;
   if (location === null) return <Loading />;
 
@@ -106,9 +80,7 @@ function App() {
             path="book"
             element={
               <Appointment
-                businessHours={location.business_hours}
-                members={members}
-                catalogObjects={catalogObjects}
+                businessHours={location.businessHours}
                 sendRequest={sendRequest}
                 booking={booking}
                 setBooking={setBooking}
