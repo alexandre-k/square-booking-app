@@ -18,16 +18,22 @@ services:
       - REACT_APP_OAUTH_ID=$UNBOXED_OAUTH_ID
       - REACT_APP_OAUTH_SECRET=$UNBOXED_OAUTH_SECRET
       - PATH /frontend/node_modules/.bin:$PATH
+    depends_on:
+      - database
+      - backend
   database:
     container_name: "unboxed_database"
     hostname: unboxed_database
     domainname: unboxed_database.local
     image: "mongo"
+    # command: mongod --auth
     volumes:
-      - ./database:/db
+      - ./database:/data/db
+      # - ./init-mongo.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     ports:
       - "27017-27019:27017-27019"
     environment:
+      - MONGO_INITDB_DATABASE=$UNBOXED_MONGODB_DATABASE
       - MONGO_INITDB_ROOT_USERNAME=$UNBOXED_MONGODB_USER
       - MONGO_INITDB_ROOT_PASSWORD=$UNBOXED_MONGODB_PASSWORD
   backend:
@@ -46,12 +52,16 @@ services:
       - SQUARE_ACCESS_TOKEN=$UNBOXED_SQUARE_ACCESS_TOKEN
       - SQUARE_LOCATION_ID=$UNBOXED_SQUARE_LOCATION_ID
       - SQUARE_API_VERSION=$UNBOXED_SQUARE_API_VERSION
-      - DB_HOST=mongodb
+      - DB_HOST=172.26.0.2
       - DB_USER=$UNBOXED_MONGODB_USER
       - DB_PASSWORD=$UNBOXED_MONGODB_PASSWORD
       - DB_NAME=$UNBOXED_MONGODB_DATABASE
       - DB_PORT=$UNBOXED_MONGODB_DOCKER_PORT
+    depends_on:
+      - database
     # stdin_open: true
     # tty: true
-
+volumes:
+  database:
+    driver: local
 
