@@ -13,13 +13,12 @@ limitations under the License.
 
 const express = require("express");
 const router = express.Router();
+const JSONBig = require('json-bigint');
 require("dotenv").config();
 
 const locationId = process.env["SQUARE_LOCATION_ID"];
 
-const {
-  catalogApi,
-} = require("../util/square-client");
+const { catalogApi } = require("../util/square-client");
 
 /**
  * GET /services
@@ -29,9 +28,11 @@ const {
 router.get("/", async (req, res, next) => {
   const cancel = req.query.cancel;
   try {
-    let { result: { items } } = await catalogApi.searchCatalogItems({
-      enabledLocationIds: [ locationId ],
-      productTypes: [ "APPOINTMENTS_SERVICE" ]
+    let {
+      result: { items },
+    } = await catalogApi.searchCatalogItems({
+      enabledLocationIds: [locationId],
+      productTypes: ["APPOINTMENTS_SERVICE"],
     });
 
     if (!items) {
@@ -39,6 +40,22 @@ router.get("/", async (req, res, next) => {
     }
 
     res.render("pages/select-service", { cancel, items });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+/**
+ * GET /services/objects
+ *
+ * This endpoint is in charge of retrieving all of the service items that can be booked for the current location.
+ */
+router.get("/objects", async (req, res, next) => {
+  const cancel = req.query.cancel;
+  try {
+    const { result, ...httpResponse } = await catalogApi.listCatalog();
+    return res.send(JSONBig.stringify(result.objects));
   } catch (error) {
     console.error(error);
     next(error);
