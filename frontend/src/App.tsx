@@ -1,10 +1,17 @@
 // import * as Square from '@square/web-sdk';
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Link, Routes, Route } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
+import Divider from "@mui/material/Divider";
+import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Footer from "components/Home/Footer";
@@ -33,11 +40,13 @@ type Error = {
 };
 
 function App() {
+  const isMobile = window.innerWidth <= 500;
   // @ts-ignore
   const [location, setLocation] = useState<Location | null>(null);
   // @ts-ignore
   const [booking, setBooking] = useState<Booking>({});
   const [error, setError] = useState<Error | null>();
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const requiredEnv = [
     "REACT_APP_SQUARE_ACCESS_TOKEN",
     "REACT_APP_SQUARE_API_VERSION",
@@ -62,12 +71,55 @@ function App() {
       return;
     }
   };
+  const toggleDrawer =
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event.type === "keydown" &&
+        ((event as React.KeyboardEvent).key === "Tab" ||
+          (event as React.KeyboardEvent).key === "Shift")
+      ) {
+        return;
+      }
+      setIsMenuOpen(open);
+    };
 
   const routes = ["home", "bookings", "appointment"];
   useEffect(() => {
     getLocation();
   }, []);
 
+  const list = () => (
+    <Box
+      sx={{ width: "auto" }}
+      role="presentation"
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
+    >
+      <List>
+        {["Account", "My Bookings"].map((text, index) => (
+          <Link to="booking/summary">
+            <ListItem key={text} disablePadding>
+              <ListItemButton>
+                <ListItemIcon></ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+        ))}
+      </List>
+      <Divider />
+      <List>
+        {["Access", "About"].map((text, index) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton>
+              <ListItemIcon></ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
   if (undefinedVariables.length > 0)
     return <EnvironmentError variables={undefinedVariables} />;
   console.log("Error ", error);
@@ -92,6 +144,7 @@ function App() {
                 color="inherit"
                 aria-label="menu"
                 sx={{ mr: 2 }}
+                onClick={toggleDrawer(true)}
               >
                 <MenuIcon />
               </IconButton>
@@ -128,10 +181,18 @@ function App() {
               />
               <Route
                 path="booking/summary"
-                element={<BookingSummary booking={booking} />}
+                element={<BookingSummary />}
               />
               <Route path="dashboard" element={<TeamDashboard />} />
             </Routes>
+            <SwipeableDrawer
+                anchor={isMobile ? "bottom" : "left"}
+                open={isMenuOpen}
+                onClose={toggleDrawer(false)}
+                onOpen={toggleDrawer(true)}
+            >
+                {list()}
+            </SwipeableDrawer>
           </BrowserRouter>
         </Grid>
         <Grid item xs={12} md={12}>

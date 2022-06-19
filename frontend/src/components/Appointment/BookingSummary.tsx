@@ -14,16 +14,17 @@ import "./BookingSummary.css";
 import { sendRequest } from "utils/request";
 import dayjs from "dayjs";
 
-interface BookingSummaryProps {
-  booking: Booking;
-}
+/* interface BookingSummaryProps {
+ *   booking: Booking;
+ * } */
 
-const BookingSummary = (props: BookingSummaryProps) => {
+const BookingSummary = () => {//{ booking }: BookingSummaryProps) => {
   const [memberProfile, setMemberProfile] =
     useState<TeamMemberBookingProfile | null>(null);
   const [catalogObject, setCatalogObject] = useState<CatalogObject | null>(
     null
   );
+    const [booking, setBooking] = useState<Booking|null>(null);
   const retrieveTeamMemberProfile = async (teamMemberId: string) => {
     const data = await sendRequest(
       "/bookings/team-member-booking-profiles/" + teamMemberId,
@@ -81,13 +82,16 @@ const BookingSummary = (props: BookingSummaryProps) => {
 
   useEffect(() => {
     // @ts-ignore
-    const booking = props.booking;
     if (booking && booking.appointmentSegments.length > 0) {
       const appointment = booking.appointmentSegments[0];
       retrieveTeamMemberProfile(appointment.teamMemberId);
       retrieveCatalogObject(appointment.serviceVariationId);
     }
-  }, [props.booking]);
+  }, [booking]);
+
+  if (booking === null) {
+      return <div>Loading...</div>
+  }
 
   return (
     <Grid
@@ -100,16 +104,16 @@ const BookingSummary = (props: BookingSummaryProps) => {
       <Grid item xs={12} md={12}>
         <Card className="card">
           <CardHeader title="Appointment" />
-          {displayDateTime(props.booking.startAt)}
+          {displayDateTime(booking.startAt)}
           <Chip
-            label={props.booking.status.toLowerCase()}
+            label={booking.status.toLowerCase()}
             color="primary"
             size="small"
           />
         </Card>
       </Grid>
-      {props.booking !== null &&
-        props.booking.appointmentSegments.map((appointment, index) => (
+      {booking !== null &&
+        booking.appointmentSegments.map((appointment, index) => (
           <React.Fragment key={index}>
             <Grid item xs={12} md={12}>
               <Card className="card">
