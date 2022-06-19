@@ -1,10 +1,12 @@
 import React from "react";
+import Grid from "@mui/material/Grid";
 import Checkbox from "@mui/material/Checkbox";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import Typography from "@mui/material/Typography";
 import { CatalogObject, CatalogObjectType } from "types/Catalog";
+import "./SquareServices.css";
 
 type Service = {
   id: string;
@@ -36,8 +38,7 @@ const SquareServices = (props: SquareServicesProps) => {
           duration = variations[0].itemVariationData.serviceDuration;
           id = variations[0].id;
           if (
-            variations[0].itemVariationData.pricingType ===
-            "VARIABLE_PRICING"
+            variations[0].itemVariationData.pricingType === "VARIABLE_PRICING"
           ) {
             price = -1;
             currency = "";
@@ -95,7 +96,7 @@ const SquareServices = (props: SquareServicesProps) => {
     props.setSelectedServices([target.value]);
   };
   return (
-    <div style={{ width: "100%" }}>
+    <div id="serviceContainer">
       {/* <div style={{ margin: 15, display: "flex" }}>
             <Typography variant="h4" color="inherit" component="div">
             Select a service

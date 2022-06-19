@@ -19,30 +19,30 @@ interface TeamMembersProps {
   goNext: () => void;
 }
 
-const LocationTeamMembers = (props: TeamMembersProps) => {
+const SquareTeamMembers = (props: TeamMembersProps) => {
   const listItem = props.members
     .filter((member) => !member.isOwner || props.showOwner)
-    .map((member) => (
-      <Grid item style={{ margin: '10px'}} xs={3} md={3} key={member.id}>
+    .map((member, index) => (
+      <Grid item xs={3} md={3} key={member.id}>
         <ListItem>
           <ListItemButton
+            className="memberButton"
+              autoFocus={index === 0 }
             selected={member.id === props.selectedMemberId}
             onClick={() => {
               props.setSelectedMemberId(member.id);
               props.goNext();
             }}
           >
-            <div className="memberButton">
-              <ListItemAvatar>
-                <Avatar sx={{ width: 56, height: 56 }} src={member.avatarUrl} />
-              </ListItemAvatar>
-              <ListItemText>
-                <div className="memberButton">
-                  <Typography mt={1}>{member.givenName}</Typography>
-                  <Typography>{member.familyName}</Typography>
-                </div>
-              </ListItemText>
-            </div>
+            <ListItemAvatar>
+              <Avatar sx={{ width: 56, height: 56 }} src={member.avatarUrl} />
+            </ListItemAvatar>
+            <ListItemText>
+              <div className="memberButton">
+                <Typography mt={1}>{member.givenName}</Typography>
+                <Typography>{member.familyName}</Typography>
+              </div>
+            </ListItemText>
           </ListItemButton>
         </ListItem>
       </Grid>
@@ -50,7 +50,7 @@ const LocationTeamMembers = (props: TeamMembersProps) => {
   return (
     <>
       <List>
-        <Grid container spacing={1}>
+        <Grid container spacing={1} justifyContent="center">
           {listItem}
         </Grid>
       </List>
@@ -58,10 +58,10 @@ const LocationTeamMembers = (props: TeamMembersProps) => {
   );
 };
 
-LocationTeamMembers.defaultProps = {
+SquareTeamMembers.defaultProps = {
   members: [],
   showOwner: false,
   selectedMemberId: null,
 };
 
-export default LocationTeamMembers;
+export default SquareTeamMembers;

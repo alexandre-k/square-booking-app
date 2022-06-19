@@ -1,4 +1,4 @@
-const Booking = () => r(
+const Booking = () => (
     <div>Booking list</div>
 )
 

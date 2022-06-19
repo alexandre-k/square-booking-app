@@ -1,7 +1,7 @@
 // import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import { User } from "types/Customer";
+import "./SquareCustomer.css";
 
 interface CustomerProps {
   customer: User;
@@ -24,43 +24,43 @@ const SquareCustomer = ({ customer, setCustomer }: CustomerProps) => {
     // setCustomer({ givenName, familyName, emailAddress });
   };
   return (
-    <form onSubmit={onSubmit}>
-      <Grid container>
+    <div id="customerContainer">
+      <form onSubmit={onSubmit}>
         <TextField
+          className="textField"
           required
           fullWidth
           autoComplete="given-name"
           label="First name"
-          helperText="First name"
           value={customer.givenName}
           onChange={(e: any) =>
             setCustomer({ ...customer, givenName: e.target.value })
           }
         />
         <TextField
+          className="textField"
           required
           fullWidth
           autoComplete="family-name"
           label="Last name"
-          helperText="Last name"
           value={customer.familyName}
           onChange={(e: any) =>
             setCustomer({ ...customer, familyName: e.target.value })
           }
         />
         <TextField
+          className="textField"
           required
           fullWidth
           autoComplete="email"
           label="Email address"
-          helperText="Email address"
           value={customer.emailAddress}
           onChange={(e: any) =>
             setCustomer({ ...customer, emailAddress: e.target.value })
           }
         />
-      </Grid>
-    </form>
+      </form>
+    </div>
   );
 };
 

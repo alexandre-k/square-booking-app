@@ -11,6 +11,7 @@ import timezone from "dayjs/plugin/timezone";
 import { DayOfWeek, LocationType, Period } from "types/Location";
 import { Availability } from "types/Booking";
 import { sendRequest } from "utils/request";
+import "./SquareBooking.css";
 
 interface TileDay {
   activeStartDate: Date;
@@ -109,57 +110,47 @@ const SquareBooking = (props: BookingProps) => {
   };
 
   return (
-    <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-around",
-          alignItems: "center",
-        }}
-      >
-        <Calendar
-          onChange={onDateSelected}
-          value={value}
-          tileDisabled={tileDisabled}
-        />
-      </div>
-      <div>
-        {availabilities && (
-          <List
-            style={{ width: "300px", overflowX: "scroll" }}
-            component={Stack}
-            direction="row"
-          >
-            {availabilities.map((availability) => {
-              const startAt = dayjs(availability.startAt);
-              return (
-                <ListItem key={availability.startAt}>
-                  <Button
-                    variant={
-                      availability.startAt === props.selectedStartAt
-                        ? "contained"
-                        : "outlined"
-                    }
-                    onClick={() => {
-                      props.onSelectStartAt(availability.startAt);
-                    }}
-                  >
-                    {startAt.format("HH:mm")}
-                  </Button>
-                </ListItem>
-              );
-            })}
-          </List>
-        )}
-      </div>
-    </>
+    <div id="bookingContainer">
+      <Calendar
+        onChange={onDateSelected}
+        value={value}
+        tileDisabled={tileDisabled}
+      />
+      {availabilities && (
+        <List
+          style={{ width: "300px", overflowX: "scroll" }}
+          component={Stack}
+          direction="row"
+        >
+          {availabilities.map((availability) => {
+            const startAt = dayjs(availability.startAt);
+            return (
+              <ListItem key={availability.startAt}>
+                <Button
+                  variant={
+                    availability.startAt === props.selectedStartAt
+                      ? "contained"
+                      : "outlined"
+                  }
+                  onClick={() => {
+                    props.onSelectStartAt(availability.startAt);
+                  }}
+                >
+                  {startAt.format("HH:mm")}
+                </Button>
+              </ListItem>
+            );
+          })}
+        </List>
+      )}
+    </div>
   );
 };
 
 SquareBooking.defaultProps = {
-  customerId: "F4J6AF1JM8RTQEWJ76ABKTV1G0",
-  locationType: LocationType.CUSTOMER_LOCATION,
-  startAt: "2022-07-08T15:00:00.607Z",
+  customerId: "",
+  locationType: "",
+  startAt: "",
   sellerNote: "Seller note!",
   selectedServices: [],
   memberId: null,

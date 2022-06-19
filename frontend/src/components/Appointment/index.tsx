@@ -12,7 +12,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import SquareBooking from "./SquareBooking";
 import SquareCustomer from "./SquareCustomer";
 import SquareServices from "./SquareServices";
-import LocationTeamMembers from "./SquareTeamMembers";
+import SquareTeamMembers from "./SquareTeamMembers";
 import { User } from "types/Customer";
 import { BusinessHours } from "types/Location";
 import { TeamMember } from "types/Team";
@@ -41,16 +41,16 @@ const Appointment = (props: AppointmentProps) => {
     emailAddress: "",
   });
   const [activeStep, setActiveStep] = useState(0);
+  const [disabled, setDisabled] = useState<boolean>(true);
   const getTeamMembers = async () => {
     const teamMembers = await sendRequest("/staff/search", "POST");
     const members = teamMembers
       .filter((m: TeamMember) => !m.isOwner)
-      .map((member: TeamMember, index: number) => {
-        return {
+      .map((member: TeamMember) => ({
           ...member,
-          avatarUrl: `https://randomuser.me/api/portraits/women/${index}.jpg`,
-        };
-      });
+            avatarUrl: `https://ui-avatars.com/api/?name=${member.givenName}+${member.familyName}.jpg`,
+        }
+      ));
     setMembers(members);
   };
   const getCatalogObjects = async () => {
@@ -93,7 +93,7 @@ const Appointment = (props: AppointmentProps) => {
     {
       label: "Select a team member",
       component: (
-        <LocationTeamMembers
+        <SquareTeamMembers
           members={members}
           selectedMemberId={selectedMemberId}
           showOwner={false}
@@ -101,6 +101,7 @@ const Appointment = (props: AppointmentProps) => {
           goNext={() => setActiveStep(+1)}
         />
       ),
+      isNextRequired: false
     },
     {
       label: "Select a service",
@@ -111,6 +112,7 @@ const Appointment = (props: AppointmentProps) => {
           setSelectedServices={setSelectedServices}
         />
       ),
+      isNextRequired: true
     },
     {
       label: "Pick a date/time",
@@ -123,12 +125,14 @@ const Appointment = (props: AppointmentProps) => {
           onSelectStartAt={onSelectStartAt}
         />
       ),
+      isNextRequired: true
     },
     {
       label: "Your information",
       component: (
         <SquareCustomer customer={customer} setCustomer={setCustomer} />
       ),
+      isNextRequired: true
     },
   ];
 
@@ -172,7 +176,7 @@ const Appointment = (props: AppointmentProps) => {
       <Grid item xs={12} md={12}>
         {steps[activeStep].component}
       </Grid>
-
+      {steps[activeStep].isNextRequired &&
       <Grid item xs={12} md={12}>
         {activeStep === steps.length - 1 ? (
           <Link
@@ -194,11 +198,11 @@ const Appointment = (props: AppointmentProps) => {
             </Button>
           </Link>
         ) : (
-          <Button variant="contained" size="large" onClick={() => navigate(+1)}>
+          <Button disabled={false} variant="contained" size="large" onClick={() => navigate(+1)}>
             next
           </Button>
         )}
-      </Grid>
+      </Grid>}
     </Grid>
   );
 };
