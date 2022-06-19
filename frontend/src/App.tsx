@@ -88,6 +88,12 @@ function App() {
     getLocation();
   }, []);
 
+    const menuRoutes = [
+        { to: "", name: "Home" },
+        { to: "profile", name: "Account" },
+        { to: "booking/summary", name: "My Bookings"}
+    ]
+
   const list = () => (
     <Box
       sx={{ width: "auto" }}
@@ -96,12 +102,12 @@ function App() {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-        {["Account", "My Bookings"].map((text, index) => (
-          <Link to="booking/summary">
-            <ListItem key={text} disablePadding>
+        {menuRoutes.map((route, index) => (
+          <Link to={route.to}>
+            <ListItem key={route.name} disablePadding>
               <ListItemButton>
                 <ListItemIcon></ListItemIcon>
-                <ListItemText primary={text} />
+                <ListItemText primary={route.name} />
               </ListItemButton>
             </ListItem>
           </Link>

@@ -37,15 +37,12 @@ docker-compose up
 
 Go to your browser and enter `http://localhost:5000` in the URL. Any other port can be used instead if 5000 is already being used. See the default in `docker-compose.yml`.
 
-## Add and pull remote backend repository
+## Clone repository 
 
+After cloning the main repository we need to clone the backend configured as a submodule:
 ```
-git remote add -f backend git@github.com:alexandre-k/bookings-api-sample-app.git
-git subtree pull --prefix backend backend master --squash
+git clone git@github.com:alexandre-k/square-booking-app.git
+cd square-booking-app
+git submodule update --init
 ```
 
-To only pull the subtree:
-
-```
-git subtree pull --prefix backend backend master --squash
-```
