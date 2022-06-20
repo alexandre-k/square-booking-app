@@ -6,7 +6,6 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import CheckIcon from "@mui/icons-material/Check";
 import DateTimePicker from "components/Booking/DateTimePicker";

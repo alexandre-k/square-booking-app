@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import RescheduleDialog from "components/Overview/RescheduleDialog";
 import Loading from "components/Loading";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
+import LoadingButton from '@mui/lab/LoadingButton';
 import Button from "@mui/material/Button";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -14,6 +16,7 @@ import {
   Booking,
   TeamMemberBookingProfile,
 } from "types/Booking";
+import { DayOfWeek } from "types/Location";
 import { PaymentLink } from "types/Checkout";
 import { CatalogObject, CatalogObjectItem } from "types/Catalog";
 import "./index.css";
@@ -26,13 +29,15 @@ import dayjs from "dayjs";
 
 const Overview = () => {
   //{ booking }: OverviewProps) => {
+    const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
   const [memberProfile, setMemberProfile] =
     useState<TeamMemberBookingProfile | null>(null);
   const [catalogObject, setCatalogObject] = useState<CatalogObject | null>(
     null
   );
   const [booking, setBooking] = useState<Booking | null>(null);
-    const [paymentLink, setPaymentLink] = useState<PaymentLink | null>(null);
+  const [paymentLink, setPaymentLink] = useState<PaymentLink | null>(null);
   const { isAuthenticated, user } = useAuth0<{ name: string }>();
 
   const getBooking = async (email: string) => {
@@ -43,6 +48,16 @@ const Overview = () => {
     }
     return data;
   };
+    const cancelBooking = async (bookingId: string) => {
+        const data = await sendRequest("/booking/" + bookingId, "DELETE");
+        if (data === -1) {
+            console.log("TODO: if error notify the user", data);
+            return null;
+        }
+        return data;
+    };
+
+
 
   const displayName = (appointment: AppointmentSegment) => {
     if (appointment.anyTeamMember) return "Any";
@@ -77,7 +92,7 @@ const Overview = () => {
           setBooking(booking);
           setMemberProfile(teamMemberBookingProfile);
           setCatalogObject(object);
-            setPaymentLink(paymentLink);
+          setPaymentLink(paymentLink);
           // @ts-ignore
           /* if (booking.appointmentSegments.length > 0) {
            *   const appointment = booking.appointmentSegments[0];
@@ -93,18 +108,40 @@ const Overview = () => {
     return <Loading />;
   }
 
-  const cancel = () => {
-    console.log("Cancel > ", booking);
+    if (!isAuthenticated) {
+        return (<><div>You need to be authenticated</div>
+            <div>
+                TODO: Create redirection to sign in page
+            </div>
+            </>
+        )
+    }
+
+  const cancel = async () => {
+      setLoading(true);
+      const data = await cancelBooking(booking.id);
+      setLoading(false);
+      console.log('TODO: Reload booking summary page')
   };
 
   const reschedule = () => {
-    console.log("Reschedule > ", booking);
+    setOpen(true);
   };
 
   return (
+      <>
+      <RescheduleDialog open={open} setOpen={setOpen}
+      businessHours={{ periods: [
+          {
+              dayOfWeek: DayOfWeek.MONDAY,
+              startLocalTime: "9:00",
+              endLocalTime: "17:00",
+          },
+      ]}}
+      />
     <div className="summaryGrid">
       <Card className="card">
-        <CardHeader title="Appointment" />
+        <CardHeader title="Your booking" />
         <CardContent id="dateTime">
           {displayDateTime(booking.startAt)}
 
@@ -128,16 +165,17 @@ const Overview = () => {
             >
               Reschedule
             </Button>
-            <Button
+            <LoadingButton
               variant="outlined"
+              loading={loading}
               size="large"
               color="error"
               startIcon={<CancelIcon />}
               aria-label="cancel"
-              onClick={reschedule}
+              onClick={cancel}
             >
               Cancel
-            </Button>
+            </LoadingButton>
           </div>
         </CardContent>
       </Card>
@@ -160,14 +198,15 @@ const Overview = () => {
         </Card>
       )}
       {paymentLink !== null && (
-          <Card className="card">
-              <CardContent>
-                  payments
-                  <iframe src={paymentLink.url + "&output=embed"}></iframe>
-              </CardContent>
-          </Card>
+        <Card className="card">
+          <CardContent>
+            payments
+            <iframe src={paymentLink.url + "&output=embed"}></iframe>
+          </CardContent>
+        </Card>
       )}
     </div>
+      </>
   );
 };
 
