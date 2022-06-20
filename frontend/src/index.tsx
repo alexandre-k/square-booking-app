@@ -18,9 +18,9 @@ root.render(
         baseURL={baseURL}
         > */
   <Auth0Provider
-    domain="dev-7yf9ze2l.us.auth0.com"
-    clientId="oAbSKobGJu8X6NYGlXYfQnPKZBHEV2jP"
-    redirectUri="http://localhost:3000"
+    domain={process.env.REACT_APP_OAUTH_DOMAIN || "undefined"}
+    clientId={process.env.REACT_APP_OAUTH_ID || "undefined"}
+    redirectUri={process.env.REACT_APP_OAUTH_REDIRECT_URI || "undefined"}
   >
     <React.StrictMode>
       <App />

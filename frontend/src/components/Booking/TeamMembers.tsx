@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-// import { Customer } from "hooks/useSquareCustomer";
+// import { Customer } from "hooks/useCustomer";
 import { TeamMember } from "types/Team";
 import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid";
@@ -9,7 +9,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Typography from "@mui/material/Typography";
-import "./SquareTeamMembers.css";
+import "./TeamMembers.css";
 
 interface TeamMembersProps {
   members: Array<TeamMember>;
@@ -19,7 +19,7 @@ interface TeamMembersProps {
   goNext: () => void;
 }
 
-const SquareTeamMembers = (props: TeamMembersProps) => {
+const TeamMembers = (props: TeamMembersProps) => {
   const listItem = props.members
     .filter((member) => !member.isOwner || props.showOwner)
     .map((member, index) => (
@@ -58,10 +58,10 @@ const SquareTeamMembers = (props: TeamMembersProps) => {
   );
 };
 
-SquareTeamMembers.defaultProps = {
+TeamMembers.defaultProps = {
   members: [],
   showOwner: false,
   selectedMemberId: null,
 };
 
-export default SquareTeamMembers;
+export default TeamMembers;

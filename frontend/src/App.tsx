@@ -7,6 +7,9 @@ import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import HomeIcon from "@mui/icons-material/Home";
+import ViewAgendaIcon from "@mui/icons-material/ViewAgenda";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -14,24 +17,25 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
-import Footer from "components/Home/Footer";
-import Completed from "components/Appointment/Completed";
+import Footer from "components/Footer";
+import "components/Footer/index.css";
+import Completed from "pages/Booking/Completed";
 // import ListBookings from "components/ListBookings";
-import EnvironmentError from "EnvironmentError";
-import NetworkError from "NetworkError";
-import Home from "components/Home";
+import EnvironmentError from "pages/Error/EnvironmentError";
+import NetworkError from "pages/Error/NetworkError";
+import Home from "pages/Home";
 import Login from "components/Auth/Login";
 import Logout from "components/Auth/Logout";
-import Profile from "components/Auth/Profile";
+import Profile from "pages/Auth/Profile";
 // import SquareCustomer from "components/SquareCustomer";
 import SquareLocation from "components/Home/SquareLocation";
-import Appointment from "components/Appointment";
-import TeamDashboard from "components/Dashboard";
+import Booking from "pages/Booking";
+import TeamDashboard from "pages/Dashboard";
 import Loading from "components/Loading";
-import BookingSummary from "components/Appointment/BookingSummary";
+import BookingSummary from "pages/Overview";
 import { sendRequest } from "utils/request";
 import { Location } from "types/Location";
-import { Booking } from "types/Booking";
+import { Booking as BookingT } from "types/Booking";
 import "./App.css";
 import Paper from "@mui/material/Paper";
 
@@ -44,7 +48,7 @@ function App() {
   // @ts-ignore
   const [location, setLocation] = useState<Location | null>(null);
   // @ts-ignore
-  const [booking, setBooking] = useState<Booking>({});
+  const [booking, setBooking] = useState<BookingT>({});
   const [error, setError] = useState<Error | null>();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const requiredEnv = [
@@ -88,11 +92,11 @@ function App() {
     getLocation();
   }, []);
 
-    const menuRoutes = [
-        { to: "", name: "Home" },
-        { to: "profile", name: "Account" },
-        { to: "booking/summary", name: "My Bookings"}
-    ]
+  const menuRoutes = [
+    { to: "", name: "Home", icon: <HomeIcon /> },
+    { to: "profile", name: "Account", icon: <AccountCircleIcon /> },
+    { to: "booking/summary", name: "My Bookings", icon: <ViewAgendaIcon /> },
+  ];
 
   const list = () => (
     <Box
@@ -103,10 +107,10 @@ function App() {
     >
       <List>
         {menuRoutes.map((route, index) => (
-          <Link to={route.to}>
+          <Link key={route.to} to={route.to} style={{ textDecoration: "none" }}>
             <ListItem key={route.name} disablePadding>
               <ListItemButton>
-                <ListItemIcon></ListItemIcon>
+                <ListItemIcon>{route.icon}</ListItemIcon>
                 <ListItemText primary={route.name} />
               </ListItemButton>
             </ListItem>
@@ -134,14 +138,8 @@ function App() {
 
   return (
     <Paper id="app" elevation={10}>
-      <Grid
-        id="rootGrid"
-        container
-        direction="row"
-        justifyContent="space-between"
-        alignItems="stretch"
-      >
-        <Grid item xs={12} md={12}>
+      <div id="rootGrid">
+        <div id="appBar">
           <AppBar color="transparent" position="static">
             <Toolbar>
               <IconButton
@@ -158,8 +156,8 @@ function App() {
               <Login />
             </Toolbar>
           </AppBar>
-        </Grid>
-        <Grid item xs={12} md={12}>
+        </div>
+        <div id="mainContent">
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Home location={location} />} />
@@ -173,7 +171,7 @@ function App() {
               <Route
                 path="/book"
                 element={
-                  <Appointment
+                  <Booking
                     businessHours={location.businessHours}
                     sendRequest={sendRequest}
                     booking={booking}
@@ -185,26 +183,24 @@ function App() {
                 path="completed"
                 element={<Completed booking={booking} />}
               />
-              <Route
-                path="booking/summary"
-                element={<BookingSummary />}
-              />
+              <Route path="booking/summary" element={<BookingSummary />} />
               <Route path="dashboard" element={<TeamDashboard />} />
             </Routes>
             <SwipeableDrawer
-                anchor={isMobile ? "bottom" : "left"}
-                open={isMenuOpen}
-                onClose={toggleDrawer(false)}
-                onOpen={toggleDrawer(true)}
+              anchor={isMobile ? "bottom" : "left"}
+              open={isMenuOpen}
+              onClose={toggleDrawer(false)}
+              onOpen={toggleDrawer(true)}
             >
-                {list()}
+              {list()}
             </SwipeableDrawer>
           </BrowserRouter>
-        </Grid>
-        <Grid item xs={12} md={12}>
+        </div>
+        <div id="footer">
+          <Divider />
           <Footer routes={routes} />
-        </Grid>
-      </Grid>
+        </div>
+      </div>
     </Paper>
   );
 }

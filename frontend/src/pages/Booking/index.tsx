@@ -6,30 +6,29 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import CheckIcon from "@mui/icons-material/Check";
-import SquareBooking from "./SquareBooking";
-import SquareCustomer from "./SquareCustomer";
-import SquareServices from "./SquareServices";
-import SquareTeamMembers from "./SquareTeamMembers";
+import DateTimePicker from "components/Booking/DateTimePicker";
+import Customer from "components/Booking/Customer";
+import Services from "components/Booking/Services";
+import TeamMembers from "components/Booking/TeamMembers";
 import { User } from "types/Customer";
 import { BusinessHours } from "types/Location";
 import { TeamMember } from "types/Team";
 import { CatalogObject } from "types/Catalog";
-import { Booking } from "types/Booking";
+import { Booking as BookingT } from "types/Booking";
 import { sendRequest } from "utils/request";
 import "./index.css";
 // import * as Yup from "yup";
 
-interface AppointmentProps {
+interface BookingProps {
   businessHours: BusinessHours;
   sendRequest: (url: string, method: string, payload: object) => Promise<void>;
-  booking: Booking | null;
-  setBooking: (booking: Booking) => void;
+  booking: BookingT | null;
+  setBooking: (booking: BookingT) => void;
 }
 
-const Appointment = (props: AppointmentProps) => {
+const Booking = (props: BookingProps) => {
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
   const [selectedServices, setSelectedServices] = useState<Array<string>>([]);
   const [selectedStartAt, onSelectStartAt] = useState<string | null>(null);
@@ -41,16 +40,15 @@ const Appointment = (props: AppointmentProps) => {
     emailAddress: "",
   });
   const [activeStep, setActiveStep] = useState(0);
-  const [disabled, setDisabled] = useState<boolean>(true);
+  // const [disabled, setDisabled] = useState<boolean>(true);
   const getTeamMembers = async () => {
     const teamMembers = await sendRequest("/staff/search", "POST");
     const members = teamMembers
       .filter((m: TeamMember) => !m.isOwner)
       .map((member: TeamMember) => ({
-          ...member,
-            avatarUrl: `https://ui-avatars.com/api/?name=${member.givenName}+${member.familyName}.jpg`,
-        }
-      ));
+        ...member,
+        avatarUrl: `https://ui-avatars.com/api/?name=${member.givenName}+${member.familyName}.jpg`,
+      }));
     setMembers(members);
   };
   const getCatalogObjects = async () => {
@@ -91,9 +89,20 @@ const Appointment = (props: AppointmentProps) => {
 
   const steps = [
     {
+      label: "Select a service",
+      component: (
+        <Services
+          catalogObjects={catalogObjects}
+          selectedServices={selectedServices}
+          setSelectedServices={setSelectedServices}
+        />
+      ),
+      isNextRequired: true,
+    },
+    {
       label: "Select a team member",
       component: (
-        <SquareTeamMembers
+        <TeamMembers
           members={members}
           selectedMemberId={selectedMemberId}
           showOwner={false}
@@ -101,23 +110,12 @@ const Appointment = (props: AppointmentProps) => {
           goNext={() => setActiveStep(+1)}
         />
       ),
-      isNextRequired: false
-    },
-    {
-      label: "Select a service",
-      component: (
-        <SquareServices
-          catalogObjects={catalogObjects}
-          selectedServices={selectedServices}
-          setSelectedServices={setSelectedServices}
-        />
-      ),
-      isNextRequired: true
+      isNextRequired: false,
     },
     {
       label: "Pick a date/time",
       component: (
-        <SquareBooking
+        <DateTimePicker
           businessHours={props.businessHours.periods}
           selectedServices={selectedServices}
           memberId={selectedMemberId}
@@ -125,14 +123,12 @@ const Appointment = (props: AppointmentProps) => {
           onSelectStartAt={onSelectStartAt}
         />
       ),
-      isNextRequired: true
+      isNextRequired: true,
     },
     {
       label: "Your information",
-      component: (
-        <SquareCustomer customer={customer} setCustomer={setCustomer} />
-      ),
-      isNextRequired: true
+      component: <Customer customer={customer} setCustomer={setCustomer} />,
+      isNextRequired: true,
     },
   ];
 
@@ -146,65 +142,60 @@ const Appointment = (props: AppointmentProps) => {
   };
 
   return (
-    <Grid
-      id="bookingGrid"
-      container
-      alignItems="start"
-      justifyContent="space-evenly"
-    >
-      <Grid item xs={1} md={1}>
+    <>
+      <div>
         <IconButton color="primary" size="large" onClick={() => navigate(-1)}>
           <ArrowBackIosNewIcon />
         </IconButton>
-      </Grid>
-      <Grid item xs={10} md={10}>
         <Typography variant="h6" color="inherit" component="div">
           {activeStep === 0 ? "Home" : steps[activeStep].label}
         </Typography>
-      </Grid>
+      </div>
 
-      <Grid item xs={12} md={12}>
-        <Stepper alternativeLabel activeStep={activeStep}>
-          {steps.map((step, index) => (
-            <Step key={index}>
-              <StepLabel style={{ marginBottom: 20 }}>{step.label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-      </Grid>
+      <Stepper alternativeLabel activeStep={activeStep}>
+        {steps.map((step, index) => (
+          <Step key={index}>
+            <StepLabel style={{ marginBottom: 20 }}>{step.label}</StepLabel>
+          </Step>
+        ))}
+      </Stepper>
 
-      <Grid item xs={12} md={12}>
-        {steps[activeStep].component}
-      </Grid>
-      {steps[activeStep].isNextRequired &&
-      <Grid item xs={12} md={12}>
-        {activeStep === steps.length - 1 ? (
-          <Link
-            to={{
-              pathname: `/completed/${
-                props.booking === null ? "" : props.booking.id
-              }`,
-            }}
-            onClick={bookAppointment}
-            style={{ textDecoration: "none" }}
-          >
+      <div id="bookingControl">{steps[activeStep].component}</div>
+      {steps[activeStep].isNextRequired && (
+        <div>
+          {activeStep === steps.length - 1 ? (
+            <Link
+              to={{
+                pathname: `/completed/${
+                  props.booking === null ? "" : props.booking.id
+                }`,
+              }}
+              onClick={bookAppointment}
+              style={{ textDecoration: "none" }}
+            >
+              <Button
+                className="businessNameButton"
+                variant="contained"
+                size="large"
+                endIcon={<CheckIcon />}
+              >
+                Book
+              </Button>
+            </Link>
+          ) : (
             <Button
-              className="businessNameButton"
+              disabled={false}
               variant="contained"
               size="large"
-              endIcon={<CheckIcon />}
+              onClick={() => navigate(+1)}
             >
-              Book
+              next
             </Button>
-          </Link>
-        ) : (
-          <Button disabled={false} variant="contained" size="large" onClick={() => navigate(+1)}>
-            next
-          </Button>
-        )}
-      </Grid>}
-    </Grid>
+          )}
+        </div>
+      )}
+    </>
   );
 };
 
-export default Appointment;
+export default Booking;

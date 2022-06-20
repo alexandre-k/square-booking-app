@@ -1,12 +1,11 @@
 import React from "react";
-import Grid from "@mui/material/Grid";
 import Checkbox from "@mui/material/Checkbox";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import Typography from "@mui/material/Typography";
 import { CatalogObject, CatalogObjectType } from "types/Catalog";
-import "./SquareServices.css";
+import "./Services.css";
 
 type Service = {
   id: string;
@@ -16,13 +15,13 @@ type Service = {
   currency: string;
 };
 
-interface SquareServicesProps {
+interface ServicesProps {
   catalogObjects: Array<CatalogObject>;
   selectedServices: Array<string>;
   setSelectedServices: (services: Array<string>) => void;
 }
 
-const SquareServices = (props: SquareServicesProps) => {
+const Services = (props: ServicesProps) => {
   const formatCatalogObjects = (catalogObjects: Array<CatalogObject>) => {
     return catalogObjects
       .filter((obj) => obj.type === CatalogObjectType.ITEM)
@@ -111,10 +110,10 @@ const SquareServices = (props: SquareServicesProps) => {
   );
 };
 
-SquareServices.defaultProps = {
+Services.defaultProps = {
   selectedServices: [],
   setSelectedServices: () => console.log("Not implemented!"),
   catalogObjects: [],
 };
 
-export default SquareServices;
+export default Services;

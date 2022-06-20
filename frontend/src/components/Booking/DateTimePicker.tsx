@@ -11,7 +11,7 @@ import timezone from "dayjs/plugin/timezone";
 import { DayOfWeek, LocationType, Period } from "types/Location";
 import { Availability } from "types/Booking";
 import { sendRequest } from "utils/request";
-import "./SquareBooking.css";
+import "./DateTimePicker.css";
 
 interface TileDay {
   activeStartDate: Date;
@@ -26,7 +26,7 @@ interface AppointmentSegment {
   teamMemberId?: string;
 }
 
-interface BookingProps {
+interface DateTimePickerProps {
   customerId?: string;
   appointmentSegments?: Array<AppointmentSegment>;
   customerNote?: string;
@@ -40,7 +40,7 @@ interface BookingProps {
   businessHours: Array<Period>;
 }
 
-const SquareBooking = (props: BookingProps) => {
+const DateTimePicker = (props: DateTimePickerProps) => {
   const [availabilities, setAvailabilities] = useState<Array<Availability>>([]);
   const [value, onChange] = useState(new Date());
   dayjs.extend(utc);
@@ -147,7 +147,7 @@ const SquareBooking = (props: BookingProps) => {
   );
 };
 
-SquareBooking.defaultProps = {
+DateTimePicker.defaultProps = {
   customerId: "",
   locationType: "",
   startAt: "",
@@ -156,4 +156,4 @@ SquareBooking.defaultProps = {
   memberId: null,
 };
 
-export default SquareBooking;
+export default DateTimePicker;

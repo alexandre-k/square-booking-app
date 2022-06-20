@@ -1,0 +1,27 @@
+.card {
+    margin: 10px;
+    padding: 20px;
+    width: 300px;
+}
+
+.summaryGrid {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#dateTime {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#bookingControl {
+    display: flex;
+}
+
+#bookingControl button {
+    margin: 5px;
+}
