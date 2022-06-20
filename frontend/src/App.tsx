@@ -17,25 +17,25 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
-import Footer from "components/Home/Footer";
-import "components/Home/Footer.css";
-import Completed from "components/Appointment/Completed";
+import Footer from "components/Footer";
+import "components/Footer/index.css";
+import Completed from "pages/Booking/Completed";
 // import ListBookings from "components/ListBookings";
-import EnvironmentError from "EnvironmentError";
-import NetworkError from "NetworkError";
-import Home from "components/Home";
+import EnvironmentError from "pages/EnvironmentError";
+import NetworkError from "pages/NetworkError";
+import Home from "pages/Home";
 import Login from "components/Auth/Login";
 import Logout from "components/Auth/Logout";
-import Profile from "components/Auth/Profile";
+import Profile from "pages/Auth/Profile";
 // import SquareCustomer from "components/SquareCustomer";
 import SquareLocation from "components/Home/SquareLocation";
-import Appointment from "components/Appointment";
-import TeamDashboard from "components/Dashboard";
+import Booking from "pages/Booking";
+import TeamDashboard from "pages/Dashboard";
 import Loading from "components/Loading";
-import BookingSummary from "components/Appointment/BookingSummary";
+import BookingSummary from "pages/Overview";
 import { sendRequest } from "utils/request";
 import { Location } from "types/Location";
-import { Booking } from "types/Booking";
+import { Booking as BookingT } from "types/Booking";
 import "./App.css";
 import Paper from "@mui/material/Paper";
 
@@ -48,7 +48,7 @@ function App() {
   // @ts-ignore
   const [location, setLocation] = useState<Location | null>(null);
   // @ts-ignore
-  const [booking, setBooking] = useState<Booking>({});
+  const [booking, setBooking] = useState<BookingT>({});
   const [error, setError] = useState<Error | null>();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const requiredEnv = [
@@ -171,7 +171,7 @@ function App() {
               <Route
                 path="/book"
                 element={
-                  <Appointment
+                  <Booking
                     businessHours={location.businessHours}
                     sendRequest={sendRequest}
                     booking={booking}

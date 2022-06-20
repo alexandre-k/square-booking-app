@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import { sendRequest } from "utils/request";
 import dayjs from "dayjs";
-import BookingsStats from "./BookingsStats";
+import BookingsStats from "components/Dashboard/BookingsStats";
 
 type MonthlyAppointments = {
   month: string;

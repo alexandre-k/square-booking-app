@@ -1,14 +1,14 @@
 // import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import TextField from "@mui/material/TextField";
 import { User } from "types/Customer";
-import "./SquareCustomer.css";
+import "./Customer.css";
 
 interface CustomerProps {
   customer: User;
   setCustomer: (customer: User) => void;
 }
 
-const SquareCustomer = ({ customer, setCustomer }: CustomerProps) => {
+const Customer = ({ customer, setCustomer }: CustomerProps) => {
   /* const validateCustomer = Yup.object({
    *   firstName: Yup.string()
    *     .max(30, "Must be 30 characters or less")
@@ -24,8 +24,7 @@ const SquareCustomer = ({ customer, setCustomer }: CustomerProps) => {
     // setCustomer({ givenName, familyName, emailAddress });
   };
   return (
-    <div id="customerContainer">
-      <form onSubmit={onSubmit}>
+        <form id="customerContainer" onSubmit={onSubmit}>
         <TextField
           className="textField"
           required
@@ -60,8 +59,7 @@ const SquareCustomer = ({ customer, setCustomer }: CustomerProps) => {
           }
         />
       </form>
-    </div>
   );
 };
 
-export default SquareCustomer;
+export default Customer;

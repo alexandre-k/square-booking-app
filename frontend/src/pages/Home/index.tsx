@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import "./index.css";
-import About from "./About";
+import About from "components/Home/About";
 import { Location } from "types/Location";
 // import { ThemeProvider, createTheme } from "@mui/material/styles";
 

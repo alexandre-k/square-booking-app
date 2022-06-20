@@ -1,6 +1,6 @@
 import Typography from "@mui/material/Typography";
 import { Booking } from "types/Booking";
-import BookingSummary from "./BookingSummary";
+import BookingSummary from "pages/Overview";
 import Loading from "components/Loading";
 
 interface CompletedProps {

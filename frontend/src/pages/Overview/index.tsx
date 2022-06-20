@@ -16,16 +16,16 @@ import {
 } from "types/Booking";
 import { PaymentLink } from "types/Checkout";
 import { CatalogObject, CatalogObjectItem } from "types/Catalog";
-import "./BookingSummary.css";
+import "./index.css";
 import { sendRequest } from "utils/request";
 import dayjs from "dayjs";
 
-/* interface BookingSummaryProps {
+/* interface OverviewProps {
  *   booking: Booking;
  * } */
 
-const BookingSummary = () => {
-  //{ booking }: BookingSummaryProps) => {
+const Overview = () => {
+  //{ booking }: OverviewProps) => {
   const [memberProfile, setMemberProfile] =
     useState<TeamMemberBookingProfile | null>(null);
   const [catalogObject, setCatalogObject] = useState<CatalogObject | null>(
@@ -171,4 +171,4 @@ const BookingSummary = () => {
   );
 };
 
-export default BookingSummary;
+export default Overview;

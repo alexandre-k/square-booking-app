@@ -9,27 +9,27 @@ import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import CheckIcon from "@mui/icons-material/Check";
-import SquareBooking from "./SquareBooking";
-import SquareCustomer from "./SquareCustomer";
-import SquareServices from "./SquareServices";
-import SquareTeamMembers from "./SquareTeamMembers";
+import DateTimePicker from "components/Booking/DateTimePicker";
+import Customer from "components/Booking/Customer";
+import Services from "components/Booking/Services";
+import TeamMembers from "components/Booking/TeamMembers";
 import { User } from "types/Customer";
 import { BusinessHours } from "types/Location";
 import { TeamMember } from "types/Team";
 import { CatalogObject } from "types/Catalog";
-import { Booking } from "types/Booking";
+import { Booking as BookingT } from "types/Booking";
 import { sendRequest } from "utils/request";
 import "./index.css";
 // import * as Yup from "yup";
 
-interface AppointmentProps {
+interface BookingProps {
   businessHours: BusinessHours;
   sendRequest: (url: string, method: string, payload: object) => Promise<void>;
-  booking: Booking | null;
-  setBooking: (booking: Booking) => void;
+  booking: BookingT | null;
+  setBooking: (booking: BookingT) => void;
 }
 
-const Appointment = (props: AppointmentProps) => {
+const Booking = (props: BookingProps) => {
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
   const [selectedServices, setSelectedServices] = useState<Array<string>>([]);
   const [selectedStartAt, onSelectStartAt] = useState<string | null>(null);
@@ -90,9 +90,20 @@ const Appointment = (props: AppointmentProps) => {
 
   const steps = [
     {
+      label: "Select a service",
+      component: (
+        <Services
+          catalogObjects={catalogObjects}
+          selectedServices={selectedServices}
+          setSelectedServices={setSelectedServices}
+        />
+      ),
+      isNextRequired: true,
+    },
+    {
       label: "Select a team member",
       component: (
-        <SquareTeamMembers
+        <TeamMembers
           members={members}
           selectedMemberId={selectedMemberId}
           showOwner={false}
@@ -103,20 +114,9 @@ const Appointment = (props: AppointmentProps) => {
       isNextRequired: false,
     },
     {
-      label: "Select a service",
-      component: (
-        <SquareServices
-          catalogObjects={catalogObjects}
-          selectedServices={selectedServices}
-          setSelectedServices={setSelectedServices}
-        />
-      ),
-      isNextRequired: true,
-    },
-    {
       label: "Pick a date/time",
       component: (
-        <SquareBooking
+        <DateTimePicker
           businessHours={props.businessHours.periods}
           selectedServices={selectedServices}
           memberId={selectedMemberId}
@@ -128,9 +128,7 @@ const Appointment = (props: AppointmentProps) => {
     },
     {
       label: "Your information",
-      component: (
-        <SquareCustomer customer={customer} setCustomer={setCustomer} />
-      ),
+      component: <Customer customer={customer} setCustomer={setCustomer} />,
       isNextRequired: true,
     },
   ];
@@ -201,4 +199,4 @@ const Appointment = (props: AppointmentProps) => {
   );
 };
 
-export default Appointment;
+export default Booking;

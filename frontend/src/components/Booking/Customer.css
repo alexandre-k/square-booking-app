@@ -1,5 +1,6 @@
 #customerContainer {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding-left: 50px;
@@ -9,4 +10,5 @@
 .textField {
   margin-top: 10px !important;
   margin-bottom: 10px !important;
+  max-width: 300px;
 }
