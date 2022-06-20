@@ -41,16 +41,15 @@ const Appointment = (props: AppointmentProps) => {
     emailAddress: "",
   });
   const [activeStep, setActiveStep] = useState(0);
-  const [disabled, setDisabled] = useState<boolean>(true);
+  // const [disabled, setDisabled] = useState<boolean>(true);
   const getTeamMembers = async () => {
     const teamMembers = await sendRequest("/staff/search", "POST");
     const members = teamMembers
       .filter((m: TeamMember) => !m.isOwner)
       .map((member: TeamMember) => ({
-          ...member,
-            avatarUrl: `https://ui-avatars.com/api/?name=${member.givenName}+${member.familyName}.jpg`,
-        }
-      ));
+        ...member,
+        avatarUrl: `https://ui-avatars.com/api/?name=${member.givenName}+${member.familyName}.jpg`,
+      }));
     setMembers(members);
   };
   const getCatalogObjects = async () => {
@@ -101,7 +100,7 @@ const Appointment = (props: AppointmentProps) => {
           goNext={() => setActiveStep(+1)}
         />
       ),
-      isNextRequired: false
+      isNextRequired: false,
     },
     {
       label: "Select a service",
@@ -112,7 +111,7 @@ const Appointment = (props: AppointmentProps) => {
           setSelectedServices={setSelectedServices}
         />
       ),
-      isNextRequired: true
+      isNextRequired: true,
     },
     {
       label: "Pick a date/time",
@@ -125,14 +124,14 @@ const Appointment = (props: AppointmentProps) => {
           onSelectStartAt={onSelectStartAt}
         />
       ),
-      isNextRequired: true
+      isNextRequired: true,
     },
     {
       label: "Your information",
       component: (
         <SquareCustomer customer={customer} setCustomer={setCustomer} />
       ),
-      isNextRequired: true
+      isNextRequired: true,
     },
   ];
 
@@ -146,64 +145,59 @@ const Appointment = (props: AppointmentProps) => {
   };
 
   return (
-    <Grid
-      id="bookingGrid"
-      container
-      alignItems="start"
-      justifyContent="space-evenly"
-    >
-      <Grid item xs={1} md={1}>
+    <>
+      <div>
         <IconButton color="primary" size="large" onClick={() => navigate(-1)}>
           <ArrowBackIosNewIcon />
         </IconButton>
-      </Grid>
-      <Grid item xs={10} md={10}>
         <Typography variant="h6" color="inherit" component="div">
           {activeStep === 0 ? "Home" : steps[activeStep].label}
         </Typography>
-      </Grid>
+      </div>
 
-      <Grid item xs={12} md={12}>
-        <Stepper alternativeLabel activeStep={activeStep}>
-          {steps.map((step, index) => (
-            <Step key={index}>
-              <StepLabel style={{ marginBottom: 20 }}>{step.label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-      </Grid>
+      <Stepper alternativeLabel activeStep={activeStep}>
+        {steps.map((step, index) => (
+          <Step key={index}>
+            <StepLabel style={{ marginBottom: 20 }}>{step.label}</StepLabel>
+          </Step>
+        ))}
+      </Stepper>
 
-      <Grid item xs={12} md={12}>
-        {steps[activeStep].component}
-      </Grid>
-      {steps[activeStep].isNextRequired &&
-      <Grid item xs={12} md={12}>
-        {activeStep === steps.length - 1 ? (
-          <Link
-            to={{
-              pathname: `/completed/${
-                props.booking === null ? "" : props.booking.id
-              }`,
-            }}
-            onClick={bookAppointment}
-            style={{ textDecoration: "none" }}
-          >
+      <div id="bookingControl">{steps[activeStep].component}</div>
+      {steps[activeStep].isNextRequired && (
+        <div>
+          {activeStep === steps.length - 1 ? (
+            <Link
+              to={{
+                pathname: `/completed/${
+                  props.booking === null ? "" : props.booking.id
+                }`,
+              }}
+              onClick={bookAppointment}
+              style={{ textDecoration: "none" }}
+            >
+              <Button
+                className="businessNameButton"
+                variant="contained"
+                size="large"
+                endIcon={<CheckIcon />}
+              >
+                Book
+              </Button>
+            </Link>
+          ) : (
             <Button
-              className="businessNameButton"
+              disabled={false}
               variant="contained"
               size="large"
-              endIcon={<CheckIcon />}
+              onClick={() => navigate(+1)}
             >
-              Book
+              next
             </Button>
-          </Link>
-        ) : (
-          <Button disabled={false} variant="contained" size="large" onClick={() => navigate(+1)}>
-            next
-          </Button>
-        )}
-      </Grid>}
-    </Grid>
+          )}
+        </div>
+      )}
+    </>
   );
 };
 

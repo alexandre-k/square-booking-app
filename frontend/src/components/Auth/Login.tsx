@@ -1,4 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react';
+import Button from "@mui/material/Button";
 
 const Login = () => {
     const {
@@ -18,14 +19,13 @@ const Login = () => {
     if (isAuthenticated && user) {
         return (
             <div>
-                Hello {user.name}{' '}
-                <button onClick={() => logout({ returnTo: window.location.origin })}>
+                <Button variant="outlined" onClick={() => logout({ returnTo: window.location.origin })}>
                     Log out
-                </button>
+                </Button>
             </div>
         );
     } else {
-        return <button onClick={loginWithRedirect}>Log in</button>;
+        return <Button variant="outlined" onClick={loginWithRedirect}>Sign in</Button>;
     }
 }
 

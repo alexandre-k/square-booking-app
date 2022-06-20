@@ -1,10 +1,27 @@
 #app {
   max-width: 728px;
+  width: 100%;
   height: max-content;
 }
 
 #rootGrid {
-    background-color: #EAECED;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+    background-color: #F7F7F7;
     min-height: 100vh;
 }
 
+#appBar {
+    height: 60px;
+    background-color: #EAECED;
+}
+
+#mainContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+    flex: 1 auto 1;
+}

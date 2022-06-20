@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import Loading from "components/Loading";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
-import Grid from "@mui/material/Grid";
+import Divider from "@mui/material/Divider";
+import Button from "@mui/material/Button";
+import CancelIcon from "@mui/icons-material/Cancel";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import {
   AppointmentSegment,
   Booking,
   TeamMemberBookingProfile,
 } from "types/Booking";
+import { PaymentLink } from "types/Checkout";
 import { CatalogObject, CatalogObjectItem } from "types/Catalog";
 import "./BookingSummary.css";
 import { sendRequest } from "utils/request";
@@ -18,39 +24,24 @@ import dayjs from "dayjs";
  *   booking: Booking;
  * } */
 
-const BookingSummary = () => {//{ booking }: BookingSummaryProps) => {
+const BookingSummary = () => {
+  //{ booking }: BookingSummaryProps) => {
   const [memberProfile, setMemberProfile] =
     useState<TeamMemberBookingProfile | null>(null);
   const [catalogObject, setCatalogObject] = useState<CatalogObject | null>(
     null
   );
-    const [booking, setBooking] = useState<Booking|null>(null);
-  const retrieveTeamMemberProfile = async (teamMemberId: string) => {
-    const data = await sendRequest(
-      "/bookings/team-member-booking-profiles/" + teamMemberId,
-      "GET"
-    );
-    if (data === -1) {
-      console.log("TODO: if error notify the user", data);
-      return;
-    }
-    setMemberProfile(data.teamMemberBookingProfile);
-  };
+  const [booking, setBooking] = useState<Booking | null>(null);
+    const [paymentLink, setPaymentLink] = useState<PaymentLink | null>(null);
+  const { isAuthenticated, user } = useAuth0<{ name: string }>();
 
-  const retrieveCatalogObject = async (serviceVariationId: string) => {
-    const data = await sendRequest(
-      "/catalog/object/" + serviceVariationId,
-      "GET"
-    ).then(async (itemVariation) => {
-      const itemId = itemVariation?.object?.itemVariationData?.itemId;
-      if (!itemId) return -1;
-      return await sendRequest("/catalog/object/" + itemId, "GET");
-    });
+  const getBooking = async (email: string) => {
+    const data = await sendRequest("/customer/booking?email=" + email, "GET");
     if (data === -1) {
       console.log("TODO: if error notify the user", data);
-      return;
+      return null;
     }
-    setCatalogObject(data.object);
+    return data;
   };
 
   const displayName = (appointment: AppointmentSegment) => {
@@ -71,71 +62,112 @@ const BookingSummary = () => {//{ booking }: BookingSummaryProps) => {
   const displayDateTime = (startAt: string) => {
     const date = dayjs(startAt);
     return (
-      <>
-        <div>{date.format("ddd")}</div>
-        <div>{date.format("DD")}</div>
-        <div>{date.format("MMM")}</div>
+      <div className="dateTime">
+        <div>{date.format("dddd DD MMMM")}</div>
         <div>{date.format("hh:mm a")}</div>
-      </>
+      </div>
     );
   };
 
   useEffect(() => {
     // @ts-ignore
-    if (booking && booking.appointmentSegments.length > 0) {
-      const appointment = booking.appointmentSegments[0];
-      retrieveTeamMemberProfile(appointment.teamMemberId);
-      retrieveCatalogObject(appointment.serviceVariationId);
+    if (booking === null && user) {
+      getBooking(user.name).then(
+        ({ booking, teamMemberBookingProfile, object, paymentLink }) => {
+          setBooking(booking);
+          setMemberProfile(teamMemberBookingProfile);
+          setCatalogObject(object);
+            setPaymentLink(paymentLink);
+          // @ts-ignore
+          /* if (booking.appointmentSegments.length > 0) {
+           *   const appointment = booking.appointmentSegments[0];
+           *   // retrieveTeamMemberProfile(appointment.teamMemberId);
+           *   retrieveCatalogObject(appointment.serviceVariationId);
+           * } */
+        }
+      );
     }
   }, [booking]);
 
   if (booking === null) {
-      return <div>Loading...</div>
+    return <Loading />;
   }
 
+  const cancel = () => {
+    console.log("Cancel > ", booking);
+  };
+
+  const reschedule = () => {
+    console.log("Reschedule > ", booking);
+  };
+
   return (
-    <Grid
-      container
-      direction="column"
-      alignItems="center"
-      justifyContent="space-evenly"
-      rowSpacing={5}
-    >
-      <Grid item xs={12} md={12}>
-        <Card className="card">
-          <CardHeader title="Appointment" />
+    <div className="summaryGrid">
+      <Card className="card">
+        <CardHeader title="Appointment" />
+        <CardContent id="dateTime">
           {displayDateTime(booking.startAt)}
+
           <Chip
             label={booking.status.toLowerCase()}
             color="primary"
             size="small"
           />
-        </Card>
-      </Grid>
-      {booking !== null &&
-        booking.appointmentSegments.map((appointment, index) => (
-          <React.Fragment key={index}>
-            <Grid item xs={12} md={12}>
-              <Card className="card">
-                <CardHeader title="Team member" />
-                <CardContent>{displayName(appointment)}</CardContent>
-              </Card>
-            </Grid>
+        </CardContent>
 
-            <Grid item xs={12} md={12}>
-              <Card className="card">
-                <CardHeader title="Services" />
-                <CardContent>
-                  {catalogObject === null
-                    ? ""
-                    : displayCatalogObject(catalogObject.itemData)}
-                  Duration {appointment.durationMinutes}min.
-                </CardContent>
-              </Card>
-            </Grid>
-          </React.Fragment>
-        ))}
-    </Grid>
+        <Divider />
+        <CardContent>
+          <div id="bookingControl">
+            <Button
+              variant="outlined"
+              size="large"
+              color="info"
+              startIcon={<CalendarMonthIcon />}
+              aria-label="change date/time"
+              onClick={reschedule}
+            >
+              Reschedule
+            </Button>
+            <Button
+              variant="outlined"
+              size="large"
+              color="error"
+              startIcon={<CancelIcon />}
+              aria-label="cancel"
+              onClick={reschedule}
+            >
+              Cancel
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+      {booking !== null && (
+        <Card className="card">
+          <CardContent>
+            {booking.appointmentSegments.map((appointment, index) => (
+              <div key={index}>
+                <p>Services</p>
+                {catalogObject === null
+                  ? ""
+                  : displayCatalogObject(catalogObject.itemData)}
+                Duration {appointment.durationMinutes}min.
+                <Divider />
+                <p>Team member</p>
+                {displayName(appointment)}
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+      {paymentLink !== null && (
+          <Card className="card">
+              <CardContent>
+                  payments
+                  <iframe src={paymentLink.url + "&output=embed"}></iframe>
+              </CardContent>
+          </Card>
+      )}
+    </div>
   );
 };
 
