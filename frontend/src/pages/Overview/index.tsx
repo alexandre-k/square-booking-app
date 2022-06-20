@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import RescheduleDialog from "components/Overview/RescheduleDialog";
 import Loading from "components/Loading";
+import TeamMemberAvatar from "components/Booking/TeamMemberAvatar";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
@@ -14,8 +15,9 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import {
   AppointmentSegment,
   Booking,
-  TeamMemberBookingProfile,
 } from "types/Booking";
+import { 
+TeamMember } from "types/Team";
 import { DayOfWeek } from "types/Location";
 import { PaymentLink } from "types/Checkout";
 import { CatalogObject, CatalogObjectItem } from "types/Catalog";
@@ -31,11 +33,12 @@ const Overview = () => {
   //{ booking }: OverviewProps) => {
     const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
-  const [memberProfile, setMemberProfile] =
-    useState<TeamMemberBookingProfile | null>(null);
+  const [member, setMember] =
+    useState<TeamMember | null>(null);
   const [catalogObject, setCatalogObject] = useState<CatalogObject | null>(
     null
   );
+  const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
   const [booking, setBooking] = useState<Booking | null>(null);
   const [paymentLink, setPaymentLink] = useState<PaymentLink | null>(null);
   const { isAuthenticated, user } = useAuth0<{ name: string }>();
@@ -61,7 +64,11 @@ const Overview = () => {
 
   const displayName = (appointment: AppointmentSegment) => {
     if (appointment.anyTeamMember) return "Any";
-    if (memberProfile !== null) return memberProfile.displayName;
+    if (member !== null)
+        return <TeamMemberAvatar
+                   member={member}
+                   selectedMemberId={selectedMemberId}
+                   setSelectedMemberId={setSelectedMemberId} />;
     return "";
   };
 
@@ -88,9 +95,9 @@ const Overview = () => {
     // @ts-ignore
     if (booking === null && user) {
       getBooking(user.name).then(
-        ({ booking, teamMemberBookingProfile, object, paymentLink }) => {
+        ({ booking, teamMember, object, paymentLink }) => {
           setBooking(booking);
-          setMemberProfile(teamMemberBookingProfile);
+          setMember(teamMember);
           setCatalogObject(object);
           setPaymentLink(paymentLink);
           // @ts-ignore
