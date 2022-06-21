@@ -8,12 +8,12 @@ interface TeamMemberAvatarProps {
 }
 
 const TeamMemberAvatar = ({ member }: TeamMemberAvatarProps) => (
-  <div className="avatarContainer">
+  <div id="avatarContainer">
     <Avatar
       sx={{ width: 56, height: 56 }}
       src={`https://ui-avatars.com/api/?name=${member.givenName}+${member.familyName}.jpg`}
     />
-    <div className="memberButton">
+    <div id="memberButton">
       <Typography mt={1}>
         {member.givenName} {member.familyName}
       </Typography>

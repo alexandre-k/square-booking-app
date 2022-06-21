@@ -1,15 +1,12 @@
 import { Dispatch, SetStateAction } from "react";
 // import { Customer } from "hooks/useCustomer";
 import { TeamMember } from "types/Team";
-import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Typography from "@mui/material/Typography";
 import "./TeamMembers.css";
+import TeamMemberAvatar from "components/Booking/TeamMemberAvatar";
 
 interface TeamMembersProps {
   members: Array<TeamMember>;
@@ -23,29 +20,21 @@ const TeamMembers = (props: TeamMembersProps) => {
   const listItem = props.members
     .filter((member) => !member.isOwner || props.showOwner)
     .map((member, index) => (
-      <Grid item xs={3} md={3} key={member.id}>
+      <div id="membersContainer" key={member.id}>
         <ListItem>
           <ListItemButton
             className="memberButton"
-              autoFocus={index === 0 }
+            autoFocus={index === 0}
             selected={member.id === props.selectedMemberId}
             onClick={() => {
               props.setSelectedMemberId(member.id);
               props.goNext();
             }}
           >
-            <ListItemAvatar>
-              <Avatar sx={{ width: 56, height: 56 }} src={member.avatarUrl} />
-            </ListItemAvatar>
-            <ListItemText>
-              <div className="memberButton">
-                <Typography mt={1}>{member.givenName}</Typography>
-                <Typography>{member.familyName}</Typography>
-              </div>
-            </ListItemText>
+            <TeamMemberAvatar member={member} />
           </ListItemButton>
         </ListItem>
-      </Grid>
+      </div>
     ));
   return (
     <>
