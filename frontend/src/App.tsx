@@ -1,11 +1,10 @@
 // import * as Square from '@square/web-sdk';
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Link, Routes, Route } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Divider from "@mui/material/Divider";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import HomeIcon from "@mui/icons-material/Home";
@@ -22,7 +21,6 @@ import "components/Footer/index.css";
 import Completed from "pages/Booking/Completed";
 // import ListBookings from "components/ListBookings";
 import EnvironmentError from "pages/Error/EnvironmentError";
-import NetworkError from "pages/Error/NetworkError";
 import Home from "pages/Home";
 import Login from "components/Auth/Login";
 import Logout from "components/Auth/Logout";
@@ -36,15 +34,10 @@ import { Booking as BookingT } from "types/Booking";
 import "./App.css";
 import Paper from "@mui/material/Paper";
 
-type Error = {
-  message: string;
-};
-
 function App() {
   const isMobile = window.innerWidth <= 500;
   // @ts-ignore
   const [booking, setBooking] = useState<BookingT>({});
-  const [error, setError] = useState<Error | null>();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const requiredEnv = [
     "REACT_APP_SQUARE_ACCESS_TOKEN",
@@ -113,8 +106,6 @@ function App() {
   );
   if (undefinedVariables.length > 0)
     return <EnvironmentError variables={undefinedVariables} />;
-  console.log("Error ", error);
-  if (error) return <NetworkError error={error} />;
 
   return (
     <Paper id="app" elevation={10}>
@@ -150,12 +141,7 @@ function App() {
                   /> */}
               <Route
                 path="/book"
-                element={
-                  <Booking
-                    booking={booking}
-                    setBooking={setBooking}
-                  />
-                }
+                element={<Booking booking={booking} setBooking={setBooking} />}
               />
               <Route
                 path="completed"

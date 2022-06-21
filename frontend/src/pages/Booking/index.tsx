@@ -115,7 +115,7 @@ const Booking = (props: BookingProps) => {
           selectedMemberId={selectedMemberId}
           showOwner={false}
           setSelectedMemberId={setSelectedMemberId}
-          goNext={() => setActiveStep(+1)}
+          goNext={() => {setActiveStep(activeStep + 1)}}
         />
       ),
       isNextRequired: false,
@@ -150,7 +150,7 @@ const Booking = (props: BookingProps) => {
   };
 
   return (
-    <>
+    <div id="bookingContainer">
       <div>
         <IconButton color="primary" size="large" onClick={() => navigate(-1)}>
           <ArrowBackIosNewIcon />
@@ -168,7 +168,7 @@ const Booking = (props: BookingProps) => {
         ))}
       </Stepper>
 
-      <div id="bookingControl">{steps[activeStep].component}</div>
+      <div id="bookingGrid">{steps[activeStep].component}</div>
       {steps[activeStep].isNextRequired && (
         <div>
           {activeStep === steps.length - 1 ? (
@@ -202,7 +202,7 @@ const Booking = (props: BookingProps) => {
           )}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

@@ -1,3 +1,11 @@
+export type Service = {
+    id: string;
+    name: string;
+    duration: number;
+    price: number;
+    currency: string;
+};
+
 export enum CatalogObjectType {
   ITEM = "ITEM",
   IMAGE = "IMAGE",
