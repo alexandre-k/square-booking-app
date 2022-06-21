@@ -1,3 +1,12 @@
+export type Color =
+    | "primary"
+    | "info"
+    | "success"
+    | "warning"
+    | "secondary"
+    | "default"
+    | undefined;
+
 export type AppointmentSegment = {
   durationMinutes: number;
   teamMemberId: string;
