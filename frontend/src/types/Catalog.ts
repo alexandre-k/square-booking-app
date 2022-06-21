@@ -1,9 +1,15 @@
+export enum ServiceCategory {
+  MAIN = "MAIN",
+  OPTIONAL = "OPTIONAL",
+}
+
 export type Service = {
-    id: string;
-    name: string;
-    duration: number;
-    price: number;
-    currency: string;
+  id: string;
+  name: string;
+  duration: number;
+  price: number;
+  currency: string;
+  category: "main" | "optional";
 };
 
 export enum CatalogObjectType {
@@ -22,11 +28,17 @@ export type Price = {
   currency: string;
 };
 
+
+export enum PricingType {
+    FIXED_PRICING = "FIXED_PRICING",
+    VARIABLE_PRICING = "VARIABLE_PRICING"
+}
+
 export type CatalogObjectItemVariationData = {
   itemId: string;
   name: string;
   priceMoney: Price;
-  pricingType: string;
+  pricingType: PricingType;
   serviceDuration: number;
   priceDescription: string;
   availableForBooking: boolean;

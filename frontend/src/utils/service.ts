@@ -1,31 +1,68 @@
-import { CatalogObject, CatalogObjectType, Service } from "types/Catalog";
+import {
+  CatalogObject,
+  CatalogObjectType,
+  Service,
+  ServiceCategory,
+  PricingType,
+} from "types/Catalog";
+
+export const getItemVariationData = (obj: CatalogObject) => {
+  const variations = obj?.itemData?.variations;
+  if (variations !== undefined && variations.length > 0) {
+    return variations[0].itemVariationData;
+  } else {
+    return null;
+  }
+};
+
+export const getItemVariation = (obj: CatalogObject) => {
+  const variations = obj?.itemData?.variations;
+  if (variations !== undefined && variations.length > 0) {
+    return variations[0];
+  } else {
+    return null;
+  }
+};
+
+export const hasItemVariation = (obj: CatalogObject) => {
+  return getItemVariation(obj) === null ? false : true;
+};
+
+export const hasItemVariationData = (obj: CatalogObject) => {
+  return getItemVariationData(obj) === null ? false : true;
+};
+
+export const hasServiceCategory = (obj: CatalogObject) =>
+  obj?.itemData?.ordinal === 0
+    ? ServiceCategory.MAIN
+    : ServiceCategory.OPTIONAL;
+
+export const hasFixedPrice = (obj: CatalogObject) =>
+  getItemVariationData(obj)!.pricingType === PricingType.VARIABLE_PRICING
+    ? false
+    : true;
+
+export const isItem = (obj: CatalogObject) =>
+  obj.type === CatalogObjectType.ITEM;
 
 export const formatCatalogObjects = (catalogObjects: Array<CatalogObject>) => {
   return catalogObjects
-    .filter((obj) => obj.type === CatalogObjectType.ITEM)
+    .filter(isItem)
+    .filter(hasItemVariationData)
+    .filter(hasItemVariation)
+    .filter(hasServiceCategory)
+    .filter(hasFixedPrice)
     .map((obj: CatalogObject) => {
-      const variations = obj?.itemData?.variations;
-      const hasVariations =
-        variations !== undefined && obj.itemData.variations.length > 0;
-      let duration = 3600000;
-      let price = -1;
-      let currency = "USD";
-      let id = "";
-      if (hasVariations && variations[0].itemVariationData) {
-        duration = variations[0].itemVariationData.serviceDuration;
-        id = variations[0].id;
-        if (
-          variations[0].itemVariationData.pricingType === "VARIABLE_PRICING"
-        ) {
-          price = -1;
-        } else {
-          price = variations[0].itemVariationData?.priceMoney?.amount;
-          currency = variations[0].itemVariationData?.priceMoney?.currency;
-        }
-      }
+      const category = obj!.itemData!.ordinal === 0 ? "main" : "optional";
+      const itemVariationData = obj!.itemData!.variations[0]!.itemVariationData;
+      const itemVariation = obj!.itemData!.variations[0];
+      const duration = itemVariationData.serviceDuration;
+      let id = itemVariation.id;
+      const price = itemVariationData.priceMoney?.amount;
+      const currency = itemVariationData.priceMoney?.currency;
       return {
         id,
-        name: obj?.itemData?.name,
+        name: obj!.itemData!.name,
         price,
         currency,
         duration,
