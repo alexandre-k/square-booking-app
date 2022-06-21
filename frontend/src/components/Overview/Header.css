@@ -1,0 +1,9 @@
+.cardItem {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.itemIcon {
+    margin: 10px;
+}
