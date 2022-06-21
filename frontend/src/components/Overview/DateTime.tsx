@@ -72,6 +72,7 @@ const DateTime = ({
   };
 
   const bookingStatus = getStatus(booking.status);
+    const isCancelBtnDisabled = booking.status !== BookingStatus.ACCEPTED && booking.status !== BookingStatus.PENDING
 
   return (
     <Card className="card">
@@ -96,6 +97,7 @@ const DateTime = ({
           </Button>
           <LoadingButton
             variant="outlined"
+              disabled={isCancelBtnDisabled}
             loading={loading}
             size="large"
             color="error"

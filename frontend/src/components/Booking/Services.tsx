@@ -1,10 +1,12 @@
 import React from "react";
+import Card from "@mui/material/Card";
 import Checkbox from "@mui/material/Checkbox";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import Typography from "@mui/material/Typography";
 import { CatalogObject, CatalogObjectType } from "types/Catalog";
+import ServiceLabel from "components/Booking/ServiceLabel";
 import "./Services.css";
 
 type Service = {
@@ -21,7 +23,11 @@ interface ServicesProps {
   setSelectedServices: (services: Array<string>) => void;
 }
 
-const Services = (props: ServicesProps) => {
+const Services = ({
+  catalogObjects,
+  selectedServices,
+  setSelectedServices,
+}: ServicesProps) => {
   const formatCatalogObjects = (catalogObjects: Array<CatalogObject>) => {
     return catalogObjects
       .filter((obj) => obj.type === CatalogObjectType.ITEM)
@@ -40,7 +46,6 @@ const Services = (props: ServicesProps) => {
             variations[0].itemVariationData.pricingType === "VARIABLE_PRICING"
           ) {
             price = -1;
-            currency = "";
           } else {
             price = variations[0].itemVariationData?.priceMoney?.amount;
             currency = variations[0].itemVariationData?.priceMoney?.currency;
@@ -57,63 +62,35 @@ const Services = (props: ServicesProps) => {
   };
 
   const serviceForms = (services: Array<Service>) => {
-    return services.map((service, index) => {
-      const label = (
-        <div key={index}>
-          <Typography
-            align="left"
-            style={{ fontWeight: "bold" }}
-            variant="body1"
-            color="inherit"
-            component="div"
-          >
-            {service.name} {service.price} {service.currency}
-          </Typography>
-          <Typography
-            align="left"
-            variant="body2"
-            color="inherit"
-            component="div"
-          >
-            {Math.floor(service.duration / 60 / 60 / 60)} min.
-          </Typography>
-        </div>
-      );
-      return (
-        <FormControlLabel
-          key={service.id}
-          value={service.id}
-          control={<Checkbox />}
-          label={label}
-          labelPlacement="end"
-        />
-      );
-    });
+    return services.map((service, index) => (
+      <ServiceLabel
+        service={service}
+        selectedServices={selectedServices}
+        key={index}
+      />
+    ));
   };
   const onChange = (event: React.FormEvent<HTMLInputElement>) => {
     const target = event.target as HTMLInputElement;
-    props.setSelectedServices([target.value]);
-  };
-  return (
-    <div id="serviceContainer">
-      {/* <div style={{ margin: 15, display: "flex" }}>
-            <Typography variant="h4" color="inherit" component="div">
-            Select a service
-            </Typography>
-            </div> */}
-      <FormControl>
-        <FormGroup onChange={onChange}>
-          {serviceForms(formatCatalogObjects(props.catalogObjects))}
-        </FormGroup>
-      </FormControl>
-    </div>
-  );
-};
+    console.log("event target checked", target.checked);
 
-Services.defaultProps = {
-  selectedServices: [],
-  setSelectedServices: () => console.log("Not implemented!"),
-  catalogObjects: [],
+    // @ts-ignore
+    if (!event.target.checked) {
+      setSelectedServices(
+        selectedServices.filter((service) => service !== target.value)
+      );
+    } else {
+      setSelectedServices([...selectedServices, target.value]);
+    }
+  };
+
+  return (
+    <FormControl>
+      <FormGroup onChange={onChange}>
+        {serviceForms(formatCatalogObjects(catalogObjects))}
+      </FormGroup>
+    </FormControl>
+  );
 };
 
 export default Services;

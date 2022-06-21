@@ -1,4 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Button from "@mui/material/Button";
 
 const Login = () => {
@@ -11,7 +12,9 @@ const Login = () => {
         logout,
     } = useAuth0<{ name: string }>();
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <LoadingButton loading variant="outlined" color="info">
+            Sign in
+        </LoadingButton>
     }
     if (error) {
         return <div>Oops... {error.message}</div>;

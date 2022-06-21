@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import RescheduleDialog from "components/Overview/RescheduleDialog";
 import Loading from "components/Loading";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import { Booking } from "types/Booking";
 import { TeamMember } from "types/Team";
 import { DayOfWeek } from "types/Location";
@@ -12,6 +10,7 @@ import { CatalogObject } from "types/Catalog";
 import "./index.css";
 import DateTime from "components/Overview/DateTime";
 import Services from "components/Overview/Services";
+import Checkout from "components/Overview/Checkout";
 import { sendRequest } from "utils/request";
 
 /* interface OverviewProps {
@@ -27,7 +26,7 @@ const Overview = () => {
   const [catalogObject, setCatalogObject] = useState<CatalogObject | null>(
     null
   );
-  const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
+  // const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
   const [booking, setBooking] = useState<Booking | null>(null);
   const [paymentLink, setPaymentLink] = useState<PaymentLink | null>(null);
   const { isAuthenticated, user } = useAuth0<{ name: string }>();
@@ -67,7 +66,7 @@ const Overview = () => {
         }
       );
     }
-  }, [booking]);
+  }, [booking, user]);
 
   if (booking === null) {
     return <Loading />;
@@ -109,20 +108,13 @@ const Overview = () => {
         )}
 
         {booking && catalogObject && member && (
-              <Services
-                appointmentSegments={booking.appointmentSegments}
-                catalogObject={catalogObject}
-                member={member}
-              />
+          <Services
+            appointmentSegments={booking.appointmentSegments}
+            catalogObject={catalogObject}
+            member={member}
+          />
         )}
-        {paymentLink && (
-          <Card className="card">
-            <CardContent>
-              payments
-              <iframe src={paymentLink.url + "&output=embed"}></iframe>
-            </CardContent>
-          </Card>
-        )}
+        {paymentLink && <Checkout paymentLink={paymentLink} />}
       </div>
     </>
   );

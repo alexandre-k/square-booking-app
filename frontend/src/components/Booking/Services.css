@@ -1,5 +1,14 @@
-#serviceContainer {
+.serviceCard {
+    margin: 5px;
+    padding: 10px;
+}
+
+.serviceLabel {
     display: flex;
-   justify-content: center;
-    align-content: center;
+    width: 100%;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+    align-items: flex-start;
 }
