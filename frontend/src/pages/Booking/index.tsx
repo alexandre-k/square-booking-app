@@ -13,7 +13,7 @@ import Customer from "components/Booking/Customer";
 import Services from "components/Booking/Services";
 import TeamMembers from "components/Booking/TeamMembers";
 import { User } from "types/Customer";
-import { BusinessHours } from "types/Location";
+import { BusinessHours, DayOfWeek } from "types/Location";
 import { TeamMember } from "types/Team";
 import { CatalogObject } from "types/Catalog";
 import { Booking as BookingT } from "types/Booking";
@@ -22,8 +22,6 @@ import "./index.css";
 // import * as Yup from "yup";
 
 interface BookingProps {
-  businessHours: BusinessHours;
-  sendRequest: (url: string, method: string, payload: object) => Promise<void>;
   booking: BookingT | null;
   setBooking: (booking: BookingT) => void;
 }
@@ -87,6 +85,16 @@ const Booking = (props: BookingProps) => {
     props.setBooking(data.booking);
   };
 
+  const businessHours = {
+    periods: [
+      {
+        dayOfWeek: DayOfWeek.MONDAY,
+        startLocalTime: "9:00",
+        endLocalTime: "17:00",
+      },
+    ],
+  };
+
   const steps = [
     {
       label: "Select a service",
@@ -116,7 +124,7 @@ const Booking = (props: BookingProps) => {
       label: "Pick a date/time",
       component: (
         <DateTimePicker
-          businessHours={props.businessHours.periods}
+          businessHours={businessHours.periods}
           selectedServices={selectedServices}
           memberId={selectedMemberId}
           selectedStartAt={selectedStartAt}

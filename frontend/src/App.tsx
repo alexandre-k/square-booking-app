@@ -28,13 +28,10 @@ import Login from "components/Auth/Login";
 import Logout from "components/Auth/Logout";
 import Profile from "pages/Auth/Profile";
 // import SquareCustomer from "components/SquareCustomer";
-import SquareLocation from "components/Home/SquareLocation";
+// import SquareLocation from "components/Home/SquareLocation";
 import Booking from "pages/Booking";
 import TeamDashboard from "pages/Dashboard";
-import Loading from "components/Loading";
 import BookingSummary from "pages/Overview";
-import { sendRequest } from "utils/request";
-import { Location } from "types/Location";
 import { Booking as BookingT } from "types/Booking";
 import "./App.css";
 import Paper from "@mui/material/Paper";
@@ -45,8 +42,6 @@ type Error = {
 
 function App() {
   const isMobile = window.innerWidth <= 500;
-  // @ts-ignore
-  const [location, setLocation] = useState<Location | null>(null);
   // @ts-ignore
   const [booking, setBooking] = useState<BookingT>({});
   const [error, setError] = useState<Error | null>();
@@ -64,17 +59,6 @@ function App() {
       process.env[envVariable] === ""
   );
 
-  const getLocation = async () => {
-    try {
-      const data = await sendRequest("/location", "GET");
-      if (data === -1) return;
-      setLocation(data);
-    } catch (error: any) {
-      // @ts-ignore
-      setError(error.message);
-      return;
-    }
-  };
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
@@ -88,9 +72,6 @@ function App() {
     };
 
   const routes = ["home", "bookings", "appointment"];
-  useEffect(() => {
-    getLocation();
-  }, []);
 
   const menuRoutes = [
     { to: "", name: "Home", icon: <HomeIcon /> },
@@ -134,7 +115,6 @@ function App() {
     return <EnvironmentError variables={undefinedVariables} />;
   console.log("Error ", error);
   if (error) return <NetworkError error={error} />;
-  if (location === null) return <Loading />;
 
   return (
     <Paper id="app" elevation={10}>
@@ -160,20 +140,18 @@ function App() {
         <div id="mainContent">
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Home location={location} />} />
+              <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/logout" element={<Logout />} />
               <Route path="/profile" element={<Profile />} />
-              <Route
-                path="/location"
-                element={<SquareLocation location={location} />}
-              />
+              {/* <Route
+                  path="/location"
+                  element={<SquareLocation location={location} />}
+                  /> */}
               <Route
                 path="/book"
                 element={
                   <Booking
-                    businessHours={location.businessHours}
-                    sendRequest={sendRequest}
                     booking={booking}
                     setBooking={setBooking}
                   />
