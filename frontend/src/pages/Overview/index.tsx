@@ -77,6 +77,13 @@ const Overview = () => {
     return <InviteLogin />;
   }
 
+  const editService = (catalogObject: CatalogObject) => {
+    console.log("TODO: Edit > ", catalogObject);
+  };
+  const editStaff = (member: TeamMember) => {
+    console.log("TODO: Edit > ", member);
+  };
+
   return (
     <>
       <RescheduleDialog
@@ -100,6 +107,8 @@ const Overview = () => {
             appointmentSegments={booking.appointmentSegments}
             catalogObject={catalogObject}
             member={member}
+            editService={editService}
+            editStaff={editStaff}
           />
         )}
         {paymentLink && <Checkout paymentLink={paymentLink} />}

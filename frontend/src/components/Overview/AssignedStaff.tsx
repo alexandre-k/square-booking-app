@@ -11,10 +11,14 @@ import "./AssignedStaff.css";
 interface AssignedStaffProps {
   appointment: AppointmentSegment;
   member: TeamMember;
-  editStaff: (edit: true) => void;
+  editStaff: (member: TeamMember) => void;
 }
 
-const AssignedStaff = ({ appointment, member, editStaff }: AssignedStaffProps) => (
+const AssignedStaff = ({
+  appointment,
+  member,
+  editStaff,
+}: AssignedStaffProps) => (
   <>
     <Header icon={<PeopleIcon />} title="Team member" />
     <div id="staffContainer">
@@ -24,7 +28,7 @@ const AssignedStaff = ({ appointment, member, editStaff }: AssignedStaffProps) =
       <IconButton
         aria-label="edit"
         color="secondary"
-        onClick={() => editStaff}
+          onClick={() => editStaff(member)}
       >
         <EditIcon />
       </IconButton>

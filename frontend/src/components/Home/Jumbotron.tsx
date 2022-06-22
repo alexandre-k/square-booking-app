@@ -2,22 +2,23 @@ import { Location } from "types/Location";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from '@mui/material/CardMedia';
+import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
 import MoreTimeIcon from "@mui/icons-material/MoreTime";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
+import "./Jumbotron.css";
 
 interface JumbotronProps {
-    location: Location
+  location: Location;
 }
 
 const Jumbotron = ({ location }: JumbotronProps) => (
   <Grid item xs={12} md={12}>
     <div id="figureContainer">
-        <Card square>
+      <Card elevation={0} square>
         <CardMedia
-            component="img"
+          component="img"
           id="image"
           alt="hair_style_woman_picture"
           src="https://unsplash.com/photos/HEde-a_T4E8/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8NHx8c3R5bGlzdHxlbnwwfHx8fDE2NTQ1Mjc5NzU&force=true&w=2400"

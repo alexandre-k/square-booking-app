@@ -1,15 +1,3 @@
-.businessNameCard {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  height: 170px;
-  text-align: center;
-  padding: 10px;
-  min-width: 220px;
-  transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.3) !important;
-}
-
 .cardContent {
   height: 100%;
   display: flex;
@@ -20,25 +8,5 @@
 
 .businessNameButton {
   margin: 10px;
-}
-
-#figureCaption {
-  position: absolute;
-  bottom: 0;
-}
-
-#image {
-  width: 100%;
-  height: 100%;
-}
-
-#figure {
-  margin: 0;
-}
-
-#figureContainer {
-  position: relative;
-  min-height: 300px;
-  width: 100%;
 }
 
