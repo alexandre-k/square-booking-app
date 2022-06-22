@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "react-calendar/dist/Calendar.css";
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import IconButton from '@mui/material/IconButton';
+import Skeleton from "@mui/material/Skeleton";
 import Calendar from "react-calendar";
 import Button from "@mui/material/Button";
 import List from "@mui/material/List";
@@ -11,6 +15,7 @@ import timezone from "dayjs/plugin/timezone";
 import { DayOfWeek, LocationType, Period } from "types/Location";
 import { Availability } from "types/Booking";
 import { sendRequest } from "utils/request";
+import TimeSelector from "components/Booking/TimeSelector";
 import "./DateTimePicker.css";
 
 interface TileDay {
@@ -34,18 +39,40 @@ interface DateTimePickerProps {
   sellerNote?: string;
   startAt?: string;
   selectedStartAt: string | null;
-  onSelectStartAt: (val: string) => void;
+  setSelectedStartAt: (val: string) => void;
   selectedServices: Array<string>;
   memberId: string | null;
-  businessHours: Array<Period>;
 }
 
 const DateTimePicker = (props: DateTimePickerProps) => {
+  const [loading, setLoading] = useState<boolean>(true);
   const [availabilities, setAvailabilities] = useState<Array<Availability>>([]);
+  const [location, setLocation] = useState<Location | null>(null);
   const [value, onChange] = useState(new Date());
+  const [businessHours, setBusinessHours] = useState<Array<Period>>([]);
+
   dayjs.extend(utc);
   dayjs.extend(timezone);
   const userTimeZone = dayjs.tz.guess();
+  const getLocation = async () => {
+    try {
+      setLoading(true);
+      const data = await sendRequest("/location", "GET");
+      if (data === -1) return;
+      setLocation(data);
+      setBusinessHours(data.businessHours.periods);
+    } catch (error: any) {
+      // @ts-ignore
+      setError(error.message);
+      return;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (location === null) getLocation();
+  });
 
   dayjs.tz.setDefault(userTimeZone);
 
@@ -58,9 +85,7 @@ const DateTimePicker = (props: DateTimePickerProps) => {
       return;
     }
     const dayOfWeek = date.toString().substring(0, 3).toUpperCase();
-    const workingDay = props.businessHours.find(
-      (obj) => obj.dayOfWeek === dayOfWeek
-    );
+    const workingDay = businessHours.find((obj) => obj.dayOfWeek === dayOfWeek);
     if (workingDay === undefined) {
       console.log(
         "Unable to find a working day associated to the date selected"
@@ -105,9 +130,16 @@ const DateTimePicker = (props: DateTimePickerProps) => {
     const dayjsDate = dayjs(date);
     if (now.diff(dayjsDate, "s") > 86400) return true;
     const dayOfWeek = dayjsDate.format("ddd").toUpperCase();
-    const workingDays = props.businessHours.map((obj) => obj.dayOfWeek);
+    const workingDays = businessHours.map((obj) => obj.dayOfWeek);
     return !workingDays.includes(dayOfWeek as DayOfWeek);
   };
+
+  if (loading)
+    return (
+      <div id="bookingContainer">
+        <Skeleton variant="rectangular" width="400px" height="300px" />
+      </div>
+    );
 
   return (
     <div id="bookingContainer">
@@ -117,31 +149,7 @@ const DateTimePicker = (props: DateTimePickerProps) => {
         tileDisabled={tileDisabled}
       />
       {availabilities && (
-        <List
-          style={{ width: "300px", overflowX: "scroll" }}
-          component={Stack}
-          direction="row"
-        >
-          {availabilities.map((availability) => {
-            const startAt = dayjs(availability.startAt);
-            return (
-              <ListItem key={availability.startAt}>
-                <Button
-                  variant={
-                    availability.startAt === props.selectedStartAt
-                      ? "contained"
-                      : "outlined"
-                  }
-                  onClick={() => {
-                    props.onSelectStartAt(availability.startAt);
-                  }}
-                >
-                  {startAt.format("HH:mm")}
-                </Button>
-              </ListItem>
-            );
-          })}
-        </List>
+        <TimeSelector availabilities={availabilities} selectedStartAt={props.selectedStartAt} setSelectedStartAt={props.setSelectedStartAt} />
       )}
     </div>
   );

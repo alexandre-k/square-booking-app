@@ -11,15 +11,14 @@ import { BusinessHours } from "types/Location";
 import DateTimePicker from "components/Booking/DateTimePicker";
 
 interface RescheduleDialogProps {
-  businessHours: BusinessHours;
     open: boolean;
     setOpen: (open: boolean) => void;
 }
 
-const RescheduleDialog = ({ businessHours, open, setOpen }: RescheduleDialogProps) => {
+const RescheduleDialog = ({ open, setOpen }: RescheduleDialogProps) => {
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
   const [selectedServices, setSelectedServices] = useState<Array<string>>([]);
-  const [selectedStartAt, onSelectStartAt] = useState<string | null>(null);
+  const [selectedStartAt, setSelectedStartAt] = useState<string | null>(null);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -43,11 +42,10 @@ const RescheduleDialog = ({ businessHours, open, setOpen }: RescheduleDialogProp
       <DialogContent>
         <DialogContentText>
           <DateTimePicker
-            businessHours={businessHours.periods}
             selectedServices={selectedServices}
             memberId={selectedMemberId}
             selectedStartAt={selectedStartAt}
-            onSelectStartAt={onSelectStartAt}
+            setSelectedStartAt={setSelectedStartAt}
           />
         </DialogContentText>
       </DialogContent>
@@ -61,16 +59,6 @@ const RescheduleDialog = ({ businessHours, open, setOpen }: RescheduleDialogProp
       </DialogActions>
     </Dialog>
   );
-};
-
-RescheduleDialog.defaultProps = {
-  businessHours: [
-    {
-      dayOfWeek: "MON",
-      startLocalTime: "9:00",
-      endLocalTime: "17:00",
-    },
-  ],
 };
 
 export default RescheduleDialog;

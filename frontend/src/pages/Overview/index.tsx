@@ -86,15 +86,6 @@ const Overview = () => {
       <RescheduleDialog
         open={openRescheduleDialog}
         setOpen={setOpenRescheduleDialog}
-        businessHours={{
-          periods: [
-            {
-              dayOfWeek: DayOfWeek.MONDAY,
-              startLocalTime: "9:00",
-              endLocalTime: "17:00",
-            },
-          ],
-        }}
       />
       <div className="summaryGrid">
         {booking && (

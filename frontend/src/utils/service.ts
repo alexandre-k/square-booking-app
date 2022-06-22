@@ -29,7 +29,7 @@ export const hasItemVariation = (obj: CatalogObject) => {
 };
 
 export const isItemAvailableForBooking = (obj: CatalogObject) => {
-    return getItemVariationData(obj)!.availableForBooking;
+  return getItemVariationData(obj)!.availableForBooking;
 };
 
 export const hasItemVariationData = (obj: CatalogObject) => {
@@ -70,6 +70,7 @@ export const formatCatalogObjects = (catalogObjects: Array<CatalogObject>) => {
         const id = itemVariation.id;
         const price = itemVariationData.priceMoney?.amount;
         const currency = itemVariationData.priceMoney?.currency;
+        const teamMemberIds = itemVariationData.teamMemberIds;
         return {
           id,
           name: obj!.itemData!.name,
@@ -77,6 +78,7 @@ export const formatCatalogObjects = (catalogObjects: Array<CatalogObject>) => {
           currency,
           duration,
           category,
+          teamMemberIds,
         } as Service;
       })
   );

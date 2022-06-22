@@ -1,15 +1,16 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 // import { Customer } from "hooks/useCustomer";
 import { TeamMember } from "types/Team";
 import Grid from "@mui/material/Grid";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
+import Loading from "components/Loading";
 import "./TeamMembers.css";
 import TeamMemberAvatar from "components/Booking/TeamMemberAvatar";
+import { sendRequest } from "utils/request";
 
 interface TeamMembersProps {
-  members: Array<TeamMember>;
   showOwner: boolean;
   selectedMemberId: string | null;
   setSelectedMemberId: Dispatch<SetStateAction<string | null>>;
@@ -17,7 +18,27 @@ interface TeamMembersProps {
 }
 
 const TeamMembers = (props: TeamMembersProps) => {
-  const listItem = props.members
+  const [loading, setLoading] = useState<boolean>(false);
+  const [members, setMembers] = useState<TeamMember[]>([]);
+  const getTeamMembers = async () => {
+    setLoading(true);
+    const teamMembers = await sendRequest("/staff/search", "POST");
+    const members = teamMembers
+      .filter((m: TeamMember) => !m.isOwner)
+      .map((member: TeamMember) => ({
+        ...member,
+        avatarUrl: `https://ui-avatars.com/api/?name=${member.givenName}+${member.familyName}.jpg`,
+      }));
+    setMembers(members);
+    setLoading(false);
+  };
+  useEffect(() => {
+    if (members.length === 0) {
+      getTeamMembers();
+    }
+  }, []);
+  if (loading) return <Loading />;
+  const listItem = members
     .filter((member) => !member.isOwner || props.showOwner)
     .map((member, index) => (
       <div id="membersContainer" key={member.id}>
@@ -48,7 +69,6 @@ const TeamMembers = (props: TeamMembersProps) => {
 };
 
 TeamMembers.defaultProps = {
-  members: [],
   showOwner: false,
   selectedMemberId: null,
 };

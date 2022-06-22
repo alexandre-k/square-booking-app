@@ -10,6 +10,7 @@ export type Service = {
   price: number;
   currency: string;
   category: ServiceCategory;
+  teamMemberIds: Array<string>;
 };
 
 export enum CatalogObjectType {
@@ -45,7 +46,7 @@ export type CatalogObjectItemVariationData = {
   sellable: boolean;
   stockable: boolean;
   transitionTime: number;
-  team_memberIds: Array<string>;
+  teamMemberIds: Array<string>;
 };
 
 export type CatalogObjectItemVariation = {

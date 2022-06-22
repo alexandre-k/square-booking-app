@@ -34,14 +34,14 @@ const Services = ({
               <div>{catalogObject.itemData.description}</div>
               Duration {appointment.durationMinutes}min.
             </div>
-            <IconButton aria-label="edit" disabled color="secondary">
+            <IconButton aria-label="edit" color="secondary">
               <EditIcon />
             </IconButton>
           </div>
         </CardContent>
         <CardContent>
           <Divider />
-          <AssignedStaff appointment={appointment} member={member} />
+          <AssignedStaff appointment={appointment} member={member} editStaff={() => console.log('TODO: Show staff dialog') } />
         </CardContent>
       </React.Fragment>
     ))}

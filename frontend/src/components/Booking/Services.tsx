@@ -1,22 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import FormGroup from "@mui/material/FormGroup";
 import FormControl from "@mui/material/FormControl";
 import { CatalogObject, Service, ServiceCategory } from "types/Catalog";
 import ServiceLabel from "components/Booking/ServiceLabel";
 import { formatCatalogObjects } from "utils/service";
+import { sendRequest } from "utils/request";
+import Loading from "components/Loading";
 import "./Services.css";
 
 interface ServicesProps {
-  catalogObjects: Array<CatalogObject>;
   selectedServices: Array<string>;
   setSelectedServices: (services: Array<string>) => void;
 }
 
-const Services = ({
-  catalogObjects,
-  selectedServices,
-  setSelectedServices,
-}: ServicesProps) => {
+const Services = ({ selectedServices, setSelectedServices }: ServicesProps) => {
+  const [catalogObjects, setCatalogObjects] = useState<Array<CatalogObject>>(
+    []
+  );
+  const [loading, setLoading] = useState<boolean>(false);
+  const getCatalogObjects = async () => {
+    setLoading(true);
+    const services = await sendRequest("/services/objects", "GET");
+    setCatalogObjects(services);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (catalogObjects.length === 0) {
+      getCatalogObjects();
+    }
+  }, [catalogObjects]);
+
+  if (loading) return <Loading />;
   const objects = formatCatalogObjects(catalogObjects);
   const mainServices = objects.filter((service) => {
     return service.category === ServiceCategory.MAIN;

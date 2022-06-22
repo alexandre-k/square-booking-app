@@ -29,9 +29,7 @@ interface BookingProps {
 const Booking = (props: BookingProps) => {
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
   const [selectedServices, setSelectedServices] = useState<Array<string>>([]);
-  const [selectedStartAt, onSelectStartAt] = useState<string | null>(null);
-  const [catalogObjects, setCatalogObjects] = useState<CatalogObject[]>([]);
-  const [members, setMembers] = useState<TeamMember[]>([]);
+  const [selectedStartAt, setSelectedStartAt] = useState<string | null>(null);
   const [customer, setCustomer] = useState<User>({
     givenName: "",
     familyName: "",
@@ -39,26 +37,7 @@ const Booking = (props: BookingProps) => {
   });
   const [activeStep, setActiveStep] = useState(0);
   // const [disabled, setDisabled] = useState<boolean>(true);
-  const getTeamMembers = async () => {
-    const teamMembers = await sendRequest("/staff/search", "POST");
-    const members = teamMembers
-      .filter((m: TeamMember) => !m.isOwner)
-      .map((member: TeamMember) => ({
-        ...member,
-        avatarUrl: `https://ui-avatars.com/api/?name=${member.givenName}+${member.familyName}.jpg`,
-      }));
-    setMembers(members);
-  };
-  const getCatalogObjects = async () => {
-    const services = await sendRequest("/services/objects", "GET");
-    setCatalogObjects(services);
-  };
 
-  useEffect(() => {
-    if (members.length === 0) getTeamMembers();
-
-    if (catalogObjects.length === 0) getCatalogObjects();
-  }, []);
   const bookAppointment = async () => {
     const data = await sendRequest("/booking/create", "POST", {
       booking: {
@@ -100,7 +79,6 @@ const Booking = (props: BookingProps) => {
       label: "Select a service",
       component: (
         <Services
-          catalogObjects={catalogObjects}
           selectedServices={selectedServices}
           setSelectedServices={setSelectedServices}
         />
@@ -111,11 +89,12 @@ const Booking = (props: BookingProps) => {
       label: "Select a team member",
       component: (
         <TeamMembers
-          members={members}
           selectedMemberId={selectedMemberId}
           showOwner={false}
           setSelectedMemberId={setSelectedMemberId}
-          goNext={() => {setActiveStep(activeStep + 1)}}
+          goNext={() => {
+            setActiveStep(activeStep + 1);
+          }}
         />
       ),
       isNextRequired: false,
@@ -124,11 +103,10 @@ const Booking = (props: BookingProps) => {
       label: "Pick a date/time",
       component: (
         <DateTimePicker
-          businessHours={businessHours.periods}
           selectedServices={selectedServices}
           memberId={selectedMemberId}
           selectedStartAt={selectedStartAt}
-          onSelectStartAt={onSelectStartAt}
+          setSelectedStartAt={setSelectedStartAt}
         />
       ),
       isNextRequired: true,
