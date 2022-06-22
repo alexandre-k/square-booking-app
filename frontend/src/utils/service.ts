@@ -28,14 +28,18 @@ export const hasItemVariation = (obj: CatalogObject) => {
   return getItemVariation(obj) === null ? false : true;
 };
 
+export const isItemAvailableForBooking = (obj: CatalogObject) => {
+    return getItemVariationData(obj)!.availableForBooking;
+};
+
 export const hasItemVariationData = (obj: CatalogObject) => {
   return getItemVariationData(obj) === null ? false : true;
 };
 
-export const hasServiceCategory = (obj: CatalogObject) =>
-  obj?.itemData?.ordinal === 0
-    ? ServiceCategory.MAIN
-    : ServiceCategory.OPTIONAL;
+// export const hasServiceCategory = (obj: CatalogObject) =>
+//   obj?.itemData?.ordinal === 0
+//     ? ServiceCategory.MAIN
+//     : ServiceCategory.OPTIONAL;
 
 export const hasFixedPrice = (obj: CatalogObject) =>
   getItemVariationData(obj)!.pricingType === PricingType.VARIABLE_PRICING
@@ -46,26 +50,34 @@ export const isItem = (obj: CatalogObject) =>
   obj.type === CatalogObjectType.ITEM;
 
 export const formatCatalogObjects = (catalogObjects: Array<CatalogObject>) => {
-  return catalogObjects
-    .filter(isItem)
-    .filter(hasItemVariationData)
-    .filter(hasItemVariation)
-    .filter(hasServiceCategory)
-    .filter(hasFixedPrice)
-    .map((obj: CatalogObject) => {
-      const category = obj!.itemData!.ordinal === 0 ? "main" : "optional";
-      const itemVariationData = obj!.itemData!.variations[0]!.itemVariationData;
-      const itemVariation = obj!.itemData!.variations[0];
-      const duration = itemVariationData.serviceDuration;
-      let id = itemVariation.id;
-      const price = itemVariationData.priceMoney?.amount;
-      const currency = itemVariationData.priceMoney?.currency;
-      return {
-        id,
-        name: obj!.itemData!.name,
-        price,
-        currency,
-        duration,
-      } as Service;
-    });
+  return (
+    catalogObjects
+      .filter(isItem)
+      .filter(hasItemVariationData)
+      .filter(hasItemVariation)
+      // .filter(hasServiceCategory)
+      .filter(isItemAvailableForBooking)
+      .filter(hasFixedPrice)
+      .map((obj: CatalogObject) => {
+        const category =
+          obj!.itemData!.variations[0]!.itemVariationData.ordinal === 0
+            ? ServiceCategory.MAIN
+            : ServiceCategory.OPTIONAL;
+        const itemVariationData =
+          obj!.itemData!.variations[0]!.itemVariationData;
+        const itemVariation = obj!.itemData!.variations[0];
+        const duration = itemVariationData.serviceDuration;
+        const id = itemVariation.id;
+        const price = itemVariationData.priceMoney?.amount;
+        const currency = itemVariationData.priceMoney?.currency;
+        return {
+          id,
+          name: obj!.itemData!.name,
+          price,
+          currency,
+          duration,
+          category,
+        } as Service;
+      })
+  );
 };

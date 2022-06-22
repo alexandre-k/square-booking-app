@@ -9,7 +9,7 @@ export type Service = {
   duration: number;
   price: number;
   currency: string;
-  category: "main" | "optional";
+  category: ServiceCategory;
 };
 
 export enum CatalogObjectType {
@@ -28,15 +28,15 @@ export type Price = {
   currency: string;
 };
 
-
 export enum PricingType {
-    FIXED_PRICING = "FIXED_PRICING",
-    VARIABLE_PRICING = "VARIABLE_PRICING"
+  FIXED_PRICING = "FIXED_PRICING",
+  VARIABLE_PRICING = "VARIABLE_PRICING",
 }
 
 export type CatalogObjectItemVariationData = {
   itemId: string;
   name: string;
+  ordinal: number;
   priceMoney: Price;
   pricingType: PricingType;
   serviceDuration: number;
@@ -62,7 +62,6 @@ export type CatalogObjectItemVariation = {
 export type CatalogObjectItem = {
   name: string;
   description: string;
-  ordinal: number;
   variations: Array<CatalogObjectItemVariation>;
   productType: string;
 };

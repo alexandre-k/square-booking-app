@@ -1,7 +1,7 @@
 import React from "react";
 import FormGroup from "@mui/material/FormGroup";
 import FormControl from "@mui/material/FormControl";
-import { CatalogObject, Service } from "types/Catalog";
+import { CatalogObject, Service, ServiceCategory } from "types/Catalog";
 import ServiceLabel from "components/Booking/ServiceLabel";
 import { formatCatalogObjects } from "utils/service";
 import "./Services.css";
@@ -17,6 +17,13 @@ const Services = ({
   selectedServices,
   setSelectedServices,
 }: ServicesProps) => {
+  const objects = formatCatalogObjects(catalogObjects);
+  const mainServices = objects.filter((service) => {
+    return service.category === ServiceCategory.MAIN;
+  });
+  const optionalServices = objects.filter(
+    (service) => service.category === ServiceCategory.OPTIONAL
+  );
   const serviceForms = (services: Array<Service>) => {
     return services.map((service, index) => (
       <ServiceLabel
@@ -42,7 +49,8 @@ const Services = ({
   return (
     <FormControl>
       <FormGroup onChange={onChange}>
-        {serviceForms(formatCatalogObjects(catalogObjects))}
+        {serviceForms(mainServices)}
+        {serviceForms(optionalServices)}
       </FormGroup>
     </FormControl>
   );
