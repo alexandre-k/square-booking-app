@@ -1,0 +1,33 @@
+#image {
+  width: 100%;
+  height: 100%;
+  border-bottom-right-radius: 50% 70px;
+  border-bottom-left-radius: 50% 70px;
+}
+
+#figureCaption {
+  position: absolute;
+  bottom: 0;
+}
+
+#figure {
+  margin: 0;
+}
+
+#figureContainer {
+  position: relative;
+  min-height: 300px;
+  width: 100%;
+}
+
+.businessNameCard {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    height: 170px;
+    text-align: center;
+    padding: 10px;
+    min-width: 220px;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.3) !important;
+}

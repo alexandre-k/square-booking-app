@@ -4,6 +4,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
+import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
 import { AppointmentSegment } from "types/Booking";
 import { CatalogObject } from "types/Catalog";
@@ -16,12 +17,16 @@ interface ServicesProp {
   appointmentSegments: Array<AppointmentSegment>;
   catalogObject: CatalogObject;
   member: TeamMember;
+  editService: (service: CatalogObject) => void;
+  editStaff: (member: TeamMember) => void;
 }
 
 const Services = ({
   appointmentSegments,
   catalogObject,
   member,
+  editService,
+  editStaff,
 }: ServicesProp) => (
   <Card className="card">
     {appointmentSegments.map((appointment, index) => (
@@ -30,18 +35,29 @@ const Services = ({
           <Header icon={<ContentCutIcon />} title="Services" />
           <div className="serviceItem">
             <div>
-              <div>{catalogObject.itemData.name}</div>
-              <div>{catalogObject.itemData.description}</div>
-              Duration {appointment.durationMinutes}min.
+              <Typography variant="body2" color="grey" component="div">
+                {catalogObject.itemData.name}
+              </Typography>
+              <Typography variant="body2" color="grey" component="div">
+                {catalogObject.itemData.description}
+              </Typography>
             </div>
-            <IconButton aria-label="edit" disabled color="secondary">
+            <IconButton
+              aria-label="edit"
+              color="secondary"
+              onClick={() => editService(catalogObject)}
+            >
               <EditIcon />
             </IconButton>
           </div>
         </CardContent>
         <CardContent>
           <Divider />
-          <AssignedStaff appointment={appointment} member={member} />
+          <AssignedStaff
+            appointment={appointment}
+            member={member}
+            editStaff={editStaff}
+          />
         </CardContent>
       </React.Fragment>
     ))}

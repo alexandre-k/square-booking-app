@@ -11,6 +11,7 @@ import "./index.css";
 import DateTime from "components/Overview/DateTime";
 import Services from "components/Overview/Services";
 import Checkout from "components/Overview/Checkout";
+import InviteLogin from "components/Auth/InviteLogin";
 import { sendRequest } from "utils/request";
 
 /* interface OverviewProps {
@@ -68,39 +69,33 @@ const Overview = () => {
     }
   }, [booking, user]);
 
-  if (booking === null) {
+  if (booking === null && isAuthenticated) {
     return <Loading />;
   }
 
   if (!isAuthenticated) {
-    return (
-      <>
-        <div>You need to be authenticated</div>
-        <div>TODO: Create redirection to sign in page</div>
-      </>
-    );
+    return <InviteLogin />;
   }
+
+  const editService = (catalogObject: CatalogObject) => {
+    console.log("TODO: Edit > ", catalogObject);
+  };
+  const editStaff = (member: TeamMember) => {
+    console.log("TODO: Edit > ", member);
+  };
 
   return (
     <>
       <RescheduleDialog
         open={openRescheduleDialog}
         setOpen={setOpenRescheduleDialog}
-        businessHours={{
-          periods: [
-            {
-              dayOfWeek: DayOfWeek.MONDAY,
-              startLocalTime: "9:00",
-              endLocalTime: "17:00",
-            },
-          ],
-        }}
       />
       <div className="summaryGrid">
         {booking && (
           <DateTime
             booking={booking}
             loading={loading}
+            appointmentSegments={booking.appointmentSegments}
             setLoading={setLoading}
             cancelBooking={cancelBooking}
             setOpenRescheduleDialog={setOpenRescheduleDialog}
@@ -112,6 +107,8 @@ const Overview = () => {
             appointmentSegments={booking.appointmentSegments}
             catalogObject={catalogObject}
             member={member}
+            editService={editService}
+            editStaff={editStaff}
           />
         )}
         {paymentLink && <Checkout paymentLink={paymentLink} />}

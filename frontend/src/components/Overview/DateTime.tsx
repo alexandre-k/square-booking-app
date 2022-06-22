@@ -12,10 +12,12 @@ import UpdateIcon from "@mui/icons-material/Update";
 import Header from "components/Overview/Header";
 import Status from "components/Overview/Status";
 import { Booking, BookingStatus, Color } from "types/Booking";
+import { AppointmentSegment } from "types/Booking";
 import dayjs from "dayjs";
 
 interface DateTimeProps {
   booking: Booking;
+  appointmentSegments: Array<AppointmentSegment>;
   loading: boolean;
   setLoading: (loading: boolean) => void;
   cancelBooking: (bookingId: string) => Promise<void>;
@@ -24,6 +26,7 @@ interface DateTimeProps {
 
 const DateTime = ({
   booking,
+  appointmentSegments,
   loading,
   setLoading,
   cancelBooking,
@@ -38,10 +41,18 @@ const DateTime = ({
 
   const displayDateTime = (startAt: string) => {
     const date = dayjs(startAt);
+
+    const durations = appointmentSegments.reduce(
+      (acc, appointment) => appointment.durationMinutes + acc,
+      0
+    );
+    const endDate = date.add(durations, "minutes");
     return (
       <div className="dateTime">
         <div>{date.format("dddd DD MMMM")}</div>
-        <div>{date.format("hh:mm a")}</div>
+        <div>
+          {date.format("hh:mm ")} - {endDate.format("hh:mm a")}
+        </div>
       </div>
     );
   };
@@ -72,7 +83,9 @@ const DateTime = ({
   };
 
   const bookingStatus = getStatus(booking.status);
-    const isCancelBtnDisabled = booking.status !== BookingStatus.ACCEPTED && booking.status !== BookingStatus.PENDING
+  const isCancelBtnDisabled =
+    booking.status !== BookingStatus.ACCEPTED &&
+    booking.status !== BookingStatus.PENDING;
 
   return (
     <Card className="card">
@@ -97,7 +110,7 @@ const DateTime = ({
           </Button>
           <LoadingButton
             variant="outlined"
-              disabled={isCancelBtnDisabled}
+            disabled={isCancelBtnDisabled}
             loading={loading}
             size="large"
             color="error"
