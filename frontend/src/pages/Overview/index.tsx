@@ -74,7 +74,7 @@ const Overview = () => {
   }
 
   if (!isAuthenticated) {
-      return <InviteLogin />;
+    return <InviteLogin />;
   }
 
   return (
@@ -88,6 +88,7 @@ const Overview = () => {
           <DateTime
             booking={booking}
             loading={loading}
+            appointmentSegments={booking.appointmentSegments}
             setLoading={setLoading}
             cancelBooking={cancelBooking}
             setOpenRescheduleDialog={setOpenRescheduleDialog}
