@@ -11,6 +11,7 @@ import "./index.css";
 import DateTime from "components/Overview/DateTime";
 import Services from "components/Overview/Services";
 import Checkout from "components/Overview/Checkout";
+import InviteLogin from "components/Auth/InviteLogin";
 import { sendRequest } from "utils/request";
 
 /* interface OverviewProps {
@@ -68,17 +69,12 @@ const Overview = () => {
     }
   }, [booking, user]);
 
-  if (booking === null) {
+  if (booking === null && isAuthenticated) {
     return <Loading />;
   }
 
   if (!isAuthenticated) {
-    return (
-      <>
-        <div>You need to be authenticated</div>
-        <div>TODO: Create redirection to sign in page</div>
-      </>
-    );
+      return <InviteLogin />;
   }
 
   return (
