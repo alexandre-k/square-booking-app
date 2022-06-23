@@ -11,6 +11,7 @@ import Services from "components/Booking/Services";
 import TeamMembers from "components/Booking/TeamMembers";
 import DateTime from "components/Overview/DateTime";
 import ServicesOverview from "components/Overview/Services";
+import NoBookingFound from "components/Overview/NoBookingFound";
 import Checkout from "components/Overview/Checkout";
 import InviteLogin from "components/Auth/InviteLogin";
 import DateTimePicker from "components/Booking/DateTimePicker";
@@ -49,7 +50,7 @@ const Overview = () => {
     return data;
   };
   const cancelBooking = async (bookingId: string) => {
-    const data = await sendRequest("/booking/" + bookingId, "DELETE");
+    const data = await sendRequest("/customer/booking/" + bookingId, "DELETE");
     if (data === -1) {
       console.log("TODO: if error notify the user", data);
       return null;
@@ -91,8 +92,13 @@ const Overview = () => {
   useEffect(() => {
     // @ts-ignore
     if (booking === null && user) {
+        setLoading(true);
       getBooking(user.name).then(
         ({ booking, teamMember, object, paymentLink }) => {
+            if (booking === undefined || booking === null) {
+                setLoading(false);
+            return;
+            }
           setBooking(booking);
           setMember(teamMember);
           setSelectedMemberId(teamMember.id);
@@ -110,9 +116,13 @@ const Overview = () => {
     }
   }, [booking, user]);
 
-  if (booking === null && isAuthenticated) {
+  if (booking === null && isAuthenticated && loading) {
     return <Loading />;
   }
+
+    if (booking === null && isAuthenticated) {
+        return <NoBookingFound />
+    }
 
   if (!isAuthenticated) {
     return <InviteLogin />;
