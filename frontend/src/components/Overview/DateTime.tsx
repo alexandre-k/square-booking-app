@@ -20,6 +20,7 @@ interface DateTimeProps {
   appointmentSegments: Array<AppointmentSegment>;
   loading: boolean;
   setLoading: (loading: boolean) => void;
+  disabled: boolean;
   cancelBooking: (bookingId: string) => Promise<void>;
   showEditDialog: (component: string) => void;
 }
@@ -29,6 +30,7 @@ const DateTime = ({
   appointmentSegments,
   loading,
   setLoading,
+  disabled,
   cancelBooking,
   showEditDialog,
 }: DateTimeProps) => {
@@ -100,6 +102,7 @@ const DateTime = ({
         <div id="bookingControl">
           <Button
             variant="outlined"
+            disabled={disabled}
             size="large"
             color="info"
             startIcon={<UpdateIcon />}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import EditDialog from "components/Overview/EditDialog";
 import Loading from "components/Loading";
-import { Booking } from "types/Booking";
+import { Booking, BookingStatus } from "types/Booking";
 import { TeamMember } from "types/Team";
 import { PaymentLink } from "types/Checkout";
 import { CatalogObject } from "types/Catalog";
@@ -118,13 +118,13 @@ const Overview = () => {
     return <InviteLogin />;
   }
 
-    /* const editService = (catalogObject: CatalogObject) => {
-     *   console.log("TODO: Edit > ", catalogObject);
-     * };
-     * const editStaff = (member: TeamMember) => {
-     *   console.log("TODO: Edit > ", member);
-     * };
-     */
+  /* const editService = (catalogObject: CatalogObject) => {
+   *   console.log("TODO: Edit > ", catalogObject);
+   * };
+   * const editStaff = (member: TeamMember) => {
+   *   console.log("TODO: Edit > ", member);
+   * };
+   */
   const save = () => {
     updateBooking(booking);
     setOpenEditDialog(false);
@@ -178,6 +178,10 @@ const Overview = () => {
     }
   };
 
+  const isCancelled = (status: BookingStatus) =>
+    status === BookingStatus.CANCELLED_BY_CUSTOMER ||
+    status === BookingStatus.CANCELLED_BY_SELLER ||
+    status === BookingStatus.DECLINED;
   return (
     <>
       {openEditDialog && (
@@ -193,6 +197,7 @@ const Overview = () => {
       <div className="summaryGrid">
         {booking && (
           <DateTime
+            disabled={isCancelled(booking.status)}
             booking={booking}
             loading={loading}
             appointmentSegments={booking.appointmentSegments}
@@ -204,6 +209,7 @@ const Overview = () => {
 
         {booking && catalogObject && member && (
           <ServicesOverview
+            disabled={isCancelled(booking.status)}
             appointmentSegments={booking.appointmentSegments}
             catalogObject={catalogObject}
             member={member}

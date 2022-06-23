@@ -17,6 +17,7 @@ interface ServicesProp {
   appointmentSegments: Array<AppointmentSegment>;
   catalogObject: CatalogObject;
   member: TeamMember | null;
+  disabled: boolean;
   showEditDialog: (component: string) => void;
 }
 
@@ -24,6 +25,7 @@ const ServicesOverview = ({
   appointmentSegments,
   catalogObject,
   member,
+  disabled,
   showEditDialog,
 }: ServicesProp) => (
   <Card className="card">
@@ -42,6 +44,7 @@ const ServicesOverview = ({
             </div>
             <IconButton
               aria-label="edit"
+              disabled={disabled}
               color="secondary"
               onClick={() => showEditDialog("service")}
             >
@@ -55,6 +58,7 @@ const ServicesOverview = ({
             <AssignedStaff
               appointment={appointment}
               member={member}
+              disabled={disabled}
               editStaff={() => showEditDialog("member")}
             />
           </CardContent>

@@ -11,6 +11,7 @@ import "./AssignedStaff.css";
 interface AssignedStaffProps {
   appointment: AppointmentSegment;
   member: TeamMember;
+  disabled: boolean;
   editStaff: (member: TeamMember) => void;
 }
 
@@ -18,6 +19,7 @@ const AssignedStaff = ({
   appointment,
   member,
   editStaff,
+  disabled,
 }: AssignedStaffProps) => (
   <>
     <Header icon={<PeopleIcon />} title="Team member" />
@@ -27,8 +29,9 @@ const AssignedStaff = ({
       />
       <IconButton
         aria-label="edit"
+        disabled={disabled}
         color="secondary"
-          onClick={() => editStaff(member)}
+        onClick={() => editStaff(member)}
       >
         <EditIcon />
       </IconButton>
