@@ -1,11 +1,11 @@
 export type Color =
-    | "primary"
-    | "info"
-    | "success"
-    | "warning"
-    | "secondary"
-    | "default"
-    | undefined;
+  | "primary"
+  | "info"
+  | "success"
+  | "warning"
+  | "secondary"
+  | "default"
+  | undefined;
 
 export type AppointmentSegment = {
   durationMinutes: number;
@@ -56,6 +56,7 @@ export type Booking = {
   appointmentSegments: Array<AppointmentSegment>;
   transitionTimeMinutes: number;
   customerNote: string;
+  sellerNote: string;
   creatorDetails: {
     creatorType: CreatorType;
     teamMemberId: string;
@@ -65,7 +66,7 @@ export type Booking = {
 };
 
 export type TeamMemberBookingProfile = {
-    teamMemberId: string;
-    displayName: string;
-    isBookable: boolean;
-}
+  teamMemberId: string;
+  displayName: string;
+  isBookable: boolean;
+};

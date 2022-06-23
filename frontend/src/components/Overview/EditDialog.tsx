@@ -1,0 +1,80 @@
+import React, { useState } from "react";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import CloseIcon from '@mui/icons-material/Close';
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
+import { BusinessHours } from "types/Location";
+
+interface EditDialogProps {
+  title: string;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  children: React.ReactNode;
+  save: () => void;
+}
+
+const EditDialog = ({
+  title,
+  open,
+  setOpen,
+  children,
+  save,
+}: EditDialogProps) => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+
+  const handleSave = () => {
+    setLoading(true);
+    save();
+    setLoading(false);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+  };
+  return (
+    <Dialog
+        id="dialogContainer"
+      open={open}
+      onClose={handleCancel}
+      aria-labelledby="responsive-dialog-title"
+    >
+      <DialogTitle id="responsive-dialog-title">
+          {title}
+          <IconButton
+              aria-label="close"
+              onClick={handleCancel}
+              sx={{
+                  position: 'absolute',
+                  right: 8,
+                  top: 8,
+              }}
+          >
+              <CloseIcon />
+          </IconButton>
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText>{children}</DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSave}
+          autoFocus
+        >
+          Save
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+export default EditDialog;

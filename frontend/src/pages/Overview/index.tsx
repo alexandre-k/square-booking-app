@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import RescheduleDialog from "components/Overview/RescheduleDialog";
+import EditDialog from "components/Overview/EditDialog";
 import Loading from "components/Loading";
 import { Booking } from "types/Booking";
 import { TeamMember } from "types/Team";
@@ -8,10 +8,13 @@ import { DayOfWeek } from "types/Location";
 import { PaymentLink } from "types/Checkout";
 import { CatalogObject } from "types/Catalog";
 import "./index.css";
+import Services from "components/Booking/Services";
+import TeamMembers from "components/Booking/TeamMembers";
 import DateTime from "components/Overview/DateTime";
-import Services from "components/Overview/Services";
+import ServicesOverview from "components/Overview/Services";
 import Checkout from "components/Overview/Checkout";
 import InviteLogin from "components/Auth/InviteLogin";
+import DateTimePicker from "components/Booking/DateTimePicker";
 import { sendRequest } from "utils/request";
 
 /* interface OverviewProps {
@@ -21,8 +24,9 @@ import { sendRequest } from "utils/request";
 const Overview = () => {
   //{ booking }: OverviewProps) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [openRescheduleDialog, setOpenRescheduleDialog] =
-    useState<boolean>(false);
+  const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
+  const [editDialogComponent, setEditDialogComponent] =
+    useState<string>("date");
   const [member, setMember] = useState<TeamMember | null>(null);
   const [catalogObject, setCatalogObject] = useState<CatalogObject | null>(
     null
@@ -31,6 +35,11 @@ const Overview = () => {
   const [booking, setBooking] = useState<Booking | null>(null);
   const [paymentLink, setPaymentLink] = useState<PaymentLink | null>(null);
   const { isAuthenticated, user } = useAuth0<{ name: string }>();
+
+  const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
+  const [selectedServices, setSelectedServices] = useState<Array<string>>([]);
+  const [selectedStartAt, setSelectedStartAt] = useState<string | null>(null);
+  const [title, setTitle] = useState<string>("Test title");
 
   const getBooking = async (email: string) => {
     const data = await sendRequest("/customer/booking?email=" + email, "GET");
@@ -48,6 +57,34 @@ const Overview = () => {
     }
     return data;
   };
+  const updateBooking = async (bookingId: string) => {
+    if (booking === null) return;
+    const data = await sendRequest("/booking/" + bookingId, "PUT", {
+      booking: {
+        customerId: booking.customerId,
+        locationId: booking.locationId,
+        locationType: booking.locationType,
+        appointmentSegments: booking.appointmentSegments,
+        /* appointmentSegments: [
+         *   {
+         *     teamMemberId: selectedMemberId,
+         *     durationMinutes: durationMinutes,
+         *     serviceVariationId: serviceVariationId,
+         *     serviceVariationVersion: serviceVariationVersion,
+         *   },
+         * ], */
+        sellerNote: booking.sellerNote,
+        startAt: booking.startAt,
+        version: booking.version,
+        customerNote: booking.customerNote,
+      },
+    });
+    if (data === -1) {
+      console.log("TODO: if error notify the user", data);
+      return null;
+    }
+    return data;
+  };
 
   useEffect(() => {
     // @ts-ignore
@@ -56,6 +93,8 @@ const Overview = () => {
         ({ booking, teamMember, object, paymentLink }) => {
           setBooking(booking);
           setMember(teamMember);
+          setSelectedMemberId(teamMember.id);
+          setSelectedServices([object.id]);
           setCatalogObject(object);
           setPaymentLink(paymentLink);
           // @ts-ignore
@@ -84,12 +123,70 @@ const Overview = () => {
     console.log("TODO: Edit > ", member);
   };
 
+  const save = () => {
+    setOpenEditDialog(false);
+  };
+
+  const showEditDialog = (component: string) => {
+    setEditDialogComponent(component);
+    setOpenEditDialog(true);
+  };
+
+  const editDialogTitle = (component: string) => {
+    switch (component) {
+      case "date":
+        return "Set date and time";
+      case "service":
+        return "Add or remove a service";
+      case "member":
+        return "Set team member";
+      default:
+        return "Title not set";
+    }
+  };
+
+  const editDialogChild = (component: string) => {
+    switch (component) {
+      case "date":
+        return (
+          <DateTimePicker
+            selectedServices={selectedServices}
+            memberId={selectedMemberId}
+            selectedStartAt={selectedStartAt}
+            setSelectedStartAt={setSelectedStartAt}
+          />
+        );
+      case "service":
+        return (
+          <Services
+            selectedServices={selectedServices}
+            setSelectedServices={setSelectedServices}
+          />
+        );
+      case "member":
+        return (
+          <TeamMembers
+            showOwner={false}
+            selectedMemberId={selectedMemberId}
+            setSelectedMemberId={setSelectedMemberId}
+            goNext={() => console.log("Implement go next")}
+          />
+        );
+    }
+  };
+
   return (
     <>
-      <RescheduleDialog
-        open={openRescheduleDialog}
-        setOpen={setOpenRescheduleDialog}
-      />
+      {openEditDialog && (
+        <EditDialog
+          title={editDialogTitle(editDialogComponent)}
+          open={openEditDialog}
+          setOpen={setOpenEditDialog}
+          save={save}
+        >
+          {editDialogChild(editDialogComponent)}
+        </EditDialog>
+      )}
       <div className="summaryGrid">
         {booking && (
           <DateTime
@@ -98,17 +195,16 @@ const Overview = () => {
             appointmentSegments={booking.appointmentSegments}
             setLoading={setLoading}
             cancelBooking={cancelBooking}
-            setOpenRescheduleDialog={setOpenRescheduleDialog}
+            showEditDialog={showEditDialog}
           />
         )}
 
         {booking && catalogObject && member && (
-          <Services
+          <ServicesOverview
             appointmentSegments={booking.appointmentSegments}
             catalogObject={catalogObject}
             member={member}
-            editService={editService}
-            editStaff={editStaff}
+            showEditDialog={showEditDialog}
           />
         )}
         {paymentLink && <Checkout paymentLink={paymentLink} />}

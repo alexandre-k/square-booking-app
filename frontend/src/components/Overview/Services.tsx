@@ -16,17 +16,15 @@ import "./Services.css";
 interface ServicesProp {
   appointmentSegments: Array<AppointmentSegment>;
   catalogObject: CatalogObject;
-  member: TeamMember;
-  editService: (service: CatalogObject) => void;
-  editStaff: (member: TeamMember) => void;
+  member: TeamMember | null;
+  showEditDialog: (component: string) => void;
 }
 
-const Services = ({
+const ServicesOverview = ({
   appointmentSegments,
   catalogObject,
   member,
-  editService,
-  editStaff,
+  showEditDialog,
 }: ServicesProp) => (
   <Card className="card">
     {appointmentSegments.map((appointment, index) => (
@@ -45,22 +43,24 @@ const Services = ({
             <IconButton
               aria-label="edit"
               color="secondary"
-              onClick={() => editService(catalogObject)}
+              onClick={() => showEditDialog("service")}
             >
               <EditIcon />
             </IconButton>
           </div>
         </CardContent>
-        <CardContent>
-          <Divider />
-          <AssignedStaff
-            appointment={appointment}
-            member={member}
-            editStaff={editStaff}
-          />
-        </CardContent>
+        {member && (
+          <CardContent>
+            <Divider />
+            <AssignedStaff
+              appointment={appointment}
+              member={member}
+              editStaff={() => showEditDialog("member")}
+            />
+          </CardContent>
+        )}
       </React.Fragment>
     ))}
   </Card>
 );
-export default Services;
+export default ServicesOverview;

@@ -21,7 +21,7 @@ interface DateTimeProps {
   loading: boolean;
   setLoading: (loading: boolean) => void;
   cancelBooking: (bookingId: string) => Promise<void>;
-  setOpenRescheduleDialog: (open: boolean) => void;
+  showEditDialog: (component: string) => void;
 }
 
 const DateTime = ({
@@ -30,7 +30,7 @@ const DateTime = ({
   loading,
   setLoading,
   cancelBooking,
-  setOpenRescheduleDialog,
+  showEditDialog,
 }: DateTimeProps) => {
   const cancel = async () => {
     setLoading(true);
@@ -104,7 +104,7 @@ const DateTime = ({
             color="info"
             startIcon={<UpdateIcon />}
             aria-label="change date/time"
-            onClick={() => setOpenRescheduleDialog(true)}
+            onClick={() => showEditDialog("date")}
           >
             Reschedule
           </Button>
