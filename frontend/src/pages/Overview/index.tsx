@@ -82,6 +82,7 @@ const Overview = () => {
         customerNote: booking.customerNote,
       },
     });
+      console.log('TODO: update version, remaining data from data fetched')
     if (data === -1) {
       console.log("TODO: if error notify the user", data);
       return null;

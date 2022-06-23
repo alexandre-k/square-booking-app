@@ -36,7 +36,7 @@ const Booking = (props: BookingProps) => {
   // const [disabled, setDisabled] = useState<boolean>(true);
 
   const bookAppointment = async () => {
-    const data = await sendRequest("/booking/create", "POST", {
+    const data = await sendRequest("/customer/booking", "POST", {
       booking: {
         ...customer,
         customerNote: "",
