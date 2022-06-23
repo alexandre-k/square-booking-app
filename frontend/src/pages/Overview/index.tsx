@@ -57,14 +57,17 @@ const Overview = () => {
     }
     return data;
   };
-  const updateBooking = async (bookingId: string) => {
+  const updateBooking = async (bookingId: Booking | null) => {
     if (booking === null) return;
-    const data = await sendRequest("/booking/" + bookingId, "PUT", {
+    const data = await sendRequest("/booking/" + booking.id, "PUT", {
       booking: {
         customerId: booking.customerId,
         locationId: booking.locationId,
         locationType: booking.locationType,
-        appointmentSegments: booking.appointmentSegments,
+        appointmentSegments: booking.appointmentSegments.map((segment) => {
+          const { intermissionMinutes, anyTeamMember, ...rest } = segment;
+          return { ...rest, teamMemberId: selectedMemberId };
+        }),
         /* appointmentSegments: [
          *   {
          *     teamMemberId: selectedMemberId,
@@ -124,6 +127,7 @@ const Overview = () => {
   };
 
   const save = () => {
+    updateBooking(booking);
     setOpenEditDialog(false);
   };
 
