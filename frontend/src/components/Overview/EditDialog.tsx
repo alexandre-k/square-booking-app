@@ -7,9 +7,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import CloseIcon from '@mui/icons-material/Close';
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { useTheme } from "@mui/material/styles";
-import { BusinessHours } from "types/Location";
 
 interface EditDialogProps {
   title: string;
@@ -27,8 +24,6 @@ const EditDialog = ({
   save,
 }: EditDialogProps) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleSave = () => {
     setLoading(true);

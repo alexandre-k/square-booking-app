@@ -4,7 +4,6 @@ import EditDialog from "components/Overview/EditDialog";
 import Loading from "components/Loading";
 import { Booking } from "types/Booking";
 import { TeamMember } from "types/Team";
-import { DayOfWeek } from "types/Location";
 import { PaymentLink } from "types/Checkout";
 import { CatalogObject } from "types/Catalog";
 import "./index.css";
@@ -39,7 +38,7 @@ const Overview = () => {
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
   const [selectedServices, setSelectedServices] = useState<Array<string>>([]);
   const [selectedStartAt, setSelectedStartAt] = useState<string | null>(null);
-  const [title, setTitle] = useState<string>("Test title");
+  // const [title, setTitle] = useState<string>("Test title");
 
   const getBooking = async (email: string) => {
     const data = await sendRequest("/customer/booking?email=" + email, "GET");
@@ -119,13 +118,13 @@ const Overview = () => {
     return <InviteLogin />;
   }
 
-  const editService = (catalogObject: CatalogObject) => {
-    console.log("TODO: Edit > ", catalogObject);
-  };
-  const editStaff = (member: TeamMember) => {
-    console.log("TODO: Edit > ", member);
-  };
-
+    /* const editService = (catalogObject: CatalogObject) => {
+     *   console.log("TODO: Edit > ", catalogObject);
+     * };
+     * const editStaff = (member: TeamMember) => {
+     *   console.log("TODO: Edit > ", member);
+     * };
+     */
   const save = () => {
     updateBooking(booking);
     setOpenEditDialog(false);

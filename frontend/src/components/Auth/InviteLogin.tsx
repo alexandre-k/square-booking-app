@@ -1,13 +1,12 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import Button from "@mui/material/Button";
 import "./InviteLogin.css";
 
 const InviteLogin = () => {
-  const { isAuthenticated, loginWithRedirect, user } = useAuth0<{
+  const { loginWithRedirect } = useAuth0<{
     name: string;
   }>();
   return (

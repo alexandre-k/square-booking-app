@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import Stepper from "@mui/material/Stepper";
@@ -13,9 +13,6 @@ import Customer from "components/Booking/Customer";
 import Services from "components/Booking/Services";
 import TeamMembers from "components/Booking/TeamMembers";
 import { User } from "types/Customer";
-import { BusinessHours, DayOfWeek } from "types/Location";
-import { TeamMember } from "types/Team";
-import { CatalogObject } from "types/Catalog";
 import { Booking as BookingT } from "types/Booking";
 import { sendRequest } from "utils/request";
 import "./index.css";
@@ -62,16 +59,6 @@ const Booking = (props: BookingProps) => {
       return;
     }
     props.setBooking(data.booking);
-  };
-
-  const businessHours = {
-    periods: [
-      {
-        dayOfWeek: DayOfWeek.MONDAY,
-        startLocalTime: "9:00",
-        endLocalTime: "17:00",
-      },
-    ],
   };
 
   const steps = [
