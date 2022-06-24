@@ -3,7 +3,7 @@ import "./NoBookingFound.css";
 
 const NoBookingFound = () => (
   <div id="noBookingFoundContainer">
-    <Typography variant="h4">Looks empty to me!</Typography>
+    <Typography variant="h4">No booking yet!</Typography>
   </div>
 );
 

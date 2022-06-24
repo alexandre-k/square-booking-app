@@ -5,7 +5,7 @@ import Loading from "components/Loading";
 import { Booking, BookingStatus } from "types/Booking";
 import { TeamMember } from "types/Team";
 import { PaymentLink } from "types/Checkout";
-import { CatalogObject } from "types/Catalog";
+import { CatalogObject, CatalogObjectItemVariation } from "types/Catalog";
 import "./index.css";
 import Services from "components/Booking/Services";
 import TeamMembers from "components/Booking/TeamMembers";
@@ -28,8 +28,11 @@ const Overview = () => {
   const [editDialogComponent, setEditDialogComponent] =
     useState<string>("date");
   const [member, setMember] = useState<TeamMember | null>(null);
-  const [catalogObject, setCatalogObject] = useState<CatalogObject | null>(
-    null
+  const [catalogObjects, setCatalogObjects] = useState<
+    Array<CatalogObject>
+  >([]);
+  const [catalogObjectItemVariations, setCatalogObjectItemVariations] = useState<Array<CatalogObjectItemVariation>>(
+    []
   );
   // const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
   const [booking, setBooking] = useState<Booking | null>(null);
@@ -82,7 +85,7 @@ const Overview = () => {
         customerNote: booking.customerNote,
       },
     });
-      console.log('TODO: update version, remaining data from data fetched')
+    console.log("TODO: update version, remaining data from data fetched");
     if (data === -1) {
       console.log("TODO: if error notify the user", data);
       return null;
@@ -93,19 +96,23 @@ const Overview = () => {
   useEffect(() => {
     // @ts-ignore
     if (booking === null && user) {
-        setLoading(true);
+      setLoading(true);
       getBooking(user.name).then(
-        ({ booking, teamMember, object, paymentLink }) => {
-            if (booking === undefined || booking === null) {
-                setLoading(false);
+        ({ booking, teamMember, objects, relatedObjects, paymentLink }) => {
+          if (booking === undefined || booking === null) {
+            setLoading(false);
             return;
-            }
+          }
           setBooking(booking);
           setMember(teamMember);
           setSelectedMemberId(teamMember.id);
-          setSelectedServices([object.id]);
-          setCatalogObject(object);
+          setSelectedServices(
+            objects.map((object: CatalogObject) => object.id)
+          );
+          setCatalogObjects(relatedObjects);
+          setCatalogObjectItemVariations(objects);
           setPaymentLink(paymentLink);
+          setLoading(false);
           // @ts-ignore
           /* if (booking.appointmentSegments.length > 0) {
            *   const appointment = booking.appointmentSegments[0];
@@ -121,9 +128,9 @@ const Overview = () => {
     return <Loading />;
   }
 
-    if (booking === null && isAuthenticated) {
-        return <NoBookingFound />
-    }
+  if (booking === null && isAuthenticated) {
+    return <NoBookingFound />;
+  }
 
   if (!isAuthenticated) {
     return <InviteLogin />;
@@ -218,11 +225,12 @@ const Overview = () => {
           />
         )}
 
-        {booking && catalogObject && member && (
+        {booking && catalogObjects && catalogObjectItemVariations && member && (
           <ServicesOverview
             disabled={isCancelled(booking.status)}
             appointmentSegments={booking.appointmentSegments}
-            catalogObject={catalogObject}
+            catalogObjectItemVariations={catalogObjectItemVariations}
+            catalogObjects={catalogObjects}
             member={member}
             showEditDialog={showEditDialog}
           />
