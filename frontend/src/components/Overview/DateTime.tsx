@@ -19,7 +19,6 @@ interface DateTimeProps {
   booking: Booking;
   appointmentSegments: Array<AppointmentSegment>;
   loading: boolean;
-  setLoading: (loading: boolean) => void;
   disabled: boolean;
   cancelBooking: (bookingId: string) => Promise<void>;
   showEditDialog: (component: string) => void;
@@ -29,15 +28,12 @@ const DateTime = ({
   booking,
   appointmentSegments,
   loading,
-  setLoading,
   disabled,
   cancelBooking,
   showEditDialog,
 }: DateTimeProps) => {
   const cancel = async () => {
-    setLoading(true);
     await cancelBooking(booking.id);
-    setLoading(false);
     console.log("TODO: Reload booking summary page");
   };
 

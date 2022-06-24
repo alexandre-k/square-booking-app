@@ -86,31 +86,31 @@ export const sendRequest = async (
       headers,
     });
       return response.data
-    // setData(response.data);
   } catch (err: any) {
-    if (axios.isAxiosError(err)) {
       throw err;
-    }
-    const errorData = err?.response?.data;
-    if (isSquareError(errorData)) {
-      errorData.errors.forEach((error) => {
-        console.error(
-          "Error at field: ",
-          error.field,
-          " detail: ",
-          error.detail
-        );
-        console.debug(error.detail);
-        console.log(error);
-        return null;
-      });
-    } else {
-      console.log(err);
-      return null;
-    }
-    // setError(err);
-    return null;
-  } finally {
+    // if (axios.isAxiosError(err)) {
+  //     throw err;
+  //   }
+  //   const errorData = err?.response?.data;
+  //   if (isSquareError(errorData)) {
+  //     errorData.errors.forEach((error) => {
+  //       console.error(
+  //         "Error at field: ",
+  //         error.field,
+  //         " detail: ",
+  //         error.detail
+  //       );
+  //       console.debug(error.detail);
+  //       console.log(error);
+  //       return null;
+  //     });
+  //   } else {
+  //     console.log(err);
+  //     return null;
+  //   }
+  //   // setError(err);
+  //   return null;
+  // } finally {
     // setLoaded(true);
   }
 };

@@ -4,6 +4,8 @@ import "./index.css";
 import App from "./App";
 import { Auth0Provider } from "@auth0/auth0-react";
 import reportWebVitals from "./reportWebVitals";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 // import SquareProvider from "./context/squareContext";
 
 // const baseURL = "https://connect.squareupsandbox.com/v2";
@@ -11,6 +13,9 @@ import reportWebVitals from "./reportWebVitals";
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
+const queryClient = new QueryClient();
+
 root.render(
   /* <SquareProvider
         applicationId={process.env.REACT_APP_SQUARE_APPLICATION_ID}
@@ -22,9 +27,12 @@ root.render(
     clientId={process.env.REACT_APP_OAUTH_ID || "undefined"}
     redirectUri={process.env.REACT_APP_OAUTH_REDIRECT_URI || "undefined"}
   >
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   </Auth0Provider>
   /* </SquareProvider> */
 );
