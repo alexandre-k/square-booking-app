@@ -15,10 +15,13 @@ type Error = {
 };
 
 const Home = () => {
-    const { isLoading, isError, data, error } = useQuery<Location, AxiosError>("location", getLocation)
+  const { isLoading, isError, data, error } = useQuery<Location, AxiosError>(
+    "location",
+    getLocation
+  );
 
-  if (error) return <NetworkError error={error} />;
-  if (!data) return <Loading />;
+  if (isError) return <NetworkError error={error} />;
+  if (!data || isLoading) return <Loading />;
   return (
     <Routes>
       <Route path="" element={<About location={data} />} />

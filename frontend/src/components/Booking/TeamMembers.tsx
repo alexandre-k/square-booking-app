@@ -1,4 +1,6 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { AxiosError } from "axios";
+import { useQuery } from "react-query";
 // import { Customer } from "hooks/useCustomer";
 import { TeamMember } from "types/Team";
 import Grid from "@mui/material/Grid";
@@ -8,37 +10,23 @@ import ListItemButton from "@mui/material/ListItemButton";
 import Loading from "components/Loading";
 import "./TeamMembers.css";
 import TeamMemberAvatar from "components/Booking/TeamMemberAvatar";
-import { sendRequest } from "utils/request";
+import { getTeamMembers } from "api/team";
 
 interface TeamMembersProps {
   showOwner: boolean;
   selectedMemberId: string | null;
-  setSelectedMemberId: Dispatch<SetStateAction<string | null>>;
+  setSelectedMemberId: (selectedMemberId: string) => void;
   goNext: () => void;
 }
 
 const TeamMembers = (props: TeamMembersProps) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [members, setMembers] = useState<TeamMember[]>([]);
-  const getTeamMembers = async () => {
-    setLoading(true);
-    const teamMembers = await sendRequest("/staff/search", "POST");
-    const members = teamMembers
-      .filter((m: TeamMember) => !m.isOwner)
-      .map((member: TeamMember) => ({
-        ...member,
-        avatarUrl: `https://ui-avatars.com/api/?name=${member.givenName}+${member.familyName}.jpg`,
-      }));
-    setMembers(members);
-    setLoading(false);
-  };
-  useEffect(() => {
-    if (members.length === 0) {
-      getTeamMembers();
-    }
-  }, []);
-  if (loading) return <Loading />;
-  const listItem = members
+  const { isLoading, isError, data, error } = useQuery<
+    Array<TeamMember>,
+    AxiosError
+  >("teamMembers", getTeamMembers);
+
+  if (!data || isLoading) return <Loading />;
+  const listItem = data
     .filter((member) => !member.isOwner || props.showOwner)
     .map((member, index) => (
       <div id="membersContainer" key={member.id}>

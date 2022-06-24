@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { AxiosError } from "axios";
+import { useQuery } from "react-query";
 import Divider from "@mui/material/Divider";
 import FormGroup from "@mui/material/FormGroup";
 import FormControl from "@mui/material/FormControl";
@@ -7,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import { CatalogObject, Service, ServiceCategory } from "types/Catalog";
 import ServiceLabel from "components/Booking/ServiceLabel";
 import { formatCatalogObjects } from "utils/service";
-import { sendRequest } from "utils/request";
+import { getCatalogObjects } from "api/services";
 import Loading from "components/Loading";
 import "./Services.css";
 
@@ -17,25 +19,15 @@ interface ServicesProps {
 }
 
 const Services = ({ selectedServices, setSelectedServices }: ServicesProps) => {
-  const [catalogObjects, setCatalogObjects] = useState<Array<CatalogObject>>(
-    []
+  const { isLoading, isError, data, error } = useQuery<Array<CatalogObject>, AxiosError>(
+    "catalogObjects",
+    getCatalogObjects
   );
-  const [loading, setLoading] = useState<boolean>(false);
-  const getCatalogObjects = async () => {
-    setLoading(true);
-    const services = await sendRequest("/services/objects", "GET");
-    setCatalogObjects(services);
-    setLoading(false);
-  };
 
-  useEffect(() => {
-    if (catalogObjects.length === 0) {
-      getCatalogObjects();
-    }
-  }, [catalogObjects]);
-
-  if (loading) return <Loading />;
-  const objects = formatCatalogObjects(catalogObjects);
+  if (!data || isLoading) return <Loading />;
+  if (isError)
+    return <div>Unable to get services! Do you have a Network problem?</div>;
+  const objects = formatCatalogObjects(data);
   const mainServices = objects.filter((service) => {
     return service.category === ServiceCategory.MAIN;
   });
@@ -65,7 +57,7 @@ const Services = ({ selectedServices, setSelectedServices }: ServicesProps) => {
           <Divider />
           <Grid container>
             {services.map((service, index) => (
-              <Grid item xs={11} md={6}>
+              <Grid key={index} item xs={11} md={6}>
                 <ServiceLabel
                   service={service}
                   selectedServices={selectedServices}
