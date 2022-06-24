@@ -35,23 +35,23 @@ export interface AxiosInterface {
   payload: object;
 }
 
-const isSquareError = (errorData: any): errorData is SquareError => {
-  if (
-    errorData &&
-    Array.isArray(errorData.errors) &&
-    errorData.errors.length > 1
-  ) {
-    const error = errorData.errors[0];
-    return (
-      "category" in error &&
-      "code" in error &&
-      "detail" in error &&
-      "field" in error
-    );
-  } else {
-    return false;
-  }
-};
+// const isSquareError = (errorData: any): errorData is SquareError => {
+//   if (
+//     errorData &&
+//     Array.isArray(errorData.errors) &&
+//     errorData.errors.length > 1
+//   ) {
+//     const error = errorData.errors[0];
+//     return (
+//       "category" in error &&
+//       "code" in error &&
+//       "detail" in error &&
+//       "field" in error
+//     );
+//   } else {
+//     return false;
+//   }
+// };
 
 // export const useAxios = (axiosParams: AxiosInterface) => {
 //   const [data, setData] = useState(undefined);

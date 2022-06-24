@@ -6,11 +6,11 @@
   "dependencies": {
     "@auth0/auth0-react": "^1.10.1",
     "@date-io/dayjs": "^2.14.0",
+    "datebook": "^7.0.8",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@headlessui/react": "^1.6.4",
     "@heroicons/react": "^1.0.6",
-    "@hollen/datebook": "^1.0.0",
     "@mui/icons-material": "^5.8.2",
     "@mui/lab": "^5.0.0-alpha.85",
     "@mui/material": "^5.8.2",
