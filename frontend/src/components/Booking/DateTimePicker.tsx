@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { AxiosError } from "axios";
 import { useQuery } from "react-query";
 import "react-calendar/dist/Calendar.css";
 import Skeleton from "@mui/material/Skeleton";
 import Calendar from "react-calendar";
 import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
 import { DayOfWeek, Location, LocationType, Period } from "types/Location";
-import { Availability } from "types/Booking";
-import TimeSelector from "components/Booking/TimeSelector";
 import Availabilities from "components/Booking/Availabilities";
 import { getLocation } from "api/location";
 import "./DateTimePicker.css";
@@ -52,7 +49,6 @@ const DateTimePicker = ({
   memberId,
 }: DateTimePickerProps) => {
   // const [availabilities, setAvailabilities] = useState<Array<Availability>>([]);
-  const [location, setLocation] = useState<Location | null>(null);
   const [value, onChange] = useState(new Date());
 
   // const [selectedStartAt, setSelectedStartAt] = useState<string | null>(null);
@@ -75,11 +71,17 @@ const DateTimePicker = ({
       </div>
     );
 
-  if (isError) return <div>Error while loading</div>;
+  if (isError)
+    return (
+      <>
+        <div>Error while loading</div>
+        <div>{error.message}</div>
+      </>
+    );
 
   const onDateSelected = async (value: Date) => {
     onChange(value);
-    const [dayOfWeek, rest] = value.toDateString().split(" ");
+    const [dayOfWeek] = value.toDateString().split(" ");
     setDate(dayjs(value));
     const foundWorkingDay = data.businessHours.periods.find((obj: Period) => {
       return obj.dayOfWeek === dayOfWeek.toUpperCase();

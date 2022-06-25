@@ -10,7 +10,6 @@ import Stack from "@mui/material/Stack";
 import dayjs from "dayjs";
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { Availability } from "types/Booking";
 import "./TimeSelector.css";
 

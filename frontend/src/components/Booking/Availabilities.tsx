@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { AxiosError } from "axios";
 import TimeSelector from "components/Booking/TimeSelector";
 import { Availability } from "types/Booking";
 import { getAvailabilities } from "api/date";
-import { DayOfWeek, LocationType, Period } from "types/Location";
+import { Period } from "types/Location";
 import { useQuery } from "react-query";
 import dayjs from "dayjs";
 
