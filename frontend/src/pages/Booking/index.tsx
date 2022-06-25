@@ -26,7 +26,7 @@ interface BookingProps {
 const Booking = (props: BookingProps) => {
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
   const [selectedServices, setSelectedServices] = useState<Array<string>>([]);
-  const [selectedStartAt, setSelectedStartAt] = useState<string | null>(null);
+  const [selectedStartAt, setSelectedStartAt] = useState<string>("");
   const [customer, setCustomer] = useState<User>({
     givenName: "",
     familyName: "",

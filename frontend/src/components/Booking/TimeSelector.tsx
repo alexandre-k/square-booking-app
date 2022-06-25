@@ -8,16 +8,21 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Stack from "@mui/material/Stack";
 import dayjs from "dayjs";
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { Availability } from "types/Booking";
 import "./TimeSelector.css";
 
 interface TimeSelectorProps {
   availabilities: Array<Availability>;
-  selectedStartAt: string | null;
+  locationTimezone: string;
+  selectedStartAt: string;
   setSelectedStartAt: (selectedStartAt: string) => void;
 }
 const TimeSelector = ({
   availabilities,
+  locationTimezone,
   selectedStartAt,
   setSelectedStartAt,
 }: TimeSelectorProps) => (
@@ -31,7 +36,10 @@ const TimeSelector = ({
       direction="row"
     >
       {availabilities.map((availability) => {
-        const startAt = dayjs(availability.startAt);
+          dayjs.extend(utc)
+          dayjs.extend(timezone)
+          const startAtUtc = dayjs(availability.startAt);
+          const startAt = startAtUtc.tz(locationTimezone);
         return (
           <ListItem key={availability.startAt}>
             <Button
