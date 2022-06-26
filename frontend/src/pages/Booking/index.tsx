@@ -36,26 +36,35 @@ const Booking = (props: BookingProps) => {
   });
   const [activeStep, setActiveStep] = useState(0);
   // const [disabled, setDisabled] = useState<boolean>(true);
-    const changeRoute = useNavigate();
-    const navigate = (step: number) => {
-        const nextActiveStep = activeStep + step;
-        if (nextActiveStep === -1) {
-            changeRoute("/");
-        }
-        setActiveStep(nextActiveStep);
-    };
-    const { isLoading, isError, isSuccess, mutate, error } = useMutation<BookingT, AxiosError>(
-        () => bookAppointment(customer, selectedStartAt, selectedServices, selectedMemberId), {
-            // @ts-ignore
-            onSuccess: ( data) => {
+  const changeRoute = useNavigate();
+  const navigate = (step: number) => {
+    const nextActiveStep = activeStep + step;
+    if (nextActiveStep === -1) {
+      changeRoute("/");
+    }
+    setActiveStep(nextActiveStep);
+  };
+  const { isLoading, isError, isSuccess, mutate, error } = useMutation<
+    BookingT,
+    AxiosError
+  >(
+    () =>
+      bookAppointment(
+        customer,
+        selectedStartAt,
+        selectedServices,
+        selectedMemberId
+      ),
+    {
+      // @ts-ignore
+      onSuccess: (data) => {
+        // @ts-ignore
+        changeRoute("/overview/" + data.booking.id);
+      },
+    }
+  );
 
-                // @ts-ignore
-                changeRoute("/completed/" + data.booking.id);
-            }
-        }
-    );
-
-    const steps = [
+  const steps = [
     {
       label: "Select a service",
       component: (
@@ -99,8 +108,6 @@ const Booking = (props: BookingProps) => {
     },
   ];
 
-
-
   return (
     <div id="bookingContainer">
       <div>
@@ -124,16 +131,16 @@ const Booking = (props: BookingProps) => {
       {steps[activeStep].isNextRequired && (
         <div>
           {activeStep === steps.length - 1 ? (
-              <Button
-                className="businessNameButton"
-                variant="contained"
-                size="large"
-                disabled={isLoading}
-                onClick={() => mutate()}
-                endIcon={<CheckIcon />}
-              >
-                Book
-              </Button>
+            <Button
+              className="businessNameButton"
+              variant="contained"
+              size="large"
+              disabled={isLoading}
+              onClick={() => mutate()}
+              endIcon={<CheckIcon />}
+            >
+              Book
+            </Button>
           ) : (
             <Button
               disabled={false}

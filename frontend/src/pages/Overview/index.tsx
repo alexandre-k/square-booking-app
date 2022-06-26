@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { AxiosError } from "axios";
 import { useQuery } from "react-query";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -52,11 +53,15 @@ const Overview = () => {
   const [selectedServices, setSelectedServices] = useState<Array<string>>([]);
   const [selectedStartAt, setSelectedStartAt] = useState<string>("");
 
+  const { bookingId } = useParams();
+  const isBookingQueryEnabled = !!user && !!bookingId;
+  const getBookingId = () => !!bookingId ? bookingId : "";
+
   const { isLoading, isError, data, error } = useQuery<
     GetBookingQuery,
     AxiosError
-  >("customer/booking", () => getBooking(user ? user.name : ""), {
-    enabled: !!user,
+  >("customer/booking", () => getBooking(getBookingId()), {
+    enabled: isBookingQueryEnabled,
   });
 
   useEffect(() => {
@@ -84,7 +89,7 @@ const Overview = () => {
   if (error) {
     return (
       <NoBookingFound
-        title="Got an error while fetching bookings:"
+          title="Check your internet connection..."
         text={error.message}
       />
     );

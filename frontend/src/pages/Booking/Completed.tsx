@@ -4,11 +4,11 @@ import BookingSummary from "pages/Overview";
 import Loading from "components/Loading";
 
 interface CompletedProps {
-  booking: Booking | null;
+  bookingId: string;
 }
 
-const Completed = ({ booking }: CompletedProps) => {
-  if (booking === null) return <Loading />;
+const Completed = ({ bookingId }: CompletedProps) => {
+  if (bookingId === null) return <Loading />;
   return (
     <>
       <Typography variant="h4" color="inherit">

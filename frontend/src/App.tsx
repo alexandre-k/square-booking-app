@@ -145,9 +145,9 @@ function App() {
               />
               <Route
                 path="completed"
-                element={<Completed booking={booking} />}
+                element={<Completed bookingId={""} />}
               />
-              <Route path="booking/summary" element={<BookingSummary />} />
+              <Route path="overview/:bookingId" element={<BookingSummary />} />
               <Route path="dashboard" element={<TeamDashboard />} />
             </Routes>
             <SwipeableDrawer
