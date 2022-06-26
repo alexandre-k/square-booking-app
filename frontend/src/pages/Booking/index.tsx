@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { AxiosError } from "axios";
+import { useMutation } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import Stepper from "@mui/material/Stepper";
@@ -14,7 +16,7 @@ import Services from "components/Booking/Services";
 import TeamMembers from "components/Booking/TeamMembers";
 import { User } from "types/Customer";
 import { Booking as BookingT } from "types/Booking";
-import { sendRequest } from "utils/request";
+import { bookAppointment } from "api/booking";
 import "./index.css";
 // import * as Yup from "yup";
 
@@ -24,7 +26,7 @@ interface BookingProps {
 }
 
 const Booking = (props: BookingProps) => {
-  const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
+  const [selectedMemberId, setSelectedMemberId] = useState<string>("");
   const [selectedServices, setSelectedServices] = useState<Array<string>>([]);
   const [selectedStartAt, setSelectedStartAt] = useState<string>("");
   const [customer, setCustomer] = useState<User>({
@@ -34,34 +36,26 @@ const Booking = (props: BookingProps) => {
   });
   const [activeStep, setActiveStep] = useState(0);
   // const [disabled, setDisabled] = useState<boolean>(true);
+    const changeRoute = useNavigate();
+    const navigate = (step: number) => {
+        const nextActiveStep = activeStep + step;
+        if (nextActiveStep === -1) {
+            changeRoute("/");
+        }
+        setActiveStep(nextActiveStep);
+    };
+    const { isLoading, isError, isSuccess, mutate, error } = useMutation<BookingT, AxiosError>(
+        () => bookAppointment(customer, selectedStartAt, selectedServices, selectedMemberId), {
+            // @ts-ignore
+            onSuccess: ( data) => {
 
-  const bookAppointment = async () => {
-    const data = await sendRequest("/customer/booking", "POST", {
-      booking: {
-        ...customer,
-        customerNote: "",
-        locationId: process.env.REACT_APP_SQUARE_LOCATION_ID,
-        // locationType: LocationType.BUSINESS_LOCATION,
-        // sellerNote: "",
-        startAt: selectedStartAt,
-        appointmentSegments: selectedServices.map((service) => {
-          return {
-            durationMinutes: 30,
-            serviceVariationId: service,
-            teamMemberId: selectedMemberId,
-            serviceVariationVersion: 1,
-          };
-        }),
-      },
-    });
-    if (data === -1 || !data.booking) {
-      console.log("TODO: if error notify the user", data);
-      return;
-    }
-    props.setBooking(data.booking);
-  };
+                // @ts-ignore
+                changeRoute("/completed/" + data.booking.id);
+            }
+        }
+    );
 
-  const steps = [
+    const steps = [
     {
       label: "Select a service",
       component: (
@@ -105,14 +99,7 @@ const Booking = (props: BookingProps) => {
     },
   ];
 
-  const changeRoute = useNavigate();
-  const navigate = (step: number) => {
-    const nextActiveStep = activeStep + step;
-    if (nextActiveStep === -1) {
-      changeRoute("/");
-    }
-    setActiveStep(nextActiveStep);
-  };
+
 
   return (
     <div id="bookingContainer">
@@ -137,24 +124,16 @@ const Booking = (props: BookingProps) => {
       {steps[activeStep].isNextRequired && (
         <div>
           {activeStep === steps.length - 1 ? (
-            <Link
-              to={{
-                pathname: `/completed/${
-                  props.booking === null ? "" : props.booking.id
-                }`,
-              }}
-              onClick={bookAppointment}
-              style={{ textDecoration: "none" }}
-            >
               <Button
                 className="businessNameButton"
                 variant="contained"
                 size="large"
+                disabled={isLoading}
+                onClick={() => mutate()}
                 endIcon={<CheckIcon />}
               >
                 Book
               </Button>
-            </Link>
           ) : (
             <Button
               disabled={false}
