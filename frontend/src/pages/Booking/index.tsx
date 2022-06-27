@@ -71,9 +71,9 @@ const Booking = (props: BookingProps) => {
       component: (
         <Services
           selectedServices={selectedServices}
-        onDone={(services: Array<Service>) => {
-            console.log('on done > ', services)
-        }}
+          onDone={(services: Array<Service>) =>
+            setSelectedServices(services.map((service) => service.id))
+          }
         />
       ),
       isNextRequired: true,
