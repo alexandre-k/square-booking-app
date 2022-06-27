@@ -5,6 +5,8 @@
 }
 
 .react-calendar {
+  padding: 15px;
+  border-radius: 20px;
   border: none;
   box-shadow: 5px 5px 20px rgb(0 0 0 / 0.3);
 }
@@ -22,8 +24,7 @@
   color: black;
 }
 
-.react-calendar__tile--now:enabled:hover  {
-    background-color: #e6e6e6;
-    color: black;
+.react-calendar__tile--now:enabled:hover {
+  background-color: #e6e6e6;
+  color: black;
 }
-
