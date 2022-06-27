@@ -1,5 +1,4 @@
 import dayjs from "dayjs";
-import { Service } from "types/Catalog";
 import { Period } from "types/Location";
 import { sendRequest } from "utils/request";
 

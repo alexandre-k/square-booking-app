@@ -50,8 +50,6 @@ const Summary = ({
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [editDialogComponent, setEditDialogComponent] =
     useState<string>("date");
-  const [loading, setLoading] = useState<boolean>(false);
-
   const [selectedMemberId, setSelectedMemberId] = useState<string>(
     teamMember.id
   );
@@ -65,7 +63,7 @@ const Summary = ({
 
   const queryClient = useQueryClient();
 
-  const updateBooking = useMutation(
+  const { mutate, isLoading } = useMutation(
     ({ booking, appointmentSegments }: BookingMutation): Promise<Booking> =>
       updateAppointmentSegments(booking, appointmentSegments),
     {
@@ -116,7 +114,7 @@ const Summary = ({
             showOwner={false}
             selectedMemberId={selectedMemberId}
             onDone={(memberId: string) =>
-              updateBooking.mutate({
+              mutate({
                 booking,
                 appointmentSegments: appointmentSegments.map(
                   (segment: ShortAppointmentSegment) => {
@@ -137,7 +135,7 @@ const Summary = ({
           title={editDialogTitle(editDialogComponent)}
           open={openEditDialog}
           setOpen={setOpenEditDialog}
-          save={() => updateBooking.mutate({ booking, appointmentSegments })}
+          save={() => mutate({ booking, appointmentSegments })}
         >
           {editDialogChild(editDialogComponent)}
         </EditDialog>
@@ -146,15 +144,16 @@ const Summary = ({
         <DateTime
           disabled={isCancelled(booking.status)}
           booking={booking}
-          loading={loading}
+          isLoading={isLoading}
           appointmentSegments={booking.appointmentSegments}
           cancelBooking={cancelBooking}
           showEditDialog={showEditDialog}
         />
 
-        {booking && <ExportToCalendar />}
+        <ExportToCalendar isLoading={isLoading} />
 
         <ServicesOverview
+          isLoading={isLoading}
           disabled={isCancelled(booking.status)}
           appointmentSegments={booking.appointmentSegments}
           catalogObjectItemVariations={objects}

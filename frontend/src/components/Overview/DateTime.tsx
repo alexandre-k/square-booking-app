@@ -1,4 +1,5 @@
 import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 import ScheduleSendIcon from "@mui/icons-material/ScheduleSend";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
@@ -7,6 +8,8 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
+import Skeleton from "@mui/material/Skeleton";
+import Stack from "@mui/material/Stack";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import UpdateIcon from "@mui/icons-material/Update";
 import Header from "components/Overview/Header";
@@ -18,7 +21,7 @@ import dayjs from "dayjs";
 interface DateTimeProps {
   booking: Booking;
   appointmentSegments: Array<AppointmentSegment>;
-  loading: boolean;
+  isLoading: boolean;
   disabled: boolean;
   cancelBooking: (bookingId: string) => Promise<void>;
   showEditDialog: (component: string) => void;
@@ -27,7 +30,7 @@ interface DateTimeProps {
 const DateTime = ({
   booking,
   appointmentSegments,
-  loading,
+  isLoading,
   disabled,
   cancelBooking,
   showEditDialog,
@@ -84,7 +87,26 @@ const DateTime = ({
   const isCancelBtnDisabled =
     booking.status !== BookingStatus.ACCEPTED &&
     booking.status !== BookingStatus.PENDING;
-
+  if (isLoading) {
+    return (
+      <Card className="card">
+        <Stack spacing={1}>
+          <Skeleton variant="text" width={100} height={25} />
+          <Skeleton variant="rectangular" width={310} height={50} />
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-around",
+            }}
+          >
+            <Skeleton variant="rectangular" width={100} height={25} />
+            <Skeleton variant="rectangular" width={100} height={25} />
+          </Box>
+        </Stack>
+      </Card>
+    );
+  }
   return (
     <Card className="card">
       <Header icon={<CalendarMonthIcon />} title="Your reservation" />
@@ -110,7 +132,6 @@ const DateTime = ({
           <LoadingButton
             variant="outlined"
             disabled={isCancelBtnDisabled}
-            loading={loading}
             size="large"
             color="error"
             startIcon={<CancelIcon />}

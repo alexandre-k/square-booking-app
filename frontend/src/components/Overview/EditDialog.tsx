@@ -23,13 +23,6 @@ const EditDialog = ({
   children,
   save
 }: EditDialogProps) => {
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const handleSave = () => {
-    setLoading(true);
-    save();
-    setLoading(false);
-  };
 
   const handleCancel = () => {
     setOpen(false);
@@ -62,7 +55,7 @@ const EditDialog = ({
         <Button
           variant="contained"
           color="primary"
-          onClick={handleSave}
+          onClick={() => save()}
           autoFocus
         >
           Save

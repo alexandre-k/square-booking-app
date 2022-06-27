@@ -8,6 +8,8 @@ import Divider from "@mui/material/Divider";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
+import Skeleton from "@mui/material/Skeleton";
+import Stack from "@mui/material/Stack";
 import { AppointmentSegment } from "types/Booking";
 import { CatalogObject, CatalogObjectItemVariation } from "types/Catalog";
 import { TeamMember } from "types/Team";
@@ -21,6 +23,7 @@ interface ServicesProp {
   catalogObjectItemVariations: Array<CatalogObjectItemVariation>;
   member: TeamMember | null;
   disabled: boolean;
+  isLoading: boolean;
   showEditDialog: (component: string) => void;
 }
 
@@ -30,13 +33,27 @@ const ServicesOverview = ({
   catalogObjectItemVariations,
   member,
   disabled,
+  isLoading,
   showEditDialog,
 }: ServicesProp) => {
+  if (isLoading) {
+    return (
+      <Card className="card">
+        <Stack spacing={1}>
+          <Skeleton variant="text" width={100} />
+          <Skeleton variant="rectangular" width={310} height={118} />
+          <Skeleton variant="text" width={100} />
+          <Skeleton variant="rectangular" width={310} height={118} />
+        </Stack>
+      </Card>
+    );
+  }
   const firstAppointment = appointmentSegments.find(Boolean);
   return (
     <Card className="card">
-
-      <CardHeader title={<Header icon={<ContentCutIcon />} title="Services" />} />
+      <CardHeader
+        title={<Header icon={<ContentCutIcon />} title="Services" />}
+      />
       {appointmentSegments.map((appointment, index) => {
         const catalogObjectItemVariation = catalogObjectItemVariations.find(
           (obj: CatalogObjectItemVariation) =>
@@ -79,19 +96,20 @@ const ServicesOverview = ({
         );
       })}
       {member && firstAppointment && (
-
-          <>
+        <>
           <Divider />
-          <CardHeader title={<Header icon={<PeopleIcon />} title="Team member" />} />
-        <CardContent>
-          <AssignedStaff
-            anyTeamMember={firstAppointment.anyTeamMember}
-            member={member}
-            disabled={disabled}
-            editStaff={() => showEditDialog("member")}
+          <CardHeader
+            title={<Header icon={<PeopleIcon />} title="Team member" />}
           />
-        </CardContent>
-          </>
+          <CardContent>
+            <AssignedStaff
+              anyTeamMember={firstAppointment.anyTeamMember}
+              member={member}
+              disabled={disabled}
+              editStaff={() => showEditDialog("member")}
+            />
+          </CardContent>
+        </>
       )}
     </Card>
   );
