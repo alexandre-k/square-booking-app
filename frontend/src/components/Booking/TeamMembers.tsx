@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import { useQuery } from "react-query";
 // import { Customer } from "hooks/useCustomer";
@@ -15,29 +14,38 @@ import { getTeamMembers } from "api/team";
 interface TeamMembersProps {
   showOwner: boolean;
   selectedMemberId: string | null;
-  // setSelectedMemberId: (selectedMemberId: string) => void;
-  goNext: (memberId: string) => void;
+  onDone: (memberId: string) => void;
 }
 
-const TeamMembers = (props: TeamMembersProps) => {
+const TeamMembers = ({
+  showOwner,
+  selectedMemberId,
+  onDone,
+}: TeamMembersProps) => {
   const { isLoading, isError, data, error } = useQuery<
     Array<TeamMember>,
     AxiosError
   >("teamMembers", getTeamMembers);
 
   if (!data || isLoading) return <Loading />;
+  if (isError)
+    return (
+      <>
+        <div>Error:</div>
+        <div>{error.message}</div>
+      </>
+    );
   const listItem = data
-    .filter((member) => !member.isOwner || props.showOwner)
+    .filter((member) => !member.isOwner || showOwner)
     .map((member, index) => (
       <div id="membersContainer" key={member.id}>
         <ListItem>
           <ListItemButton
             className="memberButton"
             autoFocus={index === 0}
-            selected={member.id === props.selectedMemberId}
+            selected={member.id === selectedMemberId}
             onClick={() => {
-              // props.setSelectedMemberId(member.id);
-              props.goNext(member.id);
+              onDone(member.id);
             }}
           >
             <TeamMemberAvatar member={member} />

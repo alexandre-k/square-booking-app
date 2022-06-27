@@ -14,6 +14,7 @@ import DateTimePicker from "components/Booking/DateTimePicker";
 import Customer from "components/Booking/Customer";
 import Services from "components/Booking/Services";
 import TeamMembers from "components/Booking/TeamMembers";
+import { Service } from "types/Catalog";
 import { User } from "types/Customer";
 import { Booking as BookingT } from "types/Booking";
 import { bookAppointment } from "api/booking";
@@ -70,7 +71,9 @@ const Booking = (props: BookingProps) => {
       component: (
         <Services
           selectedServices={selectedServices}
-          setSelectedServices={setSelectedServices}
+        onDone={(services: Array<Service>) => {
+            console.log('on done > ', services)
+        }}
         />
       ),
       isNextRequired: true,
@@ -81,7 +84,7 @@ const Booking = (props: BookingProps) => {
         <TeamMembers
           selectedMemberId={selectedMemberId}
           showOwner={false}
-          goNext={(memberId: string) => {
+          onDone={(memberId: string) => {
             setSelectedMemberId(memberId);
             setActiveStep(activeStep + 1);
           }}

@@ -1,4 +1,4 @@
-import { BookingStatus } from "types/Booking";
+import { AppointmentSegment, BookingStatus } from "types/Booking";
 
 export const editDialogTitle = (component: string) => {
     switch (component) {
@@ -17,3 +17,8 @@ export const isCancelled = (status: BookingStatus) =>
     status === BookingStatus.CANCELLED_BY_CUSTOMER ||
     status === BookingStatus.CANCELLED_BY_SELLER ||
     status === BookingStatus.DECLINED;
+
+export const shortenSegment = (segment: AppointmentSegment) => {
+    const { intermissionMinutes, anyTeamMember, ...rest } = segment;
+    return rest;
+}

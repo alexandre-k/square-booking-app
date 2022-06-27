@@ -5,9 +5,10 @@ export enum ServiceCategory {
 
 export type Service = {
   id: string;
+  version: number;
   name: string;
-  duration: number;
   price: number;
+  duration: number;
   currency: string;
   category: ServiceCategory;
   teamMemberIds: Array<string>;

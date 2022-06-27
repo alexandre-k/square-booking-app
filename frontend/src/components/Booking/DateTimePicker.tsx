@@ -6,6 +6,7 @@ import Skeleton from "@mui/material/Skeleton";
 import Calendar from "react-calendar";
 import dayjs from "dayjs";
 import { DayOfWeek, Location, LocationType, Period } from "types/Location";
+import { Service } from "types/Catalog";
 import Availabilities from "components/Booking/Availabilities";
 import { getLocation } from "api/location";
 import "./DateTimePicker.css";

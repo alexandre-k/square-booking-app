@@ -24,3 +24,14 @@ export const formatDayOfWeek = (day: string) => {
 //   const workingDays = businessHours.map((obj) => obj.dayOfWeek);
 //   return !workingDays.includes(dayOfWeek as DayOfWeek);
 // };
+
+/**
+ * Convert a duration in milliseconds to minutes
+ *
+ * @param {*} duration - duration in milliseconds
+ * @returns {Number} - duration in minutes
+ */
+export const convertMsToMins = (duration: number) => {
+    return Math.round(Number(duration) / 1000 / 60);
+}
+

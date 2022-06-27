@@ -7,6 +7,13 @@ export type Color =
   | "default"
   | undefined;
 
+export type ShortAppointmentSegment = {
+    durationMinutes: number;
+    teamMemberId: string;
+    serviceVariationId: string;
+    serviceVariationVersion: number;
+};
+
 export type AppointmentSegment = {
   durationMinutes: number;
   teamMemberId: string;

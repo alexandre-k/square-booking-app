@@ -6,14 +6,12 @@ import Typography from "@mui/material/Typography";
 import { Service } from "types/Catalog";
 import "./Services.css";
 
-type ServiceId = string;
-
 interface ServiceLabelProps {
   service: Service;
-  selectedServices: Array<ServiceId>;
+  selectedServiceIds: Array<string>;
 }
 
-const ServiceLabel = ({ service, selectedServices }: ServiceLabelProps) => {
+const ServiceLabel = ({ service, selectedServiceIds }: ServiceLabelProps) => {
   const label = (
     <div className="serviceLabel">
       <div>
@@ -63,13 +61,19 @@ const ServiceLabel = ({ service, selectedServices }: ServiceLabelProps) => {
     <Card
       className="serviceCard"
       style={
-        selectedServices.includes(service.id) ? selectedStyle : notSelectedStyle
+        selectedServiceIds.includes(service.id)
+          ? selectedStyle
+          : notSelectedStyle
       }
     >
       <FormControlLabel
         key={service.id}
         value={service.id}
-        control={<Checkbox />}
+        control={
+          <Checkbox
+            checked={selectedServiceIds.includes(service.id) ? true : false}
+          />
+        }
         label={label}
       />
     </Card>

@@ -10,12 +10,11 @@ export const bookAppointment = async (customer: User, selectedStartAt: string, s
             // locationType: LocationType.BUSINESS_LOCATION,
             // sellerNote: "",
             startAt: selectedStartAt,
-            appointmentSegments: selectedServices.map((service) => {
+            appointmentSegments: selectedServices.map(serviceId => {
                 return {
                     durationMinutes: 30,
-                    serviceVariationId: service,
+                    serviceVariationId: serviceId,
                     teamMemberId: selectedMemberId,
-                    // TODO: use real serviceVariationVersion
                     serviceVariationVersion: 1,
                 };
             }),

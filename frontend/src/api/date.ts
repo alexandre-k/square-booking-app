@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { Service } from "types/Catalog";
 import { Period } from "types/Location";
 import { sendRequest } from "utils/request";
 
@@ -22,8 +23,8 @@ export const getAvailabilities = async (
             workingDay.startLocalTime
           }.607Z`,
         },
-        segmentFilters: selectedServices.map((serviceVariationId) => ({
-          serviceVariationId,
+        segmentFilters: selectedServices.map(serviceId => ({
+          serviceVariationId: serviceId,
           teamMemberIdFilter: {
             any: [memberId],
           },

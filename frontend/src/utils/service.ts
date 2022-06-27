@@ -68,11 +68,13 @@ export const formatCatalogObjects = (catalogObjects: Array<CatalogObject>) => {
         const itemVariation = obj!.itemData!.variations[0];
         const duration = itemVariationData.serviceDuration;
         const id = itemVariation.id;
+        const version = itemVariation.version;
         const price = itemVariationData.priceMoney?.amount;
         const currency = itemVariationData.priceMoney?.currency;
         const teamMemberIds = itemVariationData.teamMemberIds;
         return {
           id,
+          version,
           name: obj!.itemData!.name,
           price,
           currency,
