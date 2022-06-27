@@ -8,7 +8,7 @@ import { Booking } from "types/Booking";
 import { TeamMember } from "types/Team";
 import { PaymentLink } from "types/Checkout";
 import { CatalogObject, CatalogObjectItemVariation } from "types/Catalog";
-import "./index.css";
+import "./Summary.css";
 import Summary from "components/Overview/Summary";
 import NoBookingFound from "components/Overview/NoBookingFound";
 import InviteLogin from "components/Auth/InviteLogin";
@@ -22,7 +22,7 @@ interface GetBookingQuery {
   paymentLink: PaymentLink;
 }
 
-const Overview = () => {
+const BookingSummary = () => {
   const {
     isLoading: isAuthLoading,
     isAuthenticated,
@@ -71,4 +71,4 @@ const Overview = () => {
   return <NoBookingFound title="No booking yet!" />;
 };
 
-export default Overview;
+export default BookingSummary;

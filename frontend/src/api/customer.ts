@@ -5,6 +5,10 @@ export const getBooking = async (bookingId: string) => {
   return await sendRequest("/customer/booking/" + bookingId, "GET");
 };
 
+export const getBookingList = async (email: string) => {
+    return await sendRequest("/customer/booking?email=" + email, "GET");
+};
+
 export const cancelBooking = async (bookingId: string) => {
   return await sendRequest("/customer/booking/" + bookingId, "DELETE");
 };

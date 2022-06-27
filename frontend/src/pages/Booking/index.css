@@ -1,14 +1,29 @@
 #bookingGrid {
-    background-color: #F7F7F7;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+  background-color: #f7f7f7;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 #bookingContainer {
-    display: flex;
-    align-content: stretch;
-    flex-direction: column;
-    align-items: stretch;
-    margin: 10px;
+  display: flex;
+  align-content: stretch;
+  flex-direction: column;
+  align-items: stretch;
+  margin: 10px;
+}
+
+#buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  margin: 10px;
+}
+
+#previousContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: row;
 }

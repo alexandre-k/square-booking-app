@@ -18,7 +18,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Footer from "components/Footer";
 import "components/Footer/index.css";
-import Completed from "pages/Booking/Completed";
 // import ListBookings from "components/ListBookings";
 import EnvironmentError from "pages/Error/EnvironmentError";
 import Home from "pages/Home";
@@ -29,7 +28,8 @@ import Profile from "pages/Auth/Profile";
 // import SquareLocation from "components/Home/SquareLocation";
 import Booking from "pages/Booking";
 import TeamDashboard from "pages/Dashboard";
-import BookingSummary from "pages/Overview";
+import BookingList from "pages/Overview/List";
+import BookingSummary from "pages/Overview/Summary";
 import { Booking as BookingT } from "types/Booking";
 import "./App.css";
 import Paper from "@mui/material/Paper";
@@ -69,7 +69,7 @@ function App() {
   const menuRoutes = [
     { to: "", name: "Home", icon: <HomeIcon /> },
     { to: "profile", name: "Account", icon: <AccountCircleIcon /> },
-    { to: "booking/summary", name: "My Bookings", icon: <ViewAgendaIcon /> },
+    { to: "overview", name: "MyBookings", icon: <ViewAgendaIcon /> },
   ];
 
   const list = () => (
@@ -143,10 +143,7 @@ function App() {
                 path="/book"
                 element={<Booking booking={booking} setBooking={setBooking} />}
               />
-              <Route
-                path="completed"
-                element={<Completed bookingId={""} />}
-              />
+              <Route path="overview" element={<BookingList />} />
               <Route path="overview/:bookingId" element={<BookingSummary />} />
               <Route path="dashboard" element={<TeamDashboard />} />
             </Routes>

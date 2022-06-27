@@ -3,6 +3,7 @@ import { AxiosError } from "axios";
 import { useMutation } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
@@ -113,13 +114,47 @@ const Booking = (props: BookingProps) => {
 
   return (
     <div id="bookingContainer">
-      <div>
-        <IconButton color="primary" size="large" onClick={() => navigate(-1)}>
-          <ArrowBackIosNewIcon />
-        </IconButton>
-        <Typography variant="h6" color="inherit" component="div">
-          {activeStep === 0 ? "Home" : steps[activeStep].label}
-        </Typography>
+      <div id="buttonContainer">
+        <div id="previousContainer">
+          <IconButton
+            style={{ marginRight: "10px" }}
+            aria-label="previous"
+            color="primary"
+            size="large"
+            onClick={() => navigate(-1)}
+          >
+            <ArrowBackIosNewIcon />
+          </IconButton>
+          <Typography variant="h6" color="inherit" component="div">
+            {activeStep === 0 ? "Home" : steps[activeStep].label}
+          </Typography>
+        </div>
+        {steps[activeStep].isNextRequired && (
+          <div>
+            {activeStep === steps.length - 1 ? (
+              <Button
+                className="businessNameButton"
+                variant="contained"
+                size="large"
+                disabled={isLoading}
+                onClick={() => mutate()}
+                endIcon={<CheckIcon />}
+              >
+                Book
+              </Button>
+            ) : (
+              <IconButton
+                disabled={false}
+                aria-label="next"
+                color="primary"
+                size="large"
+                onClick={() => navigate(+1)}
+              >
+                <ArrowForwardIosIcon />
+              </IconButton>
+            )}
+          </div>
+        )}
       </div>
 
       <Stepper alternativeLabel activeStep={activeStep}>
@@ -131,31 +166,6 @@ const Booking = (props: BookingProps) => {
       </Stepper>
 
       <div id="bookingGrid">{steps[activeStep].component}</div>
-      {steps[activeStep].isNextRequired && (
-        <div>
-          {activeStep === steps.length - 1 ? (
-            <Button
-              className="businessNameButton"
-              variant="contained"
-              size="large"
-              disabled={isLoading}
-              onClick={() => mutate()}
-              endIcon={<CheckIcon />}
-            >
-              Book
-            </Button>
-          ) : (
-            <Button
-              disabled={false}
-              variant="contained"
-              size="large"
-              onClick={() => navigate(+1)}
-            >
-              next
-            </Button>
-          )}
-        </div>
-      )}
     </div>
   );
 };
