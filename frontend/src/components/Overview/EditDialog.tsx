@@ -13,7 +13,6 @@ interface EditDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   children: React.ReactNode;
-  save: () => void;
 }
 
 const EditDialog = ({
@@ -21,15 +20,8 @@ const EditDialog = ({
   open,
   setOpen,
   children,
-  save,
 }: EditDialogProps) => {
   const [loading, setLoading] = useState<boolean>(false);
-
-  const handleSave = () => {
-    setLoading(true);
-    save();
-    setLoading(false);
-  };
 
   const handleCancel = () => {
     setOpen(false);
@@ -58,16 +50,16 @@ const EditDialog = ({
       <DialogContent>
         <DialogContentText>{children}</DialogContentText>
       </DialogContent>
-      <DialogActions>
-        <Button
+      {/* <DialogActions>
+          <Button
           variant="contained"
           color="primary"
           onClick={handleSave}
           autoFocus
-        >
+          >
           Save
-        </Button>
-      </DialogActions>
+          </Button>
+          </DialogActions> */}
     </Dialog>
   );
 };

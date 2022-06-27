@@ -15,8 +15,8 @@ import { getTeamMembers } from "api/team";
 interface TeamMembersProps {
   showOwner: boolean;
   selectedMemberId: string | null;
-  setSelectedMemberId: (selectedMemberId: string) => void;
-  goNext: () => void;
+  // setSelectedMemberId: (selectedMemberId: string) => void;
+  goNext: (memberId: string) => void;
 }
 
 const TeamMembers = (props: TeamMembersProps) => {
@@ -36,8 +36,8 @@ const TeamMembers = (props: TeamMembersProps) => {
             autoFocus={index === 0}
             selected={member.id === props.selectedMemberId}
             onClick={() => {
-              props.setSelectedMemberId(member.id);
-              props.goNext();
+              // props.setSelectedMemberId(member.id);
+              props.goNext(member.id);
             }}
           >
             <TeamMemberAvatar member={member} />

@@ -81,8 +81,8 @@ const Booking = (props: BookingProps) => {
         <TeamMembers
           selectedMemberId={selectedMemberId}
           showOwner={false}
-          setSelectedMemberId={setSelectedMemberId}
-          goNext={() => {
+          goNext={(memberId: string) => {
+            setSelectedMemberId(memberId);
             setActiveStep(activeStep + 1);
           }}
         />

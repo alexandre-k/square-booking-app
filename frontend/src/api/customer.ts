@@ -9,8 +9,8 @@ export const cancelBooking = async (bookingId: string) => {
     return await sendRequest("/customer/booking/" + bookingId, "DELETE");
 };
 
-export const updateBooking = async (booking: Booking, selectedMemberId: string) => {
-    if (booking === null) return;
+export const updateBooking = async (booking: Booking | null, selectedMemberId: string) => {
+    if (booking === null) throw 'Booking not available';
     return await sendRequest("/booking/" + booking.id, "PUT", {
       booking: {
         customerId: booking.customerId,
