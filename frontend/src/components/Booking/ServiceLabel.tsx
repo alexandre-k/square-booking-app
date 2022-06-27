@@ -4,6 +4,7 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Typography from "@mui/material/Typography";
 import { Service } from "types/Catalog";
+import { convertMsToMins } from "utils/dateTime";
 import "./Services.css";
 
 interface ServiceLabelProps {
@@ -44,7 +45,7 @@ const ServiceLabel = ({ service, selectedServiceIds }: ServiceLabelProps) => {
           color="inherit"
           component="div"
         >
-          {Math.floor(service.duration / 60 / 60 / 60)} min.
+          {convertMsToMins(service.duration)} min.
         </Typography>
       </div>
     </div>
