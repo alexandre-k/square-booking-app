@@ -16,5 +16,3 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: docker-compose up -d
-      with: # Set the secret as an input
-        super_secret: ${{ secrets.DOCKER_SECRET }}
