@@ -15,6 +15,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag kmalexandre/square-booking-app:$(date +%s)
+      run: docker-compose up -d
       with: # Set the secret as an input
         super_secret: ${{ secrets.DOCKER_SECRET }}
