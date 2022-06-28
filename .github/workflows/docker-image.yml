@@ -2,17 +2,29 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
+    env:
+      - UNBOXED_SQUARE_ENVIRONMENT: "sandbox"
+      - UNBOXED_SQUARE_ACCESS_TOKEN: ${{ secrets.UNBOXED_SQUARE_ACCESS_TOKEN }}
+      - UNBOXED_SQUARE_LOCATION_ID: ${{ secrets.UNBOXED_SQUARE_LOCATION_ID }}
+      - UNBOXED_SQUARE_API_VERSION: "2022-05-12"
+
+      - UNBOXED_OAUTH_DOMAIN: ${{ secrets.UNBOXED_OAUTH_DOMAIN }}
+      - UNBOXED_OAUTH_ID: ${{ secrets.UNBOXED_OAUTH_ID }}
+      - UNBOXED_OAUTH_SECRET: ${{ secrets.UNBOXED_OAUTH_SECRET }}
+
+      - UNBOXED_MONGODB_USER: "mongodb"
+      - UNBOXED_MONGODB_PASSWORD: ${{ secrets.UNBOXED_MONGODB_PASSWORD }}
+      - UNBOXED_MONGODB_DATABASE: "booking"
+      - UNBOXED_MONGODB_DOCKER_PORT: 27017
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker-compose up -d
+      - uses: actions/checkout@v3
+      - name: Build the Docker image
+        run: docker-compose up -d
