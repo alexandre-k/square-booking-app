@@ -19,7 +19,7 @@ services:
       - REACT_APP_OAUTH_REDIRECT_URI=http://localhost:5000
       - REACT_APP_OAUTH_ID=$UNBOXED_OAUTH_ID
       - REACT_APP_OAUTH_SECRET=$UNBOXED_OAUTH_SECRET
-      - PATH /frontend/node_modules/.bin:$PATH
+      - PATH=/frontend/node_modules/.bin:$PATH
     depends_on:
       - database
       - backend
