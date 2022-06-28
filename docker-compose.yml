@@ -5,7 +5,7 @@ services:
     domainname: unboxed_frontend.local
     build:
       context: ./frontend
-      dockerfile: ./frontend/Dockerfile
+      dockerfile: ./Dockerfile
     volumes:
       - /usr/src/app/node_modules
       - ./frontend:/usr/src/app
@@ -46,7 +46,7 @@ services:
     domainname: unboxed_backend.local
     build:
       context: ./backend
-      dockerfile: ./backend/Dockerfile
+      dockerfile: ./Dockerfile
     volumes:
       - /usr/src/app/node_modules
       - ./backend:/usr/src/app
