@@ -16,11 +16,12 @@ import Header from "components/Overview/Header";
 import Status from "components/Overview/Status";
 import { Booking, BookingStatus, Color } from "types/Booking";
 import { AppointmentSegment } from "types/Booking";
-import dayjs from "dayjs";
+import { localizedDate } from "utils/dateTime";
 
 interface DateTimeProps {
   booking: Booking;
   appointmentSegments: Array<AppointmentSegment>;
+  localTimezone: string;
   isLoading: boolean;
   disabled: boolean;
   cancelBooking: (bookingId: string) => Promise<void>;
@@ -32,6 +33,7 @@ const DateTime = ({
   appointmentSegments,
   isLoading,
   disabled,
+  localTimezone,
   cancelBooking,
   showEditDialog,
 }: DateTimeProps) => {
@@ -40,8 +42,8 @@ const DateTime = ({
     console.log("TODO: Reload booking summary page");
   };
 
-  const displayDateTime = (startAt: string) => {
-    const date = dayjs(startAt);
+  const displayDateTime = (startAt: string, timezone: string) => {
+    const date = localizedDate(startAt, timezone);
 
     const durations = appointmentSegments.reduce(
       (acc, appointment) => appointment.durationMinutes + acc,
@@ -111,7 +113,7 @@ const DateTime = ({
     <Card className="card">
       <Header icon={<CalendarMonthIcon />} title="Your reservation" />
       <CardContent id="dateTime">
-        {displayDateTime(booking.startAt)}
+        {displayDateTime(booking.startAt, localTimezone)}
         <Status bookingStatus={bookingStatus} />
       </CardContent>
 

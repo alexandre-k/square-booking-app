@@ -8,7 +8,8 @@ import dayjs from "dayjs";
 import { DayOfWeek, Location, LocationType, Period } from "types/Location";
 import { Service } from "types/Catalog";
 import Availabilities from "components/Booking/Availabilities";
-import { getLocation } from "api/location";
+import { useLocation } from "context/LocationProvider";
+import NetworkError from "pages/Error/NetworkError";
 import "./DateTimePicker.css";
 
 interface TileDay {
@@ -54,16 +55,14 @@ const DateTimePicker = ({
 
   // const [selectedStartAt, setSelectedStartAt] = useState<string | null>(null);
   // const [businessHours, setBusinessHours] = useState<Array<Period>>([]);
-  const { isLoading, isError, data, error } = useQuery<Location, AxiosError>(
-    "location",
-    getLocation
-  );
+
+    const { isLoading, isError, location, error } = useLocation();
 
   const [date, setDate] = useState<dayjs.Dayjs>();
   const [endDate, setEndDate] = useState<dayjs.Dayjs>();
   const [workingDay, setWorkingDay] = useState<Period>();
 
-  if (!data) return <div>No data</div>;
+  if (!(!!location)) return <div>No location found</div>;
 
   if (isLoading)
     return (
@@ -72,19 +71,13 @@ const DateTimePicker = ({
       </div>
     );
 
-  if (isError)
-    return (
-      <>
-        <div>Error while loading</div>
-        <div>{error.message}</div>
-      </>
-    );
+  if (isError && !!error) return <NetworkError error={error} />;
 
   const onDateSelected = async (value: Date) => {
     onChange(value);
     const [dayOfWeek] = value.toDateString().split(" ");
     setDate(dayjs(value));
-    const foundWorkingDay = data.businessHours.periods.find((obj: Period) => {
+    const foundWorkingDay = location.businessHours.periods.find((obj: Period) => {
       return obj.dayOfWeek === dayOfWeek.toUpperCase();
     });
     setWorkingDay(foundWorkingDay);
@@ -99,7 +92,7 @@ const DateTimePicker = ({
       return;
     }
     setEndDate(dayjs(value).add(1, "day"));
-    // const availabilities: Array<Availability> = data.availabilities;
+    // const availabilities: Array<Availability> = location.availabilities;
     // setAvailabilities(availabilities);
   };
 
@@ -108,7 +101,7 @@ const DateTimePicker = ({
     const dayjsDate = dayjs(date);
     if (now.diff(dayjsDate, "s") > 86400) return true;
     const dayOfWeek = dayjsDate.format("ddd").toUpperCase();
-    const workingDays = data.businessHours.periods.map(
+    const workingDays = location.businessHours.periods.map(
       (obj: Period) => obj.dayOfWeek
     );
     return !workingDays.includes(dayOfWeek as DayOfWeek);
@@ -121,7 +114,7 @@ const DateTimePicker = ({
         value={value}
         tileDisabled={tileDisabled}
       />
-      {data && workingDay && memberId && endDate && date && (
+      {location && workingDay && memberId && endDate && date && (
         <Availabilities
           selectedStartAt={selectedStartAt}
           setSelectedStartAt={setSelectedStartAt}
@@ -130,7 +123,7 @@ const DateTimePicker = ({
           endDate={endDate}
           workingDay={workingDay}
           date={date}
-          locationTimezone={data.timezone}
+          locationTimezone={location.timezone}
         />
       )}
     </div>

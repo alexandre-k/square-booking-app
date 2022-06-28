@@ -4,26 +4,26 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import { AppointmentSegment } from "types/Booking";
+import { CatalogObject, CatalogObjectItemVariation } from "types/Catalog";
+import { useLocation } from "context/LocationProvider";
+import { localizedDate } from "utils/dateTime";
 import { ICalendar, CalendarOptions } from "datebook";
 import "./ExportToCalendar.css";
 
 interface ExportToCalendarProps {
   isLoading: boolean;
+  appointmentSegments: Array<AppointmentSegment>;
+  services: Array<CatalogObject>;
 }
 
-const ExportToCalendar = ({ isLoading }: ExportToCalendarProps) => {
-  const config: CalendarOptions = {
-    title: "Happy Hour",
-    location: "The Bar, New York, NY",
-    description: "Let's blow off some steam with a tall cold one!",
-    start: new Date("2022-07-08T19:00:00"),
-    end: new Date("2022-07-08T23:30:00"),
-  };
-  const addToCalendar = () => {
-    const icalendar = new ICalendar(config);
-    icalendar.download();
-  };
-  if (isLoading) {
+const ExportToCalendar = ({
+  isLoading,
+  appointmentSegments,
+  services,
+}: ExportToCalendarProps) => {
+  const { isLoading: isLocationLoading, isError, location, error } = useLocation();
+  if (isLoading || isLocationLoading || !location) {
     return (
       <Card className="card">
         <Box
@@ -38,6 +38,17 @@ const ExportToCalendar = ({ isLoading }: ExportToCalendarProps) => {
       </Card>
     );
   }
+  const config: CalendarOptions = {
+    title: location.name,
+    location: location.address.addressLine1,
+    description: "Let's blow off some steam with a tall cold one!",
+    start: localizedDate("2022-07-08T19:00:00", location.timezone).toDate(),
+    end: localizedDate("2022-07-08T19:00:00", location.timezone).toDate(),
+  };
+  const addToCalendar = () => {
+    const icalendar = new ICalendar(config);
+    icalendar.download();
+  };
   return (
     <Card className="card">
       <CardContent id="exportContainer">

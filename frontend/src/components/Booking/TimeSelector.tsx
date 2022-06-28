@@ -7,10 +7,8 @@ import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Stack from "@mui/material/Stack";
-import dayjs from "dayjs";
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
 import { Availability } from "types/Booking";
+import { localizedDate } from "utils/dateTime";
 import "./TimeSelector.css";
 
 interface TimeSelectorProps {
@@ -35,10 +33,7 @@ const TimeSelector = ({
       direction="row"
     >
       {availabilities.map((availability) => {
-          dayjs.extend(utc)
-          dayjs.extend(timezone)
-          const startAtUtc = dayjs(availability.startAt);
-          const startAt = startAtUtc.tz(locationTimezone);
+        const startAt = localizedDate(availability.startAt, locationTimezone);
         return (
           <ListItem key={availability.startAt}>
             <Button

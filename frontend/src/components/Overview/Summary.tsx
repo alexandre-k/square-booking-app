@@ -14,6 +14,7 @@ import {
   Booking,
   ShortAppointmentSegment,
 } from "types/Booking";
+import { Location } from "types/Location";
 import { TeamMember } from "types/Team";
 import { PaymentLink } from "types/Checkout";
 import {
@@ -31,6 +32,7 @@ interface SummaryProps {
   relatedObjects: Array<CatalogObject>;
   objects: Array<CatalogObjectItemVariation>;
   paymentLink: PaymentLink;
+  location: Location;
 }
 
 interface BookingMutation {
@@ -46,6 +48,7 @@ const Summary = ({
   relatedObjects,
   objects,
   paymentLink,
+  location,
 }: SummaryProps) => {
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [editDialogComponent, setEditDialogComponent] =
@@ -148,9 +151,14 @@ const Summary = ({
           appointmentSegments={booking.appointmentSegments}
           cancelBooking={cancelBooking}
           showEditDialog={showEditDialog}
+          localTimezone={location.timezone}
         />
 
-        <ExportToCalendar isLoading={isLoading} />
+        <ExportToCalendar
+          isLoading={isLoading}
+          appointmentSegments={booking.appointmentSegments}
+          services={relatedObjects}
+        />
 
         <ServicesOverview
           isLoading={isLoading}

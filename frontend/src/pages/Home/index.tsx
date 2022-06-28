@@ -8,18 +8,16 @@ import Loading from "components/Loading";
 import NetworkError from "pages/Error/NetworkError";
 import { Location } from "types/Location";
 import { getLocation } from "api/location";
+import { useLocation } from "context/LocationProvider";
 
 const Home = () => {
-  const { isLoading, isError, data, error } = useQuery<Location, AxiosError>(
-    "location",
-    getLocation
-  );
+  const { isLoading, isError, location, error } = useLocation();
 
-  if (isError) return <NetworkError error={error} />;
-  if (!data || isLoading) return <Loading />;
+  if (isError && !!error) return <NetworkError error={error} />;
+  if (!location || isLoading) return <Loading />;
   return (
     <Routes>
-      <Route path="" element={<About location={data} />} />
+      <Route path="" element={<About location={location} />} />
     </Routes>
   );
 };

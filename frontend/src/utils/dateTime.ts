@@ -1,4 +1,6 @@
 import dayjs from "dayjs";
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
 // interface TileDay {
@@ -35,3 +37,15 @@ export const convertMsToMins = (duration: number) => {
     return Math.round(Number(duration) / 1000 / 60);
 }
 
+/**
+ * Localize a time to the given timezone
+ *
+ * @param {*} utcDate - A date in UTC format
+ * @param {*} timezone - A timezone
+ * @returns {localizedDate} - Localized date
+ */
+export const localizedDate = (utcDate: string, tz: string) => {
+    dayjs.extend(utc)
+    dayjs.extend(timezone)
+    return dayjs(utcDate).tz(tz);
+}

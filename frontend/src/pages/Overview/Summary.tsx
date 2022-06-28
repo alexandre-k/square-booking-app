@@ -13,6 +13,7 @@ import Summary from "components/Overview/Summary";
 import NoBookingFound from "components/Overview/NoBookingFound";
 import InviteLogin from "components/Auth/InviteLogin";
 import { getBooking } from "api/customer";
+import { useLocation } from "context/LocationProvider";
 
 interface GetBookingQuery {
   booking: Booking;
@@ -29,6 +30,7 @@ const BookingSummary = () => {
     user,
   } = useAuth0<{ name: string }>();
 
+  const { isLoading: isLocationLoading, isError: isLocationError, location, error: locationError } = useLocation();
   const { bookingId } = useParams();
   const isBookingQueryEnabled = !!user && !!bookingId;
   const getBookingId = () => (!!bookingId ? bookingId : "");
@@ -56,7 +58,7 @@ const BookingSummary = () => {
       />
     );
   }
-  if (isSuccess) {
+  if (isSuccess && !!location) {
     const { booking, teamMember, objects, relatedObjects, paymentLink } = data;
     return (
       <Summary
@@ -65,6 +67,7 @@ const BookingSummary = () => {
         objects={objects}
         relatedObjects={relatedObjects}
         paymentLink={paymentLink}
+        location={location}
       />
     );
   }
