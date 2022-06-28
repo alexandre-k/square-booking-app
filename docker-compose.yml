@@ -3,7 +3,9 @@ services:
     container_name: "unboxed_frontend"
     hostname: unboxed_frontend
     domainname: unboxed_frontend.local
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: ./frontend/Dockerfile
     volumes:
       - /usr/src/app/node_modules
       - ./frontend:/usr/src/app
@@ -42,7 +44,9 @@ services:
     container_name: "unboxed_backend"
     hostname: unboxed_backend
     domainname: unboxed_backend.local
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: ./backend/Dockerfile
     volumes:
       - /usr/src/app/node_modules
       - ./backend:/usr/src/app
