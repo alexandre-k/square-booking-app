@@ -84,6 +84,7 @@ const Summary = ({
   const editDialogChild = (component: string) => {
     switch (component) {
       case "date":
+            console.log('TODO: introduce time limit - e.g.: reschedule until 1 day before ')
         return (
           <DateTimePicker
             selectedServices={selectedServices}

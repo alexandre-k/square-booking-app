@@ -1,6 +1,8 @@
 #image {
   width: 100%;
   height: 100%;
+  border-top-right-radius: 50% 70px;
+  border-top-left-radius: 50% 70px;
   border-bottom-right-radius: 50% 70px;
   border-bottom-left-radius: 50% 70px;
 }
