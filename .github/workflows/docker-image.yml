@@ -37,9 +37,9 @@ jobs:
           docker-compose -f ./docker-compose.yml up -d
           echo --- Containers up ---
 
-      - name: JEST Report
-        uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@v1.0.0
+      # - name: JEST Report
+      #   uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@v1.0.0
  
-      - name: Run tests
-        run: |
-          docker compose run frontend test
+      # - name: Run tests
+      #   run: |
+      #     docker compose run frontend test
