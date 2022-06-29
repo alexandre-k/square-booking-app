@@ -26,5 +26,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Build the Docker image
-        run: docker-compose up -d
+      - name: Build Docker containers
+        run: |
+          echo --- Building docker containers ---
+          ls -l
+          docker-compose -f ./docker-compose.yml up -d
+          echo --- Containers up ---
