@@ -13,7 +13,6 @@ test("give an uppercase word", () => {
 
 test("conversion from milliseconds to minutes", () => {
   expect(convertMsToMins(60000)).toBe(1);
-  expect(convertMsToMins("wrong input")).toBeNaN();
 });
 
 test("given a date and a timezone, returns a localized date", () => {

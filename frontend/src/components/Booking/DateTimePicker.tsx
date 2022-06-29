@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import { AxiosError } from "axios";
-import { useQuery } from "react-query";
 import "react-calendar/dist/Calendar.css";
+import Grid from "@mui/material/Grid";
 import Skeleton from "@mui/material/Skeleton";
 import Calendar from "react-calendar";
 import dayjs from "dayjs";
-import { DayOfWeek, Location, LocationType, Period } from "types/Location";
-import { Service } from "types/Catalog";
+import { DayOfWeek, LocationType, Period } from "types/Location";
 import Availabilities from "components/Booking/Availabilities";
 import { useLocation } from "context/LocationProvider";
 import NetworkError from "pages/Error/NetworkError";
@@ -56,13 +54,13 @@ const DateTimePicker = ({
   // const [selectedStartAt, setSelectedStartAt] = useState<string | null>(null);
   // const [businessHours, setBusinessHours] = useState<Array<Period>>([]);
 
-    const { isLoading, isError, location, error } = useLocation();
+  const { isLoading, isError, location, error } = useLocation();
 
   const [date, setDate] = useState<dayjs.Dayjs>();
   const [endDate, setEndDate] = useState<dayjs.Dayjs>();
   const [workingDay, setWorkingDay] = useState<Period>();
 
-  if (!(!!location)) return <div>No location found</div>;
+  if (!!!location) return <div>No location found</div>;
 
   if (isLoading)
     return (
@@ -77,9 +75,11 @@ const DateTimePicker = ({
     onChange(value);
     const [dayOfWeek] = value.toDateString().split(" ");
     setDate(dayjs(value));
-    const foundWorkingDay = location.businessHours.periods.find((obj: Period) => {
-      return obj.dayOfWeek === dayOfWeek.toUpperCase();
-    });
+    const foundWorkingDay = location.businessHours.periods.find(
+      (obj: Period) => {
+        return obj.dayOfWeek === dayOfWeek.toUpperCase();
+      }
+    );
     setWorkingDay(foundWorkingDay);
     if (foundWorkingDay === undefined) {
       console.log(
@@ -108,25 +108,42 @@ const DateTimePicker = ({
   };
 
   return (
-    <div id="bookingContainer">
-      <Calendar
-        onChange={(value: Date) => onDateSelected(value)}
-        value={value}
-        tileDisabled={tileDisabled}
-      />
+    <Grid
+      container
+      direction="row"
+      spacing={2}
+      justifyContent="space-around"
+      alignItems="center"
+    >
+      <Grid item xs={12} md={6}>
+        <div className="bookingContainer">
+          <Calendar
+            onChange={(value: Date) => {
+                setSelectedStartAt("");
+                onDateSelected(value)}
+            }
+            value={value}
+            tileDisabled={tileDisabled}
+          />
+        </div>
+      </Grid>
       {location && workingDay && memberId && endDate && date && (
-        <Availabilities
-          selectedStartAt={selectedStartAt}
-          setSelectedStartAt={setSelectedStartAt}
-          selectedServices={selectedServices}
-          memberId={memberId}
-          endDate={endDate}
-          workingDay={workingDay}
-          date={date}
-          locationTimezone={location.timezone}
-        />
+        <Grid item xs={12} md={6}>
+          <div className="bookingContainer">
+            <Availabilities
+              selectedStartAt={selectedStartAt}
+              setSelectedStartAt={setSelectedStartAt}
+              selectedServices={selectedServices}
+              memberId={memberId}
+              endDate={endDate}
+              workingDay={workingDay}
+              date={date}
+              locationTimezone={location.timezone}
+            />
+          </div>
+        </Grid>
       )}
-    </div>
+    </Grid>
   );
 };
 

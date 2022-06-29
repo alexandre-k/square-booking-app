@@ -38,7 +38,7 @@ const TeamMembers = ({
   const listItem = data
     .filter((member) => !member.isOwner || showOwner)
     .map((member, index) => (
-      <div id="membersContainer" key={member.id}>
+      <Grid item xs={6} md={3} key={member.id}>
         <ListItem>
           <ListItemButton
             className="memberButton"
@@ -51,12 +51,12 @@ const TeamMembers = ({
             <TeamMemberAvatar member={member} />
           </ListItemButton>
         </ListItem>
-      </div>
+      </Grid>
     ));
   return (
     <>
       <List>
-        <Grid container spacing={1} justifyContent="center">
+        <Grid container spacing={1} justifyContent="start" alignItems="center">
           {listItem}
         </Grid>
       </List>

@@ -1,13 +1,9 @@
 import React from "react";
-import { AxiosError } from "axios";
-import { useQuery } from "react-query";
 import { Routes, Route } from "react-router-dom";
 import "./index.css";
 import About from "components/Home/About";
 import Loading from "components/Loading";
 import NetworkError from "pages/Error/NetworkError";
-import { Location } from "types/Location";
-import { getLocation } from "api/location";
 import { useLocation } from "context/LocationProvider";
 
 const Home = () => {

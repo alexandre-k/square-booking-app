@@ -1,8 +1,6 @@
 import React from "react";
 import "react-calendar/dist/Calendar.css";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import IconButton from "@mui/material/IconButton";
+import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -23,19 +21,18 @@ const TimeSelector = ({
   selectedStartAt,
   setSelectedStartAt,
 }: TimeSelectorProps) => (
-  <div id="timeContainer">
-    <IconButton aria-label="left">
-      <ChevronLeftIcon />
-    </IconButton>
-    <List
-      style={{ width: "300px", overflowX: "scroll" }}
-      component={Stack}
-      direction="row"
-    >
-      {availabilities.map((availability) => {
-        const startAt = localizedDate(availability.startAt, locationTimezone);
-        return (
-          <ListItem key={availability.startAt}>
+  <Grid
+    container
+    justifyContent="start"
+    spacing={2}
+    alignItems="center"
+    direction="row"
+  >
+    {availabilities.map((availability, idx) => {
+      const startAt = localizedDate(availability.startAt, locationTimezone);
+      return (
+        <Grid item xs={3} md={3} key={idx}>
+          <div className="timeContainer">
             <Button
               variant={
                 availability.startAt === selectedStartAt
@@ -48,14 +45,11 @@ const TimeSelector = ({
             >
               {startAt.format("HH:mm")}
             </Button>
-          </ListItem>
-        );
-      })}
-    </List>
-    <IconButton aria-label="right">
-      <ChevronRightIcon />
-    </IconButton>
-  </div>
+          </div>
+        </Grid>
+      );
+    })}
+  </Grid>
 );
 
 export default TimeSelector;

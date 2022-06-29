@@ -1,4 +1,4 @@
-#avatarContainer {
+.avatarContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -6,6 +6,9 @@
     margin: 10px;
 }
 
-#memberButton {
-
+.memberButton {
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

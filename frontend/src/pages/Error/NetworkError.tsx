@@ -1,9 +1,5 @@
 import Typography from "@mui/material/Typography";
 
-type AxiosError = {
-  message: string;
-};
-
 interface NetworkErrorProps {
   error: Error;
 }

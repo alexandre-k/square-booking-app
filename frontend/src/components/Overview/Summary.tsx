@@ -10,7 +10,6 @@ import DateTimePicker from "components/Booking/DateTimePicker";
 import ExportToCalendar from "components/Overview/ExportToCalendar";
 import { cancelBooking, updateAppointmentSegments } from "api/customer";
 import {
-  AppointmentSegment,
   Booking,
   ShortAppointmentSegment,
 } from "types/Booking";

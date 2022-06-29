@@ -1,3 +1,4 @@
-#timeContainer {
-    display: flex;
+.timeContainer {
+  display: flex;
+  justify-content: center;
 }
