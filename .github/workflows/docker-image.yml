@@ -39,5 +39,7 @@ jobs:
 
       - name: JEST Report
         uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@v1.0.0
+ 
+      - name: Run tests
         run: |
-          docker compose run frontend test -- --coverage
+          docker compose run frontend test
