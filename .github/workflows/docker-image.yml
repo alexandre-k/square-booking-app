@@ -25,11 +25,13 @@ jobs:
       UNBOXED_MONGODB_DOCKER_PORT: 27017
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: "true"
       - name: Build Docker containers
         run: |
           echo --- Building docker containers ---
-          git submodule update --init
           ls -l
           ls -l backend
           docker-compose -f ./docker-compose.yml up -d
