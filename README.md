@@ -1,6 +1,8 @@
 # square-booking-app
 App for Square Unboxed Hackathon
 
+[![Docker Image CI](https://github.com/alexandre-k/square-booking-app/actions/workflows/docker-image.yml/badge.svg?branch=master&event=push)](https://github.com/alexandre-k/square-booking-app/actions/workflows/docker-image.yml)
+
 ## Prepare
 ### Square API
 Go to https://developer.squareup.com/apps/
