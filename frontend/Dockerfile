@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:16-alpine as frontend
 
 WORKDIR /usr/src/app
 
@@ -12,4 +12,4 @@ RUN chown -R node /usr/src/app/node_modules
 USER node
 
 # start app
-CMD ["yarn", "start"]
+ENTRYPOINT ["yarn"]
