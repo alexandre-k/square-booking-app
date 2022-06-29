@@ -14,7 +14,7 @@ const TeamMemberAvatar = ({ member }: TeamMemberAvatarProps) => (
       src={`https://ui-avatars.com/api/?name=${member.givenName}+${member.familyName}.jpg`}
     />
     <div className="memberButton">
-      <Typography  mt={1}>
+      <Typography  mt={1} >
         {member.givenName}
       </Typography>
 

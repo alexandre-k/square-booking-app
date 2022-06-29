@@ -6,6 +6,7 @@ import Grid from "@mui/material/Grid";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
+import Skeleton from "@mui/material/Skeleton";
 import Loading from "components/Loading";
 import "./TeamMembers.css";
 import TeamMemberAvatar from "components/Booking/TeamMemberAvatar";
@@ -27,7 +28,17 @@ const TeamMembers = ({
     AxiosError
   >("teamMembers", getTeamMembers);
 
-  if (!data || isLoading) return <Loading />;
+  if (!data || isLoading) {
+    return (
+      <Grid container spacing={1} justifyContent="start" alignItems="center">
+        {Array.from(Array(4).keys()).map((key) => (
+          <Grid item xs={6} md={6} key={key}>
+            <Skeleton variant="text" width="200px" height="200px" />
+          </Grid>
+        ))}
+      </Grid>
+    );
+  }
   if (isError)
     return (
       <>
@@ -54,13 +65,11 @@ const TeamMembers = ({
       </Grid>
     ));
   return (
-    <>
-      <List>
-        <Grid container spacing={1} justifyContent="start" alignItems="center">
-          {listItem}
-        </Grid>
-      </List>
-    </>
+    <List>
+      <Grid container spacing={1} justifyContent="start" alignItems="center">
+        {listItem}
+      </Grid>
+    </List>
   );
 };
 
