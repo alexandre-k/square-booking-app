@@ -1,19 +1,11 @@
 import axios from "axios";
 
-const token = process.env.REACT_APP_SQUARE_ACCESS_TOKEN;
-
 type SquareAPIRequestHeader = {
-  Authorization: string;
-  "Square-Version": string;
   Accept: string;
   "Content-Type": string;
 };
 
 const headers: SquareAPIRequestHeader = {
-  Authorization: `Bearer ${token}`,
-  "Square-Version": process.env.REACT_APP_SQUARE_API_VERSION
-    ? process.env.REACT_APP_SQUARE_API_VERSION
-    : "",
   Accept: "application/json",
   "Content-Type": "application/json",
 };

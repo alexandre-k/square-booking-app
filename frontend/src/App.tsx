@@ -40,9 +40,6 @@ function App() {
   const [booking, setBooking] = useState<BookingT>({});
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const requiredEnv = [
-    "REACT_APP_SQUARE_ACCESS_TOKEN",
-    "REACT_APP_SQUARE_API_VERSION",
-    "REACT_APP_SQUARE_ENVIRONMENT",
     "REACT_APP_SQUARE_LOCATION_ID",
   ];
   const undefinedVariables = requiredEnv.filter(
