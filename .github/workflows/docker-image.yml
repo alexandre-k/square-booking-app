@@ -30,5 +30,10 @@ jobs:
         run: |
           echo --- Building docker containers ---
           ls -l
+          cd backend
+          git pull
+          cd ..
+          ls -l
+          ls -l backend
           docker-compose -f ./docker-compose.yml up -d
           echo --- Containers up ---
