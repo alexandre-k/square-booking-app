@@ -21,6 +21,7 @@ services:
     depends_on:
       - database
       - backend
+    command: start
   database:
     container_name: "unboxed_database"
     hostname: unboxed_database
