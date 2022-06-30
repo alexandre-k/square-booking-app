@@ -34,11 +34,15 @@ import { Booking as BookingT } from "types/Booking";
 import "./App.css";
 import Paper from "@mui/material/Paper";
 
-function App() {
+interface AppProps {
+    isMenuOpenDefault: boolean;
+}
+
+function App({ isMenuOpenDefault }: AppProps) {
   const isMobile = window.innerWidth <= 500;
   // @ts-ignore
   const [booking, setBooking] = useState<BookingT>({});
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(isMenuOpenDefault);
   const requiredEnv = [
     "REACT_APP_SQUARE_LOCATION_ID",
   ];
@@ -109,7 +113,7 @@ function App() {
       <div id="rootGrid">
         <div id="appBar">
           <AppBar color="transparent" position="static">
-            <Toolbar>
+            <Toolbar role="toolbar">
               <IconButton
                 size="large"
                 edge="start"
@@ -125,7 +129,7 @@ function App() {
             </Toolbar>
           </AppBar>
         </div>
-        <div id="mainContent">
+        <div id="mainContent" role="application">
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -145,6 +149,7 @@ function App() {
               <Route path="dashboard" element={<TeamDashboard />} />
             </Routes>
             <SwipeableDrawer
+              role="menu"
               anchor={isMobile ? "bottom" : "left"}
               open={isMenuOpen}
               onClose={toggleDrawer(false)}
@@ -161,6 +166,11 @@ function App() {
       </div>
     </Paper>
   );
+}
+
+
+App.defaultProps = {
+    isMenuOpenDefault: false
 }
 
 export default App;

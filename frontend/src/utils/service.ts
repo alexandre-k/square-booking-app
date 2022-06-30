@@ -29,11 +29,11 @@ export const hasItemVariation = (obj: CatalogObject) => {
 };
 
 export const isItemAvailableForBooking = (obj: CatalogObject) => {
-  return getItemVariationData(obj)!.availableForBooking;
+  return !!getItemVariationData(obj)?.availableForBooking;
 };
 
 export const hasItemVariationData = (obj: CatalogObject) => {
-  return getItemVariationData(obj) === null ? false : true;
+  return !!getItemVariationData(obj);
 };
 
 // export const hasServiceCategory = (obj: CatalogObject) =>
@@ -41,47 +41,43 @@ export const hasItemVariationData = (obj: CatalogObject) => {
 //     ? ServiceCategory.MAIN
 //     : ServiceCategory.OPTIONAL;
 
-export const hasFixedPrice = (obj: CatalogObject) =>
-  getItemVariationData(obj)!.pricingType === PricingType.VARIABLE_PRICING
-    ? false
-    : true;
+export const hasFixedPrice = (obj: CatalogObject) => {
+  const pricingType = getItemVariationData(obj)?.pricingType;
+  return !!pricingType && pricingType !== PricingType.VARIABLE_PRICING;
+};
 
 export const isItem = (obj: CatalogObject) =>
   obj.type === CatalogObjectType.ITEM;
 
-export const formatCatalogObjects = (catalogObjects: Array<CatalogObject>) => {
-  return (
-    catalogObjects
-      .filter(isItem)
-      .filter(hasItemVariationData)
-      .filter(hasItemVariation)
-      // .filter(hasServiceCategory)
-      .filter(isItemAvailableForBooking)
-      .filter(hasFixedPrice)
-      .map((obj: CatalogObject) => {
-        const category =
-          obj!.itemData!.variations[0]!.itemVariationData.ordinal === 0
-            ? ServiceCategory.MAIN
-            : ServiceCategory.OPTIONAL;
-        const itemVariationData =
-          obj!.itemData!.variations[0]!.itemVariationData;
-        const itemVariation = obj!.itemData!.variations[0];
-        const duration = itemVariationData.serviceDuration;
-        const id = itemVariation.id;
-        const version = itemVariation.version;
-        const price = itemVariationData.priceMoney?.amount;
-        const currency = itemVariationData.priceMoney?.currency;
-        const teamMemberIds = itemVariationData.teamMemberIds;
-        return {
-          id,
-          version,
-          name: obj!.itemData!.name,
-          price,
-          currency,
-          duration,
-          category,
-          teamMemberIds,
-        } as Service;
-      })
-  );
-};
+export const formatCatalogObjects = (catalogObjects: Array<CatalogObject>) =>
+  catalogObjects
+    .filter(isItem)
+    .filter(hasItemVariationData)
+    .filter(hasItemVariation)
+    // .filter(hasServiceCategory)
+    .filter(isItemAvailableForBooking)
+    .filter(hasFixedPrice)
+    .map((obj: CatalogObject) => {
+      const category =
+        obj!.itemData!.variations[0]!.itemVariationData.ordinal === 0
+          ? ServiceCategory.MAIN
+          : ServiceCategory.OPTIONAL;
+      const itemVariationData = obj!.itemData!.variations[0]!.itemVariationData;
+      const itemVariation = obj!.itemData!.variations[0];
+      const duration = itemVariationData.serviceDuration;
+      const id = itemVariation.id;
+      const version = itemVariation.version;
+      const price = itemVariationData.priceMoney?.amount;
+      const currency = itemVariationData.priceMoney?.currency;
+      const teamMemberIds = itemVariationData.teamMemberIds;
+      return {
+        id,
+        version,
+        name: obj!.itemData!.name,
+        price,
+        currency,
+        duration,
+        category,
+        teamMemberIds,
+      } as Service;
+    });
