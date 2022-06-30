@@ -11,8 +11,8 @@ const InviteLogin = () => {
   }>();
   return (
     <div id="loginContainer">
-      <Card>
-        <CardHeader title="You need to login first" />
+      <Card id="loginCard">
+        <CardHeader title="You need to login first to see this page." />
         <CardContent>
           <Button variant="contained" onClick={loginWithRedirect}>
             Sign in

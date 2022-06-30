@@ -1,8 +1,16 @@
 #loginContainer {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     align-content: center;
     margin: 20px;
+    height: 500px;
+}
+
+#loginCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
 }
