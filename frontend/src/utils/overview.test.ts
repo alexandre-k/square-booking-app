@@ -5,23 +5,23 @@ test("Each edit dialog title to be adequate", () => {
   expect(editDialogTitle("date")).toBe("Set date and time");
   expect(editDialogTitle("service")).toBe("Add or remove a service");
   expect(editDialogTitle("member")).toBe("Set team member");
-  expect(editDialogTitle(null)).toBe("Title not set");
+  expect(editDialogTitle("")).toBe("Title not set");
 });
 
 test("an appointment segment should have read-only properties removed", () => {
   const segment = {
-    duration_minutes: 30,
-    service_variation_id: "AFY2WI3VNSLYP2IADUVK6DCQ",
-    team_member_id: "TMbwtPGv72uRGpvX",
-    service_variation_version: 1654470446165,
-    any_team_member: false,
-    intermission_minutes: 0,
+    durationMinutes: 30,
+    serviceVariationId: "AFY2WI3VNSLYP2IADUVK6DCQ",
+    teamMemberId: "TMbwtPGv72uRGpvX",
+    serviceVariationVersion: 1654470446165,
+    anyTeamMember: false,
+    intermissionMinutes: 0,
   };
   const segmentWithoutReadOnlyProperties = {
-    duration_minutes: 30,
-    service_variation_id: "AFY2WI3VNSLYP2IADUVK6DCQ",
-    team_member_id: "TMbwtPGv72uRGpvX",
-    service_variation_version: 1654470446165,
+    durationMinutes: 30,
+    serviceVariationId: "AFY2WI3VNSLYP2IADUVK6DCQ",
+    teamMemberId: "TMbwtPGv72uRGpvX",
+    serviceVariationVersion: 1654470446165,
   };
   expect(shortenSegment(segment)).toMatchObject(
     segmentWithoutReadOnlyProperties

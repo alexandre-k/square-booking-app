@@ -38,8 +38,8 @@ export enum PricingType {
 export type CatalogObjectItemVariationData = {
   itemId: string;
   name: string;
-  ordinal: number;
-  priceMoney: Price;
+  ordinal?: number;
+  priceMoney?: Price;
   pricingType: PricingType;
   serviceDuration: number;
   priceDescription: string;
@@ -63,7 +63,7 @@ export type CatalogObjectItemVariation = {
 
 export type CatalogObjectItem = {
   name: string;
-  description: string;
+  description?: string;
   variations: Array<CatalogObjectItemVariation>;
   productType: string;
 };
