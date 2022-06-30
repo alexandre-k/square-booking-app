@@ -156,7 +156,7 @@ const Summary = ({
 
         <ExportToCalendar
           isLoading={isLoading}
-          appointmentSegments={booking.appointmentSegments}
+          booking={booking}
           services={relatedObjects}
         />
 

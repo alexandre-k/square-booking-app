@@ -1,4 +1,11 @@
-import { formatDayOfWeek, formatTime, convertMsToMins, localizedDate } from "./dateTime";
+import {
+  addAppointmentDuration,
+  formatDayOfWeek,
+  formatTime,
+  convertMsToMins,
+  localizedDate,
+} from "./dateTime";
+import dayjs from "dayjs";
 
 test("given a UTC date, time format on HH:mm format if valid", () => {
   expect(formatTime("2026")).toBe("Invalid Date");
@@ -6,9 +13,9 @@ test("given a UTC date, time format on HH:mm format if valid", () => {
 });
 
 test("give an uppercase word", () => {
-    expect(formatDayOfWeek("monday")).toBe("Monday");
-    expect(formatDayOfWeek("MON")).toBe("Mon");
-    expect(formatDayOfWeek("mon")).toBe("Mon");
+  expect(formatDayOfWeek("monday")).toBe("Monday");
+  expect(formatDayOfWeek("MON")).toBe("Mon");
+  expect(formatDayOfWeek("mon")).toBe("Mon");
 });
 
 test("conversion from milliseconds to minutes", () => {
@@ -22,4 +29,19 @@ test("given a date and a timezone, returns a localized date", () => {
   expect(JSON.stringify(localizedDate(date, timezone))).toEqual(
     JSON.stringify(expectedDate)
   );
+});
+
+test("Given a dayjs date, get the same date with the duration added", () => {
+  const appointmentSegment = {
+    anyTeamMember: false,
+    durationMinutes: 30,
+    intermissionMinutes: 0,
+    serviceVariationId: "RFSK3OGSHZSEOOEDIZEWASGJ",
+    serviceVariationVersion: 1654470446165,
+    teamMemberId: "TMbwtPGv72uRGpvX",
+  };
+  const startAt = "2022-06-30T00:30:00.000Z";
+  const endAt = "2022-06-30T01:00:00.000Z";
+  const result = addAppointmentDuration(dayjs(startAt), [appointmentSegment]);
+  expect(result.toISOString()).toBe(endAt);
 });

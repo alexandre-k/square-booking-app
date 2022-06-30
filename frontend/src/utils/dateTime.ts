@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { AppointmentSegment } from "types/Booking";
 
 // interface TileDay {
 //   activeStartDate: Date;
@@ -34,18 +35,29 @@ export const formatDayOfWeek = (day: string) => {
  * @returns {Number} - duration in minutes
  */
 export const convertMsToMins = (duration: number) => {
-    return Math.round(Number(duration) / 1000 / 60);
-}
+  return Math.round(Number(duration) / 1000 / 60);
+};
 
 /**
  * Localize a time to the given timezone
  *
  * @param {*} utcDate - A date in UTC format
  * @param {*} timezone - A timezone
- * @returns {localizedDate} - Localized date
+ * @returns {dayjs.Dayjs} - Localized date
  */
 export const localizedDate = (utcDate: string, tz: string) => {
-    dayjs.extend(utc)
-    dayjs.extend(timezone)
-    return dayjs(utcDate).tz(tz);
-}
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
+  return dayjs(utcDate).tz(tz);
+};
+
+export const addAppointmentDuration = (
+  date: dayjs.Dayjs,
+  segments: Array<AppointmentSegment>
+) => {
+  const totalDuration = segments.reduce(
+    (minutes, curr) => minutes + curr.durationMinutes,
+    0
+  );
+  return date.add(totalDuration, "m");
+};

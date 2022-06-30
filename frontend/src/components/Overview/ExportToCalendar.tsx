@@ -4,25 +4,30 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import { AppointmentSegment } from "types/Booking";
-import { CatalogObject, CatalogObjectItemVariation } from "types/Catalog";
+import { Booking } from "types/Booking";
+import { CatalogObject } from "types/Catalog";
 import { useLocation } from "context/LocationProvider";
-import { localizedDate } from "utils/dateTime";
+import { addAppointmentDuration, localizedDate } from "utils/dateTime";
 import { ICalendar, CalendarOptions } from "datebook";
 import "./ExportToCalendar.css";
 
 interface ExportToCalendarProps {
   isLoading: boolean;
-  appointmentSegments: Array<AppointmentSegment>;
+  booking: Booking;
   services: Array<CatalogObject>;
 }
 
 const ExportToCalendar = ({
   isLoading,
-  appointmentSegments,
+  booking,
   services,
 }: ExportToCalendarProps) => {
-  const { isLoading: isLocationLoading, isError, location, error } = useLocation();
+  const {
+    isLoading: isLocationLoading,
+    isError,
+    location,
+    error,
+  } = useLocation();
   if (isLoading || isLocationLoading || !location) {
     return (
       <Card className="card">
@@ -41,9 +46,12 @@ const ExportToCalendar = ({
   const config: CalendarOptions = {
     title: location.name,
     location: location.address.addressLine1,
-    description: "Let's blow off some steam with a tall cold one!",
-    start: localizedDate("2022-07-08T19:00:00", location.timezone).toDate(),
-    end: localizedDate("2022-07-08T19:00:00", location.timezone).toDate(),
+    description: "Appointment at " + location.name,
+    start: localizedDate(booking.startAt, location.timezone).toDate(),
+    end: addAppointmentDuration(
+      localizedDate(booking.startAt, location.timezone),
+      booking.appointmentSegments
+    ).toDate(),
   };
   const addToCalendar = () => {
     const icalendar = new ICalendar(config);
