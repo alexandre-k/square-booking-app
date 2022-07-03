@@ -38,7 +38,6 @@ const StoreLocationProvider = ({
       setIsLoading(true);
       getLocation()
         .then((response: Location) => {
-          console.log("Location > ", response);
           setLocation(response);
           setIsError(false);
           setIsLoading(false);

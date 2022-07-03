@@ -1,4 +1,5 @@
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
+import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Header from "components/Overview/Header";
@@ -12,7 +13,8 @@ const Checkout = ({ paymentLink }: CheckoutProps) => (
     <Card className="card">
         <Header icon={<ShoppingCartCheckoutIcon />} title="Checkout your reservation" />
         <CardContent>
-            <iframe width="100%" src={paymentLink.url + "&output=embed"}></iframe>
+            <Button variant="contained" onClick={() => {
+                window.open(paymentLink.url, "_blank")}}>Pay</Button>
         </CardContent>
     </Card>
 );
