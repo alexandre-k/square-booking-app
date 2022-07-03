@@ -27,3 +27,14 @@ variable "region" {
   description = "America Seattle"
   type        = string
 }
+
+variable "hostname" {
+  default = "unboxed-booking-app"
+  description = "Hostname"
+  type = string
+}
+
+variable "SSH_PUB_KEY" {
+  description = "Local ssh public key"
+  type = string
+}
