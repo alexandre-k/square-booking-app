@@ -1,41 +1,40 @@
-
 resource "vultr_ssh_key" "ssh_key" {
-  name    = "vultr_key"
-  ssh_key = file("~/.ssh/${var.ssh_key_name}")
+  name    = var.ssh_key_name
+  ssh_key = file("~/.ssh/${var.ssh_key_name}.pub")
 }
 
-resource "vultr_instance" "square_booking_app" {
-  depends_on       = [vultr_ssh_key.ssh_key]
-  plan             = var.server_type
-  region           = var.region
-  iso_id           = var.server_iso
+resource "vultr_instance" "booking_app" {
+  plan             = data.vultr_plan.plan.id
+  region           = data.vultr_region.region.id
+  os_id            = data.vultr_os.os.id
+  # iso_id            = data.vultr_iso_public.iso.id
   hostname         = var.instance_name
   label            = var.instance_name
-  ssh_key_ids      = [vultr_ssh_key.ssh_key.id]
-  tag              = var.instance_name
+  ssh_key_ids      = [data.vultr_ssh_key.key.id]
   enable_ipv6      = false
   backups          = "disabled"
   ddos_protection  = false
   activation_email = false
+}
 
+resource "null_resource" "configure-booking-app" {
   connection {
-    host     = self.main_ip
+    host     = vultr_instance.booking_app.main_ip
     user     = "core"
     type     = "ssh"
-    password = self.default_password
   }
 
-  # provisioner "file" {
-  #   source      = "./known_hosts"
-  #   destination = "/var/home/core/.ssh/known_hosts"
-  # }
+  provisioner "file" {
+    source      = "./scripts/provision.sh"
+    destination = "/tmp/provision.sh"
+  }
 
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "chmod +x /var/home/core/provision.sh",
-  #     "/var/home/core/provision.sh"
-  #   ]
-  # }
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/provision.sh",
+      "/tmp/provision.sh"
+    ]
+  }
 }
 
 
