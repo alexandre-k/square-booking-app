@@ -18,7 +18,7 @@ interface CheckoutProps {
 const Checkout = ({ paymentLink, isCheckedOut }: CheckoutProps) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isDisabled, setIsDisabled] = useState<boolean>(isCheckedOut);
-    const { isConnected, socket } = useWebSocket();
+    const { socket } = useWebSocket();
     socket.on("payment.updated", (data) => {
         setIsLoading(false);
         setIsDisabled(true);

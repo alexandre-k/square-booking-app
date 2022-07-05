@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { AxiosError } from "axios";
 
 interface ServerToClientEvents {
     "payment.updated": () => void;
@@ -9,15 +8,6 @@ interface ServerToClientEvents {
 
 interface ClientToServerEvents {
     hello: () => void;
-}
-
-interface InterServerEvents {
-    ping: () => void;
-}
-
-interface SocketData {
-    name: string;
-    age: number;
 }
 
 export interface WebSocket {
@@ -52,7 +42,7 @@ const WebSocketProvider = ({
       })
       setSocket(sock);
       }
-  }, []);
+  }, [socket]);
 
   return (
     <WebSocketContext.Provider value={{ isConnected, socket }}>

@@ -30,7 +30,11 @@ const BookingSummary = () => {
     user,
   } = useAuth0<{ name: string }>();
 
-  const { isLoading: isLocationLoading, isError: isLocationError, location, error: locationError } = useLocation();
+  const {
+    isLoading: isLocationLoading,
+    isError: isLocationError,
+    location
+  } = useLocation();
   const { bookingId } = useParams();
   const isBookingQueryEnabled = !!user && !!bookingId;
   const getBookingId = () => (!!bookingId ? bookingId : "");
@@ -41,6 +45,10 @@ const BookingSummary = () => {
   >("customer/booking", () => getBooking(getBookingId()), {
     enabled: isBookingQueryEnabled,
   });
+
+  if (isLocationError) {
+    return <div>Location error. Unable to retrieve current location</div>;
+  }
 
   if (!isAuthenticated && !isAuthLoading) {
     return <InviteLogin />;

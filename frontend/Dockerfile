@@ -12,4 +12,4 @@ RUN chown -R node /usr/src/app/node_modules
 USER node
 
 # start app
-ENTRYPOINT ["yarn"]
+ENTRYPOINT ["yarn start"]

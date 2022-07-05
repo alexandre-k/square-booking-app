@@ -4,24 +4,17 @@ import { AxiosError } from "axios";
 import { useQuery } from "react-query";
 import { useAuth0 } from "@auth0/auth0-react";
 import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Loading from "components/Loading";
 import { Booking } from "types/Booking";
-import { TeamMember } from "types/Team";
-import { PaymentLink } from "types/Checkout";
-import { CatalogObject, CatalogObjectItemVariation } from "types/Catalog";
 import "./List.css";
 import NetworkError from "pages/Error/NetworkError";
-import Summary from "components/Overview/Summary";
 import NoBookingFound from "components/Overview/NoBookingFound";
 import InviteLogin from "components/Auth/InviteLogin";
 import { getBookingList } from "api/customer";
 import { useLocation } from "context/LocationProvider";
 import { localizedDate } from "utils/dateTime";
-
 
 const BookingList = () => {
   const {
@@ -30,7 +23,11 @@ const BookingList = () => {
     user,
   } = useAuth0<{ name: string }>();
 
-  const { isLoading: isLocationLoading, isError: isLocationError, location, error: locationError } = useLocation();
+  const {
+    isLoading: isLocationLoading,
+    isError: isLocationError,
+    location,
+  } = useLocation();
 
   const getUserName = () => (!!user ? user.name : "");
 
@@ -40,6 +37,10 @@ const BookingList = () => {
   >("customer/bookings", () => getBookingList(getUserName()), {
     enabled: !!user,
   });
+
+  if (isLocationError) {
+    return <div>Location error. Unable to retrieve current location</div>;
+  }
 
   if (!isAuthenticated && !isAuthLoading) {
     return <InviteLogin />;

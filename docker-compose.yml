@@ -12,6 +12,7 @@ services:
     ports:
       - "5000:5000"
     environment:
+      - NODE_ENV=$NODE_ENV
       - PORT=5000
       - REACT_APP_SQUARE_LOCATION_ID=$UNBOXED_SQUARE_LOCATION_ID
       - REACT_APP_OAUTH_DOMAIN=$UNBOXED_OAUTH_DOMAIN
@@ -50,6 +51,7 @@ services:
     ports:
       - "8000:8000"
     environment:
+      - NODE_ENV=$NODE_ENV
       - PORT=8000
       - ENVIRONMENT=$UNBOXED_SQUARE_ENVIRONMENT
       - SQUARE_ACCESS_TOKEN=$UNBOXED_SQUARE_ACCESS_TOKEN

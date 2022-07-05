@@ -7,7 +7,6 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import Skeleton from "@mui/material/Skeleton";
-import Loading from "components/Loading";
 import "./TeamMembers.css";
 import TeamMemberAvatar from "components/Booking/TeamMemberAvatar";
 import { getTeamMembers } from "api/team";
