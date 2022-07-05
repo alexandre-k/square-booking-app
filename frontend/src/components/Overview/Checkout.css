@@ -1,0 +1,4 @@
+.paymentContent {
+    display: flex;
+    flex-direction: column;
+}

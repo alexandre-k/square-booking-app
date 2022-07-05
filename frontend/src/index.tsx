@@ -6,6 +6,7 @@ import { Auth0Provider } from "@auth0/auth0-react";
 import reportWebVitals from "./reportWebVitals";
 import { QueryClient, QueryClientProvider } from "react-query";
 import StoreLocationProvider from "context/LocationProvider";
+import WebSocketProvider from "context/WebSocketProvider";
 import { ReactQueryDevtools } from "react-query/devtools";
 // import SquareProvider from "./context/squareContext";
 
@@ -29,11 +30,13 @@ root.render(
     redirectUri={process.env.REACT_APP_OAUTH_REDIRECT_URI || "undefined"}
   >
     <QueryClientProvider client={queryClient}>
-      <StoreLocationProvider>
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>
-      </StoreLocationProvider>
+      <WebSocketProvider>
+        <StoreLocationProvider>
+          <React.StrictMode>
+            <App />
+          </React.StrictMode>
+        </StoreLocationProvider>
+      </WebSocketProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </Auth0Provider>
