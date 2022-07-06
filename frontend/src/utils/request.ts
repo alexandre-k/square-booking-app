@@ -55,7 +55,8 @@ export interface AxiosInterface {
 export const sendRequest = async (
   url: string,
   method: string,
-  payload: object = {}
+  payload: object = {},
+  jwt: string = ""
 ) => {
   try {
     // const formData = new FormData();
@@ -70,39 +71,42 @@ export const sendRequest = async (
     //   headers,
     //   data: JSON.stringify(params.payload),
     // });
+    const authHeaders = !!jwt
+      ? { ...headers, Authorization: `Bearer ${jwt}` }
+      : headers;
     const response = await axios.request({
       url,
       method,
       //@ts-ignore
       data: payload,
-      headers,
+      headers: authHeaders,
     });
-      return response.data
+    return response.data;
   } catch (err: any) {
-      throw err;
+    throw err;
     // if (axios.isAxiosError(err)) {
-  //     throw err;
-  //   }
-  //   const errorData = err?.response?.data;
-  //   if (isSquareError(errorData)) {
-  //     errorData.errors.forEach((error) => {
-  //       console.error(
-  //         "Error at field: ",
-  //         error.field,
-  //         " detail: ",
-  //         error.detail
-  //       );
-  //       console.debug(error.detail);
-  //       console.log(error);
-  //       return null;
-  //     });
-  //   } else {
-  //     console.log(err);
-  //     return null;
-  //   }
-  //   // setError(err);
-  //   return null;
-  // } finally {
+    //     throw err;
+    //   }
+    //   const errorData = err?.response?.data;
+    //   if (isSquareError(errorData)) {
+    //     errorData.errors.forEach((error) => {
+    //       console.error(
+    //         "Error at field: ",
+    //         error.field,
+    //         " detail: ",
+    //         error.detail
+    //       );
+    //       console.debug(error.detail);
+    //       console.log(error);
+    //       return null;
+    //     });
+    //   } else {
+    //     console.log(err);
+    //     return null;
+    //   }
+    //   // setError(err);
+    //   return null;
+    // } finally {
     // setLoaded(true);
   }
 };

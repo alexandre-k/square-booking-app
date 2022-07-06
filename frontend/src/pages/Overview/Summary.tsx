@@ -1,8 +1,8 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import { useMagicLogin } from "context/MagicLoginProvider";
 import { AxiosError } from "axios";
 import { useQuery } from "react-query";
-import { useAuth0 } from "@auth0/auth0-react";
 import Loading from "components/Loading";
 import { Booking } from "types/Booking";
 import { TeamMember } from "types/Team";
@@ -24,25 +24,22 @@ interface GetBookingQuery {
 }
 
 const BookingSummary = () => {
-  const {
-    isLoading: isAuthLoading,
-    isAuthenticated,
-    user,
-  } = useAuth0<{ name: string }>();
-
+    const { isLoading: isAuthLoading, isAuthenticated, user, jwt } =
+        useMagicLogin();
   const {
     isLoading: isLocationLoading,
     isError: isLocationError,
     location
   } = useLocation();
   const { bookingId } = useParams();
-  const isBookingQueryEnabled = !!user && !!bookingId;
+  const isBookingQueryEnabled = !!user && !!bookingId && !!jwt;
   const getBookingId = () => (!!bookingId ? bookingId : "");
+  const getJwt = () => (!!jwt ? jwt : "");
 
   const { isLoading, isSuccess, isError, data, error } = useQuery<
     GetBookingQuery,
     AxiosError
-  >("customer/booking", () => getBooking(getBookingId()), {
+  >("customer/booking", () => getBooking(getBookingId(), getJwt()), {
     enabled: isBookingQueryEnabled,
   });
 

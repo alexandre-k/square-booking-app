@@ -1,17 +1,9 @@
-import { Magic, PromiEvent } from "magic-sdk";
-import React, { createContext, useContext, useState } from "react";
+import { Magic, MagicUserMetadata, PromiEvent } from "magic-sdk";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface Error {
   message: string;
 }
-
-export type User = {
-  email: string;
-  isMfaEnabled: boolean;
-  issuer: string;
-  phoneNumber: string | null;
-  publicAddress: string;
-};
 
 interface MagicLogin {
   isLoading: boolean;
@@ -19,7 +11,8 @@ interface MagicLogin {
   login: (email: string) => Promise<void>;
   logout: () => Promise<void>;
   error: Error | null;
-  user: User;
+  user: MagicUserMetadata;
+  jwt: string;
 }
 
 const getMagicSingleton = (apiKey: string | undefined) =>
@@ -51,7 +44,7 @@ const MagicLoginProvider = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [jwt, setJwt] = useState<string>(null as any);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [user, setUser] = useState<User>(undefined as any);
+  const [user, setUser] = useState<MagicUserMetadata>(undefined as any);
   const [error, setError] = useState<Error>(null as any);
 
   const login = async (email: string) => {
@@ -62,8 +55,9 @@ const MagicLoginProvider = ({
         showUI: false,
       });
 
-      const user = await magicSingleton.user.getMetadata();
-
+      const metadata = await magicSingleton.user.getMetadata();
+      if (jwt) setJwt(jwt);
+      setUser(metadata);
       setIsLoading(false);
       setIsAuthenticated(true);
     } catch (err) {
@@ -80,9 +74,21 @@ const MagicLoginProvider = ({
     setIsLoading(false);
   };
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      magicSingleton.user.getIdToken().then((jwt) => {
+        setJwt(jwt);
+      });
+      magicSingleton.user.getMetadata().then((metadata) => {
+        setUser(metadata);
+        setIsAuthenticated(true);
+      });
+    }
+  });
+
   return (
     <MagicLoginContext.Provider
-      value={{ isLoading, isAuthenticated, login, logout, error, user }}
+      value={{ isLoading, isAuthenticated, login, logout, error, user, jwt }}
     >
       {children}
     </MagicLoginContext.Provider>

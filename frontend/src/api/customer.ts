@@ -1,8 +1,8 @@
 import { sendRequest } from "utils/request";
 import { ShortAppointmentSegment, Booking } from "types/Booking";
 
-export const getBooking = async (bookingId: string) => {
-  return await sendRequest("/customer/booking/" + bookingId, "GET");
+export const getBooking = async (bookingId: string, jwt: string) => {
+    return await sendRequest("/customer/booking/" + bookingId, "GET", {}, jwt);
 };
 
 export const getBookingList = async (email: string) => {

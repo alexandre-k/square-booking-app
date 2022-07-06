@@ -23,7 +23,7 @@ const Profile = () => {
         <Grid container alignItems="center" justifyContent="center">
           <Card>
             <CardContent>
-              <UserAvatar letters={user.email} />
+              {user.email && <UserAvatar letters={user.email} />}
               <h2>{user.email}</h2>
               <p>Public address: {user.publicAddress}</p>
             </CardContent>
