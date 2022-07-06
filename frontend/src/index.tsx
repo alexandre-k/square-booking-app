@@ -5,6 +5,7 @@ import App from "./App";
 import { Auth0Provider } from "@auth0/auth0-react";
 import reportWebVitals from "./reportWebVitals";
 import { QueryClient, QueryClientProvider } from "react-query";
+import MagicLoginProvider from "context/MagicLoginProvider";
 import StoreLocationProvider from "context/LocationProvider";
 import WebSocketProvider from "context/WebSocketProvider";
 import { ReactQueryDevtools } from "react-query/devtools";
@@ -30,13 +31,15 @@ root.render(
     redirectUri={process.env.REACT_APP_OAUTH_REDIRECT_URI || "undefined"}
   >
     <QueryClientProvider client={queryClient}>
-      <WebSocketProvider>
-        <StoreLocationProvider>
-          <React.StrictMode>
-            <App />
-          </React.StrictMode>
-        </StoreLocationProvider>
-      </WebSocketProvider>
+      <MagicLoginProvider>
+        <WebSocketProvider>
+          <StoreLocationProvider>
+            <React.StrictMode>
+              <App />
+            </React.StrictMode>
+          </StoreLocationProvider>
+        </WebSocketProvider>
+      </MagicLoginProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </Auth0Provider>

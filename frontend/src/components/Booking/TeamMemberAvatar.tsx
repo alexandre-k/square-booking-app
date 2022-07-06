@@ -1,4 +1,5 @@
 import { TeamMember } from "types/Team";
+import UserAvatar from "components/User/UserAvatar";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import "./TeamMemberAvatar.css";
@@ -9,9 +10,8 @@ interface TeamMemberAvatarProps {
 
 const TeamMemberAvatar = ({ member }: TeamMemberAvatarProps) => (
   <div className="avatarContainer">
-    <Avatar
-      sx={{ width: 56, height: 56 }}
-      src={`https://ui-avatars.com/api/?name=${member.givenName}+${member.familyName}.jpg`}
+    <UserAvatar
+      letters={`${member.givenName}+${member.familyName}`}
     />
     <div className="memberButton">
       <Typography  mt={1} >

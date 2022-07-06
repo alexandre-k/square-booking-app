@@ -21,6 +21,7 @@ import "components/Footer/index.css";
 // import ListBookings from "components/ListBookings";
 import EnvironmentError from "pages/Error/EnvironmentError";
 import Home from "pages/Home";
+import LoginButton from "components/Auth/LoginButton";
 import Login from "components/Auth/Login";
 import Logout from "components/Auth/Logout";
 import Profile from "pages/Auth/Profile";
@@ -35,7 +36,7 @@ import "./App.css";
 import Paper from "@mui/material/Paper";
 
 interface AppProps {
-    isMenuOpenDefault: boolean;
+  isMenuOpenDefault: boolean;
 }
 
 function App({ isMenuOpenDefault }: AppProps) {
@@ -43,9 +44,7 @@ function App({ isMenuOpenDefault }: AppProps) {
   // @ts-ignore
   const [booking, setBooking] = useState<BookingT>({});
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(isMenuOpenDefault);
-  const requiredEnv = [
-    "REACT_APP_SQUARE_LOCATION_ID",
-  ];
+  const requiredEnv = ["REACT_APP_SQUARE_LOCATION_ID"];
   const undefinedVariables = requiredEnv.filter(
     (envVariable) =>
       process.env[envVariable] === undefined ||
@@ -111,26 +110,26 @@ function App({ isMenuOpenDefault }: AppProps) {
   return (
     <Paper id="app" elevation={10}>
       <div id="rootGrid">
-        <div id="appBar">
-          <AppBar color="transparent" position="static">
-            <Toolbar role="toolbar">
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                sx={{ mr: 2 }}
-                onClick={toggleDrawer(true)}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Box sx={{ flexGrow: 1 }} />
-              <Login />
-            </Toolbar>
-          </AppBar>
-        </div>
-        <div id="mainContent" role="application">
-          <BrowserRouter>
+        <BrowserRouter>
+          <div id="appBar">
+            <AppBar color="transparent" position="static">
+              <Toolbar role="toolbar">
+                <IconButton
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  sx={{ mr: 2 }}
+                  onClick={toggleDrawer(true)}
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Box sx={{ flexGrow: 1 }} />
+                <LoginButton />
+              </Toolbar>
+            </AppBar>
+          </div>
+          <div id="mainContent" role="application">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
@@ -157,20 +156,19 @@ function App({ isMenuOpenDefault }: AppProps) {
             >
               {list()}
             </SwipeableDrawer>
-          </BrowserRouter>
-        </div>
-        <div id="footer">
-          <Divider />
-          <Footer routes={routes} />
-        </div>
+          </div>
+          <div id="footer">
+            <Divider />
+            <Footer routes={routes} />
+          </div>
+        </BrowserRouter>
       </div>
     </Paper>
   );
 }
 
-
 App.defaultProps = {
-    isMenuOpenDefault: false
-}
+  isMenuOpenDefault: false,
+};
 
 export default App;

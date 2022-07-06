@@ -1,24 +1,39 @@
-import { useAuth0 } from "@auth0/auth0-react";
-import Avatar from "@mui/material/Avatar";
+import { useMagicLogin } from "context/MagicLoginProvider";
+import UserAvatar from "components/User/UserAvatar";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
+import "./Profile.css";
 
 const Profile = () => {
-    const { user, isAuthenticated, isLoading } = useAuth0();
+  const { isLoading, isAuthenticated, error, user, login, logout } =
+    useMagicLogin();
 
-    if (isLoading) {
-        return <div>Loading ...</div>;
-    }
+  if (isLoading) {
+    return (
+      <div className="profileBackground">
+        <div>Loading ...</div>
+      </div>
+    );
+  }
 
-    if (isAuthenticated && user) {
-        return <Grid container alignItems="center" justifyContent="center">
-            <Avatar sx={{ width: 56, height: 56 }} src={user.picture} />
-            <h2>{user.name}</h2>
-            <p>{user.email}</p>
+  if (isAuthenticated && user) {
+    return (
+      <div className="profileBackground">
+        <Grid container alignItems="center" justifyContent="center">
+          <Card>
+            <CardContent>
+              <UserAvatar letters={user.email} />
+              <h2>{user.email}</h2>
+              <p>Public address: {user.publicAddress}</p>
+            </CardContent>
+          </Card>
         </Grid>
-    }
+      </div>
+    );
+  }
 
-    return (<div>Profile</div>);
-
+  return <div>Profile</div>;
 };
 
 export default Profile;
