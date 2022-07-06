@@ -6,7 +6,6 @@
   "dependencies": {
     "@auth0/auth0-react": "^1.10.1",
     "@date-io/dayjs": "^2.14.0",
-    "datebook": "^7.0.8",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@headlessui/react": "^1.6.4",
@@ -26,7 +25,9 @@
     "@types/react-dom": "^18.0.5",
     "autoprefixer": "^10.4.7",
     "axios": "^0.27.2",
+    "datebook": "^7.0.8",
     "dayjs": "^1.11.3",
+    "magic-sdk": "^8.1.1",
     "react": "^18.1.0",
     "react-calendar": "^3.7.0",
     "react-dom": "^18.1.0",
@@ -41,7 +42,7 @@
     "yarn": "^1.22.18"
   },
   "scripts": {
-    "start": "NODE_ENV=$NODE_ENV PORT=$PORT react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
