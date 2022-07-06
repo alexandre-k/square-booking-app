@@ -8,8 +8,9 @@ RUN yarn
 
 COPY --chown=node:node . .
 
-RUN chown -R node /usr/src/app/node_modules
+RUN chown -R node node_modules
 USER node
 
 # start app
-ENTRYPOINT ["yarn start"]
+RUN chmod +x entrypoint.sh
+ENTRYPOINT "/usr/src/app/entrypoint.sh"
