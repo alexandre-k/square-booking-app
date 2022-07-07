@@ -10,7 +10,7 @@ export const getBookingList = async (email: string, jwt: string) => {
 };
 
 export const cancelBooking = async (bookingId: string, jwt: string) => {
-  return await sendRequest("/customer/booking/" + bookingId, "DELETE", jwt);
+  return await sendRequest("/customer/booking/" + bookingId, "DELETE", {}, jwt);
 };
 
 export const updateAppointmentSegments = async (

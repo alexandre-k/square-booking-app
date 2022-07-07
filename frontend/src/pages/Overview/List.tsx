@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { AxiosError } from "axios";
 import { useQuery } from "react-query";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useMagicLogin } from "context/MagicLoginProvider";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -17,11 +17,13 @@ import { useLocation } from "context/LocationProvider";
 import { localizedDate } from "utils/dateTime";
 
 const BookingList = () => {
-  const {
-    isLoading: isAuthLoading,
-    isAuthenticated,
-    user,
-  } = useAuth0<{ name: string }>();
+    const {
+        isLoading: isAuthLoading,
+        isAuthenticated,
+        user,
+        jwt,
+    } = useMagicLogin();
+
 
   const {
     isLoading: isLocationLoading,
@@ -29,12 +31,12 @@ const BookingList = () => {
     location,
   } = useLocation();
 
-  const getUserName = () => (!!user ? user.name : "");
+  const getUserEmail = () => (!!user && user.email ? user.email : "");
 
   const { isLoading, isSuccess, isError, data, error } = useQuery<
     Array<Booking>,
     AxiosError
-  >("customer/bookings", () => getBookingList(getUserName()), {
+  >("customer/bookings", () => getBookingList(getUserEmail(), jwt), {
     enabled: !!user,
   });
 

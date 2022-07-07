@@ -24,7 +24,7 @@ interface DateTimeProps {
   localTimezone: string;
   isLoading: boolean;
   disabled: boolean;
-  cancelBooking: (bookingId: string) => Promise<void>;
+  cancelBooking: () => Promise<void>;
   showEditDialog: (component: string) => void;
 }
 
