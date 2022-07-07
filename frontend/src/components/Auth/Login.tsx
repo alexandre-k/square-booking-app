@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -25,10 +28,10 @@ const Login = () => {
   const getError = () => {
     if (!!error) {
       return (
-        <>
-          <div>Oops... Unable to login!</div>
-          <div>{error.message}</div>
-        </>
+        <Alert severity="error">
+          <AlertTitle>Oops.. Unable to login!</AlertTitle>
+          {error.message}
+        </Alert>
       );
     }
   };
@@ -39,22 +42,11 @@ const Login = () => {
     }
   });
 
-  if (isLoading && !isAuthenticated) {
-    return (
-      <div className="loginBackground">
-        <Card>
-          <CardContent>Plase check your email</CardContent>
-          {!!error && <CardContent>{getError()}</CardContent>}
-        </Card>
-      </div>
-    );
-  }
-
   return (
-    <div className="loginBackground">
-      <Card>
-        <CardContent>
-          <FormControl>
+    <Box className="loginBackground">
+      <Card id="loginCard">
+        <CardContent id="loginCardContent">
+          <FormControl sx={{ width: "100%", maxWidth: "250px" }}>
             <InputLabel htmlFor="email">Email address</InputLabel>
             <Input
               id="email"
@@ -62,18 +54,25 @@ const Login = () => {
               onChange={(e: any) => changeEmail(e)}
             />
 
-            <Button
+            <LoadingButton
               id="loginButton"
+              loading={isLoading}
               variant="outlined"
               onClick={() => login(email)}
             >
               Sign in
-            </Button>
+            </LoadingButton>
           </FormControl>
+        </CardContent>
+        <CardContent id="loginCardContent">
+          <Alert severity="info">
+            <AlertTitle>Check your mailbox</AlertTitle>A mail has been sent to
+            you to authenticate.
+          </Alert>
         </CardContent>
         {!!error && <CardContent>{getError()}</CardContent>}
       </Card>
-    </div>
+    </Box>
   );
 };
 

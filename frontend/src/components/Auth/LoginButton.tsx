@@ -6,21 +6,10 @@ import { useMagicLogin } from "context/MagicLoginProvider";
 const LoginButton = () => {
   const { isLoading, isAuthenticated, error, user, logout } = useMagicLogin();
 
-  if (isLoading) {
-    return (
-      <LoadingButton loading variant="outlined" color="info">
-        Sign in
-      </LoadingButton>
-    );
-  }
-
   if (isAuthenticated && user) {
     return (
       <div>
-        <Button
-          variant="outlined"
-          onClick={() => logout()}
-        >
+        <Button variant="outlined" onClick={() => logout()}>
           Log out
         </Button>
       </div>
@@ -28,7 +17,9 @@ const LoginButton = () => {
   } else {
     return (
       <Link to="login" style={{ textDecoration: "none" }}>
-        <Button variant="outlined">Sign in</Button>
+        <LoadingButton loading={isLoading} variant="outlined">
+          Sign in
+        </LoadingButton>
       </Link>
     );
   }

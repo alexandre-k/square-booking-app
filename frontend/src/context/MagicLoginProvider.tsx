@@ -3,6 +3,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface Error {
   message: string;
+  err_code: string;
+  status: number;
 }
 
 interface MagicLogin {
@@ -49,6 +51,7 @@ const MagicLoginProvider = ({
 
   const login = async (email: string) => {
     setIsLoading(true);
+    setError(null as any);
     try {
       const jwt = await magicSingleton.auth.loginWithMagicLink({
         email,
@@ -61,12 +64,13 @@ const MagicLoginProvider = ({
       setIsLoading(false);
       setIsAuthenticated(true);
     } catch (err) {
-      setError({ message: err } as Error);
+      setError(err as any);
       setIsLoading(false);
     }
   };
   const logout = async () => {
     setIsLoading(true);
+    setError(null as any);
     await magicSingleton.user.logout();
     setIsAuthenticated(false);
     setUser(null as any);
@@ -74,15 +78,24 @@ const MagicLoginProvider = ({
     setIsLoading(false);
   };
 
+  const getSavedMetadata = async () => {
+    setIsLoading(true);
+    try {
+      const metadata = await magicSingleton.user.getMetadata();
+      setUser(metadata);
+      setIsAuthenticated(true);
+      const jwt = await magicSingleton.user.getIdToken();
+      setJwt(jwt);
+    } catch (err) {
+      setError(err as any);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    if (!isAuthenticated) {
-      magicSingleton.user.getIdToken().then((jwt) => {
-        setJwt(jwt);
-      });
-      magicSingleton.user.getMetadata().then((metadata) => {
-        setUser(metadata);
-        setIsAuthenticated(true);
-      });
+    if (!isAuthenticated && !isLoading && !!!error) {
+      getSavedMetadata();
     }
   });
 

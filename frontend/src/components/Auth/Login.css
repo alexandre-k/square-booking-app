@@ -1,10 +1,21 @@
 .loginBackground {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   align-content: center;
   height: 500px;
+}
+
+#loginCard {
+  width: 80%;
+}
+
+#loginCardContent {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  width: 100%;
 }
 
 #loginButton {
