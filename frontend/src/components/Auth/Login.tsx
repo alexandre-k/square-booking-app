@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Box from "@mui/material/Box";
@@ -7,15 +7,13 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import LoadingButton from "@mui/lab/LoadingButton";
 import FormControl from "@mui/material/FormControl";
-import FormHelperText from "@mui/material/FormHelperText";
 import InputLabel from "@mui/material/InputLabel";
 import Input from "@mui/material/Input";
-import Button from "@mui/material/Button";
 import { useMagicLogin } from "context/MagicLoginProvider";
 import "./Login.css";
 
 const Login = () => {
-  const { isLoading, isAuthenticated, error, user, login, logout } =
+  const { isLoading, isAuthenticated, error, user, login } =
     useMagicLogin();
   const [email, setEmail] = useState<string>("");
   const navigate = useNavigate();

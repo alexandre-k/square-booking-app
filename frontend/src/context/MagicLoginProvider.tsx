@@ -1,4 +1,4 @@
-import { Magic, MagicUserMetadata, PromiEvent } from "magic-sdk";
+import { Magic, MagicUserMetadata } from "magic-sdk";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface Error {

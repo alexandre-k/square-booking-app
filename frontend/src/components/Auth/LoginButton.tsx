@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import { useMagicLogin } from "context/MagicLoginProvider";
 
 const LoginButton = () => {
-  const { isLoading, isAuthenticated, error, user, logout } = useMagicLogin();
+  const { isLoading, isAuthenticated, user, logout } = useMagicLogin();
 
   if (isAuthenticated && user) {
     return (

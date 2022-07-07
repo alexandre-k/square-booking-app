@@ -61,10 +61,7 @@ const Summary = ({
     Array<ShortAppointmentSegment>
   >(booking.appointmentSegments.map(shortenSegment));
   const {
-    isLoading: isAuthLoading,
-    isAuthenticated,
-    user,
-    jwt,
+    jwt
   } = useMagicLogin();
 
   const queryClient = useQueryClient();

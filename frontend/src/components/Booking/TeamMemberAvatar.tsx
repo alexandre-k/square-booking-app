@@ -1,6 +1,5 @@
 import { TeamMember } from "types/Team";
 import UserAvatar from "components/User/UserAvatar";
-import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import "./TeamMemberAvatar.css";
 

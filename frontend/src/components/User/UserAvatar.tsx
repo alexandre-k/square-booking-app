@@ -1,5 +1,4 @@
 import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
 
 interface UserAvatarProps {
   letters: string;
