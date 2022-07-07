@@ -9,10 +9,7 @@ import Checkout from "components/Overview/Checkout";
 import DateTimePicker from "components/Booking/DateTimePicker";
 import ExportToCalendar from "components/Overview/ExportToCalendar";
 import { cancelBooking, updateAppointmentSegments } from "api/customer";
-import {
-  Booking,
-  ShortAppointmentSegment,
-} from "types/Booking";
+import { Booking, ShortAppointmentSegment } from "types/Booking";
 import { Location } from "types/Location";
 import { TeamMember } from "types/Team";
 import { PaymentLink } from "types/Checkout";
@@ -24,6 +21,7 @@ import {
 import { formatCatalogObjects } from "utils/service";
 import { convertMsToMins } from "utils/dateTime";
 import { isCancelled, editDialogTitle, shortenSegment } from "utils/overview";
+import { useMagicLogin } from "context/MagicLoginProvider";
 
 interface SummaryProps {
   booking: Booking;
@@ -62,12 +60,18 @@ const Summary = ({
   const [appointmentSegments, setAppointmentSegments] = useState<
     Array<ShortAppointmentSegment>
   >(booking.appointmentSegments.map(shortenSegment));
+  const {
+    isLoading: isAuthLoading,
+    isAuthenticated,
+    user,
+    jwt,
+  } = useMagicLogin();
 
   const queryClient = useQueryClient();
 
   const { mutate, isLoading } = useMutation(
     ({ booking, appointmentSegments }: BookingMutation): Promise<Booking> =>
-      updateAppointmentSegments(booking, appointmentSegments),
+      updateAppointmentSegments(booking, appointmentSegments, jwt),
     {
       mutationKey: "update/booking",
       onSuccess: () => queryClient.invalidateQueries("customer/booking"),
@@ -83,7 +87,9 @@ const Summary = ({
   const editDialogChild = (component: string) => {
     switch (component) {
       case "date":
-            console.log('TODO: introduce time limit - e.g.: reschedule until 1 day before ')
+        console.log(
+          "TODO: introduce time limit - e.g.: reschedule until 1 day before "
+        );
         return (
           <DateTimePicker
             selectedServices={selectedServices}
@@ -149,7 +155,7 @@ const Summary = ({
           booking={booking}
           isLoading={isLoading}
           appointmentSegments={booking.appointmentSegments}
-          cancelBooking={cancelBooking}
+          cancelBooking={() => cancelBooking(booking.id, jwt)}
           showEditDialog={showEditDialog}
           localTimezone={location.timezone}
         />

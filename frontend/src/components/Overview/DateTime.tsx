@@ -38,7 +38,7 @@ const DateTime = ({
   showEditDialog,
 }: DateTimeProps) => {
   const cancel = async () => {
-    await cancelBooking(booking.id);
+    await cancelBooking();
     console.log("TODO: Reload booking summary page");
   };
 
