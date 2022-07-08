@@ -1,6 +1,11 @@
-FROM nginx:latest
+FROM nginx:alpine
 
 COPY default.conf /etc/nginx/conf.d/default.conf
 
-COPY certs/fullchain.pem /etc/nginx/certs/devpost-hackathon.xyz/fullchain.pem
-COPY certs/privkey.pem /etc/nginx/certs/devpost-hackathon.xyz/privkey.pem
+COPY certs /etc/nginx/certs/devpost-hackathon.xyz
+
+COPY build /usr/share/nginx/html
+
+EXPOSE 80 443
+
+CMD ["nginx", "-g", "daemon off;"]

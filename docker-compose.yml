@@ -17,7 +17,6 @@ services:
       - REACT_APP_API_ENDPOINT=$UNBOXED_API_ENDPOINT
       - REACT_APP_UNBOXED_MAGIC_LINK_PUBLISHABLE_API_KEY=$UNBOXED_MAGIC_LINK_PUBLISHABLE_API_KEY
       - REACT_APP_SQUARE_LOCATION_ID=$UNBOXED_SQUARE_LOCATION_ID
-      - PATH=/frontend/node_modules/.bin:$PATH
     depends_on:
       - database
       - backend
