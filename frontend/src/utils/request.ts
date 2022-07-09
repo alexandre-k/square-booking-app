@@ -74,8 +74,9 @@ export const sendRequest = async (
     const authHeaders = !!jwt
       ? { ...headers, Authorization: `Bearer ${jwt}` }
       : headers;
+    console.log(process.env);
     const response = await axios.request({
-      url: process.env.REACT_APP_API_ENDPOINT + url,
+      url,
       method,
       //@ts-ignore
       data: payload,

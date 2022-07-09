@@ -21,6 +21,8 @@ services:
       - database
       - backend
     command: start
+    networks:
+      - unboxed
   database:
     container_name: "unboxed_database"
     hostname: unboxed_database
@@ -36,6 +38,8 @@ services:
       - MONGO_INITDB_DATABASE=$MONGODB_DATABASE
       - MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER
       - MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD
+    networks:
+      - unboxed
   backend:
     container_name: "unboxed_backend"
     hostname: unboxed_backend
@@ -60,13 +64,18 @@ services:
       - MONGODB_HOST=$MONGODB_HOST
       - MONGODB_USER=$MONGODB_USER
       - MONGODB_PASSWORD=$MONGODB_PASSWORD
-      - MONGODB_NAME=$MONGODB_NAME
+      - MONGODB_DATABASE=$MONGODB_DATABASE
       - MONGODB_PORT=$MONGODB_PORT
     depends_on:
       - database
+    networks:
+      - unboxed
     # stdin_open: true
     # tty: true
 volumes:
   database:
     driver: local
+networks:
+  unboxed:
+    driver: bridge
 
