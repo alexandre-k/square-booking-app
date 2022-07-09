@@ -23,18 +23,24 @@ jobs:
       UNBOXED_MONGODB_PASSWORD: ${{ secrets.UNBOXED_MONGODB_PASSWORD }}
       UNBOXED_MONGODB_DATABASE: "booking"
       UNBOXED_MONGODB_DOCKER_PORT: 27017
+      REACT_APP_LOCATION_ID: ${{ secrets.UNBOXED_SQUARE_LOCATION_ID }}
+      REACT_APP_PUBLISHABLE_API_KEY: ${{ secrets.REACT_APP_PUBLISHABLE_API_KEY }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           submodules: "true"
+      - name: Login to Docker hub registry
+        run: echo ${{ secrets.DOCKER_HUB_PASSWORD }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
       - name: Build Docker containers
         run: |
           echo --- Building docker containers ---
           ls -l
-          ls -l backend
-          docker-compose -f ./docker-compose.yml up -d
+          ls -l frontend
+          cd frontend
+          docker build -t kmalexandre/square-booking-app:latest -f ./docker/Dockerfile.production .
+          docker push kmalexandre/square-booking-app:latest
           echo --- Containers up ---
 
       # - name: JEST Report
