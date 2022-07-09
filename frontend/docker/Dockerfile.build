@@ -6,10 +6,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN yarn
 
-COPY --chown=node:node . .
-
-RUN chown -R node node_modules
-USER node
+COPY . .
 
 # start app
 RUN chmod +x entrypoint.sh

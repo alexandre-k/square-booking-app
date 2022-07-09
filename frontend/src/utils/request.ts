@@ -76,7 +76,7 @@ export const sendRequest = async (
       : headers;
     console.log(process.env);
     const response = await axios.request({
-      url,
+      url: "/api" + url,
       method,
       //@ts-ignore
       data: payload,

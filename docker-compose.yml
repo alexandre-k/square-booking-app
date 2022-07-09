@@ -72,6 +72,17 @@ services:
       - unboxed
     # stdin_open: true
     # tty: true
+  nginx:
+    container_name: unboxed_nginx
+    hostname: unboxed_nginx
+    domainname: unboxed_nginx.local
+    build:
+      context: ./infra
+      dockerfile: ./Dockerfile
+    ports:
+      - 80:80
+    networks:
+      - unboxed
 volumes:
   database:
     driver: local
