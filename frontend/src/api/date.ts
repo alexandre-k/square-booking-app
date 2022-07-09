@@ -13,7 +13,7 @@ export const getAvailabilities = async (
   return await sendRequest("/booking/availability/search", "POST", {
     query: {
       filter: {
-        locationId: process.env.REACT_APP_SQUARE_LOCATION_ID,
+        locationId: process.env.REACT_APP_LOCATION_ID,
         startAtRange: {
           endAt: `${endDate.year()}-${endDate.format("MM")}-${endDate.format(
             "DD"

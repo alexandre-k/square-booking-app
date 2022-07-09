@@ -17,11 +17,16 @@ interface MagicLogin {
   jwt: string;
 }
 
-const getMagicSingleton = (apiKey: string | undefined) =>
-  new Magic(!!apiKey ? apiKey : "");
+const getMagicSingleton = (apiKey: string | undefined) => {
+  try {
+    return new Magic(!!apiKey ? apiKey : "");
+  } catch {
+    return null;
+  }
+};
 
-export const magicSingleton = getMagicSingleton(
-  process.env.REACT_APP_MAGIC_LINK_PUBLISHABLE_API_KEY
+const magicSingleton = getMagicSingleton(
+  process.env.REACT_APP_PUBLISHABLE_API_KEY
 );
 
 /* const initialContext = {
@@ -53,14 +58,14 @@ const MagicLoginProvider = ({
     setIsLoading(true);
     setError(null as any);
     try {
-      const jwt = await magicSingleton.auth.loginWithMagicLink({
+      const jwt = await magicSingleton?.auth.loginWithMagicLink({
         email,
         showUI: false,
       });
 
-      const metadata = await magicSingleton.user.getMetadata();
+      const metadata = await magicSingleton?.user.getMetadata();
       if (jwt) setJwt(jwt);
-      setUser(metadata);
+      if (metadata) setUser(metadata);
       setIsLoading(false);
       setIsAuthenticated(true);
     } catch (err) {
@@ -71,7 +76,7 @@ const MagicLoginProvider = ({
   const logout = async () => {
     setIsLoading(true);
     setError(null as any);
-    await magicSingleton.user.logout();
+    await magicSingleton?.user.logout();
     setIsAuthenticated(false);
     setUser(null as any);
     setJwt(null as any);
@@ -81,11 +86,11 @@ const MagicLoginProvider = ({
   const getSavedMetadata = async () => {
     setIsLoading(true);
     try {
-      const metadata = await magicSingleton.user.getMetadata();
-      setUser(metadata);
+      const metadata = await magicSingleton?.user.getMetadata();
+      if (metadata) setUser(metadata);
       setIsAuthenticated(true);
-      const jwt = await magicSingleton.user.getIdToken();
-      setJwt(jwt);
+      const jwt = await magicSingleton?.user.getIdToken();
+      if (jwt) setJwt(jwt);
     } catch (err) {
       setError(err as any);
     } finally {

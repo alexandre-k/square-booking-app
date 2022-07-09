@@ -6,7 +6,7 @@ export const bookAppointment = async (customer: User, selectedStartAt: string, s
         booking: {
             ...customer,
             customerNote: "",
-            locationId: process.env.REACT_APP_SQUARE_LOCATION_ID,
+            locationId: process.env.REACT_APP_LOCATION_ID,
             // locationType: LocationType.BUSINESS_LOCATION,
             // sellerNote: "",
             startAt: selectedStartAt,

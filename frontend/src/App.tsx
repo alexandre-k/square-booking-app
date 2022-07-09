@@ -44,7 +44,7 @@ function App({ isMenuOpenDefault }: AppProps) {
   // @ts-ignore
   const [booking, setBooking] = useState<BookingT>({});
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(isMenuOpenDefault);
-  const requiredEnv = ["REACT_APP_SQUARE_LOCATION_ID"];
+  const requiredEnv = ["REACT_APP_LOCATION_ID"];
   const undefinedVariables = requiredEnv.filter(
     (envVariable) =>
       process.env[envVariable] === undefined ||

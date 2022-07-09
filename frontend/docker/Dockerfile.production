@@ -4,13 +4,12 @@ WORKDIR /usr/src/app
 
 # install app dependencies
 COPY package*.json ./
-RUN yarn
+RUN npm install
 
 COPY . .
 
 # start app
-RUN chmod +x entrypoint.sh
-RUN /usr/src/app/entrypoint.sh
+RUN npm run build
 
 FROM nginx:alpine as serve
 

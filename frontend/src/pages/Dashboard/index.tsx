@@ -16,7 +16,7 @@ const TeamDashboard = () => {
 
   const listAppointments = async () => {
     const data = await sendRequest(
-      "/bookings?location_id=" + process.env.REACT_APP_SQUARE_LOCATION_ID,
+      "/bookings?location_id=" + process.env.REACT_APP_LOCATION_ID,
       "GET"
     );
     return data.bookings;
