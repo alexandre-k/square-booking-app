@@ -48,3 +48,13 @@ cd square-booking-app
 git submodule update --init
 ```
 
+## Deployment
+
+Example:
+
+```
+docker build -t booking-server:[TAG] -f Dockerfile.serve .
+docker build -t booking-api:[TAG] -f Dockerfile .
+docker run -d -p 8000:8000 booking-server:[TAG]
+docker run -d -p 80:80 -p 443:443 booking-api:[TAG]
+```

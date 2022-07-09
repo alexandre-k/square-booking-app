@@ -21,7 +21,7 @@ const getMagicSingleton = (apiKey: string | undefined) =>
   new Magic(!!apiKey ? apiKey : "");
 
 export const magicSingleton = getMagicSingleton(
-  process.env.REACT_APP_UNBOXED_MAGIC_LINK_PUBLISHABLE_API_KEY
+  process.env.REACT_APP_MAGIC_LINK_PUBLISHABLE_API_KEY
 );
 
 /* const initialContext = {
