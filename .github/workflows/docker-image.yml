@@ -39,6 +39,10 @@ jobs:
           ls -l
           ls -l frontend
           cd frontend
+          touch .env.production
+          cat REACT_APP_LOCATION_ID=$REACT_APP_LOCATION_ID > .env.production
+          cat REACT_APP_PUBLISHABLE_API_KEY=$REACT_APP_PUBLISHABLE_API_KEY >> .env.production
+          cat .env.production
           docker build -t kmalexandre/square-booking-app:latest -f ./docker/Dockerfile.production .
           docker push kmalexandre/square-booking-app:latest
           echo --- Containers up ---
