@@ -23,8 +23,6 @@ jobs:
       UNBOXED_MONGODB_PASSWORD: ${{ secrets.UNBOXED_MONGODB_PASSWORD }}
       UNBOXED_MONGODB_DATABASE: "booking"
       UNBOXED_MONGODB_DOCKER_PORT: 27017
-      REACT_APP_LOCATION_ID: ${{ secrets.UNBOXED_SQUARE_LOCATION_ID }}
-      REACT_APP_PUBLISHABLE_API_KEY: ${{ secrets.REACT_APP_PUBLISHABLE_API_KEY }}
 
     steps:
       - name: Checkout repository
@@ -34,14 +32,16 @@ jobs:
       - name: Login to Docker hub registry
         run: echo ${{ secrets.DOCKER_HUB_PASSWORD }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
       - name: Build Docker containers
+        env:
+          REACT_APP_LOCATION_ID: ${{ secrets.UNBOXED_SQUARE_LOCATION_ID }}
+          REACT_APP_PUBLISHABLE_API_KEY: ${{ secrets.REACT_APP_PUBLISHABLE_API_KEY }}
         run: |
           echo --- Building docker containers ---
-          ls -l
-          ls -l frontend
           cd frontend
           touch .env.production
-          echo REACT_APP_LOCATION_ID=${{ secrets.UNBOXED_SQUARE_LOCATION_ID }} > .env.production
-          echo REACT_APP_PUBLISHABLE_API_KEY=${{ secrets.REACT_APP_PUBLISHABLE_API_KEY }} >> .env.production
+          echo REACT_APP_LOCATION_ID=$REACT_APP_LOCATION_ID > .env.production
+          echo REACT_APP_PUBLISHABLE_API_KEY=$REACT_APP_PUBLISHABLE_API_KEY >> .env.production
+          ls -la
           cat .env.production
           docker build -t kmalexandre/square-booking-app:latest -f ./docker/Dockerfile.production .
           docker push kmalexandre/square-booking-app:latest
