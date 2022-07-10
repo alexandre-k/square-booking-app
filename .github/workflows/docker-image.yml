@@ -37,7 +37,7 @@ jobs:
           REACT_APP_PUBLISHABLE_API_KEY: ${{ secrets.REACT_APP_PUBLISHABLE_API_KEY }}
         run: |
           echo Location Id:
-          echo ${{ secrets.UNBOXED_SQUARE_LOCATION_ID }}
+          echo $REACT_APP_LOCATION_ID
       - name: Build Docker containers
         env:
           REACT_APP_LOCATION_ID: ${{ secrets.UNBOXED_SQUARE_LOCATION_ID }}
