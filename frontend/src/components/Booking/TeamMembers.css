@@ -1,3 +1,8 @@
 #membersContainer {
     display:flex;
 }
+
+#memberSkeletonContainer {
+    display: flex;
+    justify-content: center;
+}

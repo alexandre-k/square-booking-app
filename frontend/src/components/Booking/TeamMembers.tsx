@@ -29,10 +29,15 @@ const TeamMembers = ({
 
   if (!data || isLoading) {
     return (
-      <Grid container spacing={1} justifyContent="start" alignItems="center">
+      <Grid
+        container
+        direction="row"
+        justifyContent="space-evenly"
+        alignItems="center"
+      >
         {Array.from(Array(4).keys()).map((key) => (
-          <Grid item xs={6} md={6} key={key}>
-            <Skeleton variant="text" width="200px" height="200px" />
+          <Grid id="memberSkeletonContainer" item xs={6} md={6} key={key}>
+            <Skeleton variant="text" width="150px" height="150px" />
           </Grid>
         ))}
       </Grid>

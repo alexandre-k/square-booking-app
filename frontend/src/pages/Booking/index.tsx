@@ -143,15 +143,18 @@ const Booking = (props: BookingProps) => {
                 Book
               </Button>
             ) : (
-              <IconButton
-                disabled={false}
-                aria-label="next"
-                color="primary"
-                size="large"
-                onClick={() => navigate(+1)}
-              >
-                <ArrowForwardIosIcon />
-              </IconButton>
+                <Button
+                    disabled={false}
+                    aria-label="next"
+                    color="primary"
+                    size="large"
+                    onClick={() => navigate(+1)}
+                    variant="contained" endIcon={
+
+                    <ArrowForwardIosIcon />
+                    }>
+                    Next
+                </Button>
             )}
           </div>
         )}

@@ -51,7 +51,7 @@ const ServiceLabel = ({ service, selectedServiceIds }: ServiceLabelProps) => {
     </div>
   );
   const selectedStyle = {
-    backgroundColor: "#bfe2e2",
+    backgroundColor: "#e3f6f5",
     border: "1px solid #bfe2e2",
   };
   const notSelectedStyle = {
