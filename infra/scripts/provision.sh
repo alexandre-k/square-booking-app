@@ -1,6 +1,6 @@
 #!/bin/bash
 pacman -Syyu --noconfirm
-pacman -S git lxc docker docker-compose certbot certbot-nginx nginx mkcert --noconfirm
+pacman -S git lxc docker docker-compose certbot certbot-nginx nginx mkcert webhook --noconfirm
 systemctl enable --now docker
 systemctl status docker
 systemctl enable nginx
