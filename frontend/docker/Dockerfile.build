@@ -3,11 +3,11 @@ FROM node:16-alpine as build
 WORKDIR /usr/src/app
 
 # install app dependencies
-COPY package*.json ./
-RUN yarn
+COPY package.json ./
+COPY yarn.lock ./
+RUN yarn install --immutable --immutable-cache --check-cache
 
 COPY . .
 
 # start app
-RUN chmod +x entrypoint.sh
-ENTRYPOINT "/usr/src/app/entrypoint.sh"
+CMD ["yarn", "start"]
