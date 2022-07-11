@@ -16,7 +16,7 @@ const LoginButton = () => {
     );
   } else {
     return (
-      <Link to="login" style={{ textDecoration: "none" }}>
+      <Link to="/login" style={{ textDecoration: "none" }}>
         <LoadingButton loading={isLoading} variant="outlined">
           Sign in
         </LoadingButton>
