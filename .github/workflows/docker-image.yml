@@ -20,14 +20,14 @@ jobs:
       - name: Test env
         run: |
           echo Location Id:
-          echo "$REACT_APP_LOCATION_ID"
+          echo '${{ secrets.REACT_APP_LOCATION_ID }}'
       - name: Build Docker containers
         run: |
           echo --- Building docker containers ---
           cd frontend
           touch .env.production
-          echo REACT_APP_LOCATION_ID="$REACT_APP_LOCATION_ID" > .env.production
-          echo REACT_APP_PUBLISHABLE_API_KEY="$REACT_APP_PUBLISHABLE_API_KEY" >> .env.production
+          echo REACT_APP_LOCATION_ID='${{ secrets.REACT_APP_LOCATION_ID }}' > .env.production
+          echo REACT_APP_PUBLISHABLE_API_KEY='${{ secrets.REACT_APP_PUBLISHABLE_API_KEY }}' >> .env.production
           ls -la
           cat .env.production
           docker build -t kmalexandre/square-booking-app:latest -f ./docker/Dockerfile.production .
