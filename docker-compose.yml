@@ -44,7 +44,7 @@ services:
     domainname: unboxed_backend.local
     build:
       context: ./backend
-      dockerfile: ./Dockerfile
+      dockerfile: ./docker/Dockerfile.build
     volumes:
       - /usr/src/app/node_modules
       - ./backend:/usr/src/app
