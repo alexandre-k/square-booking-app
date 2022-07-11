@@ -9,21 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      UNBOXED_SQUARE_ENVIRONMENT: "sandbox"
-      UNBOXED_SQUARE_ACCESS_TOKEN: ${{ secrets.UNBOXED_SQUARE_ACCESS_TOKEN }}
-      UNBOXED_SQUARE_LOCATION_ID: ${{ secrets.UNBOXED_SQUARE_LOCATION_ID }}
-      UNBOXED_SQUARE_API_VERSION: "2022-05-12"
-
-      UNBOXED_OAUTH_DOMAIN: ${{ secrets.UNBOXED_OAUTH_DOMAIN }}
-      UNBOXED_OAUTH_ID: ${{ secrets.UNBOXED_OAUTH_ID }}
-      UNBOXED_OAUTH_REDIRECT_URI: "http://localhost:5000"
-
-      UNBOXED_MONGODB_USER: "mongodb"
-      UNBOXED_MONGODB_PASSWORD: ${{ secrets.UNBOXED_MONGODB_PASSWORD }}
-      UNBOXED_MONGODB_DATABASE: "booking"
-      UNBOXED_MONGODB_DOCKER_PORT: 27017
-
+    environment: square-booking-app
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -32,22 +18,16 @@ jobs:
       - name: Login to Docker hub registry
         run: echo ${{ secrets.DOCKER_HUB_PASSWORD }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
       - name: Test env
-        env:
-          REACT_APP_LOCATION_ID: ${{ secrets.UNBOXED_SQUARE_LOCATION_ID }}
-          REACT_APP_PUBLISHABLE_API_KEY: ${{ secrets.REACT_APP_PUBLISHABLE_API_KEY }}
         run: |
           echo Location Id:
-          echo $REACT_APP_LOCATION_ID
+          echo "$REACT_APP_LOCATION_ID"
       - name: Build Docker containers
-        env:
-          REACT_APP_LOCATION_ID: ${{ secrets.UNBOXED_SQUARE_LOCATION_ID }}
-          REACT_APP_PUBLISHABLE_API_KEY: ${{ secrets.REACT_APP_PUBLISHABLE_API_KEY }}
         run: |
           echo --- Building docker containers ---
           cd frontend
           touch .env.production
-          echo REACT_APP_LOCATION_ID=${{ secrets.UNBOXED_SQUARE_LOCATION_ID }} > .env.production
-          echo REACT_APP_PUBLISHABLE_API_KEY=${{ secrets.REACT_APP_PUBLISHABLE_API_KEY }} >> .env.production
+          echo REACT_APP_LOCATION_ID="$REACT_APP_LOCATION_ID" > .env.production
+          echo REACT_APP_PUBLISHABLE_API_KEY="$REACT_APP_PUBLISHABLE_API_KEY" >> .env.production
           ls -la
           cat .env.production
           docker build -t kmalexandre/square-booking-app:latest -f ./docker/Dockerfile.production .
