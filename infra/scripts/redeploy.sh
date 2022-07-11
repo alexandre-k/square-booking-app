@@ -1,11 +1,16 @@
 #!/bin/bash
 
-echo "cd to backend"
+id
+whoami
+git config --global --add safe.directory /home/guest/square-booking-app/backend
+echo "Cd to backend"
 cd /home/guest/square-booking-app/backend
 echo "backend: git pull"
 git pull
 echo "cd frontend"
 cd ..
+
+git config --global --add safe.directory /home/guest/square-booking-app
 echo "frontend: git pull"
 git pull
 echo "Change run_app.sh as executable"
