@@ -37,7 +37,6 @@ const Booking = (props: BookingProps) => {
     emailAddress: "",
   });
   const [activeStep, setActiveStep] = useState(0);
-  // const [disabled, setDisabled] = useState<boolean>(true);
   const changeRoute = useNavigate();
   const navigate = (step: number) => {
     const nextActiveStep = activeStep + step;
@@ -78,6 +77,7 @@ const Booking = (props: BookingProps) => {
         />
       ),
       isNextRequired: true,
+      isFormBlank: () => selectedServices.length === 0
     },
     {
       label: "Select a team member",
@@ -92,6 +92,7 @@ const Booking = (props: BookingProps) => {
         />
       ),
       isNextRequired: false,
+      isFormBlank: () => selectedMemberId === ""
     },
     {
       label: "Pick a date/time",
@@ -104,11 +105,13 @@ const Booking = (props: BookingProps) => {
         />
       ),
       isNextRequired: true,
+      isFormBlank: () => selectedStartAt === ""
     },
     {
       label: "Your information",
       component: <Customer customer={customer} setCustomer={setCustomer} />,
       isNextRequired: true,
+      isFormBlank: () => customer.emailAddress === ""
     },
   ];
 
@@ -136,7 +139,7 @@ const Booking = (props: BookingProps) => {
                 className="businessNameButton"
                 variant="contained"
                 size="large"
-                disabled={isLoading}
+                disabled={isLoading || steps[activeStep].isFormBlank()}
                 onClick={() => mutate()}
                 endIcon={<CheckIcon />}
               >
@@ -144,7 +147,7 @@ const Booking = (props: BookingProps) => {
               </Button>
             ) : (
                 <Button
-                    disabled={false}
+                    disabled={steps[activeStep].isFormBlank()}
                     aria-label="next"
                     color="primary"
                     size="large"
