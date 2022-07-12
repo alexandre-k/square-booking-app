@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import { useMagicLogin } from "context/MagicLoginProvider";
 
 const LoginButton = () => {
-  const { isLoading, isAuthenticated, user, logout } = useMagicLogin();
+  const { isInitializing, isAuthenticated, user, logout } = useMagicLogin();
 
   if (isAuthenticated && user) {
     return (
@@ -17,7 +17,7 @@ const LoginButton = () => {
   } else {
     return (
       <Link to="/login" style={{ textDecoration: "none" }}>
-        <LoadingButton loading={isLoading} variant="outlined">
+        <LoadingButton loading={isInitializing} variant="outlined">
           Sign in
         </LoadingButton>
       </Link>

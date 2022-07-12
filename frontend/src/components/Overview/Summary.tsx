@@ -51,15 +51,15 @@ const Summary = ({
   const [editDialogComponent, setEditDialogComponent] =
     useState<string>("date");
   const [selectedMemberId, setSelectedMemberId] = useState<string>(
-    teamMember.id
+    teamMember ? teamMember.id : ""
   );
   const [selectedStartAt, setSelectedStartAt] = useState<string>("");
   const [selectedServices, setSelectedServices] = useState<Array<ServiceID>>(
-    formatCatalogObjects(relatedObjects).map((service) => service.id)
+    relatedObjects ? formatCatalogObjects(relatedObjects).map((service) => service.id) : []
   );
   const [appointmentSegments, setAppointmentSegments] = useState<
     Array<ShortAppointmentSegment>
-  >(booking.appointmentSegments.map(shortenSegment));
+  >(booking ? booking.appointmentSegments.map(shortenSegment) : []);
   const {
     jwt
   } = useMagicLogin();
@@ -146,7 +146,7 @@ const Summary = ({
           {editDialogChild(editDialogComponent)}
         </EditDialog>
       )}
-      <div className="summaryGrid">
+      {booking && <div className="summaryGrid">
         <DateTime
           disabled={isCancelled(booking.status)}
           booking={booking}
@@ -173,7 +173,7 @@ const Summary = ({
           showEditDialog={showEditDialog}
         />
         <Checkout paymentLink={paymentLink} isCheckedOut={false} />
-      </div>
+      </div>}
     </>
   );
 };

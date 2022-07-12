@@ -9,6 +9,7 @@ interface Error {
 
 interface MagicLogin {
   isLoading: boolean;
+  isInitializing: boolean;
   isAuthenticated: boolean;
   login: (email: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -53,6 +54,8 @@ const MagicLoginProvider = ({
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<MagicUserMetadata>(undefined as any);
   const [error, setError] = useState<Error>(null as any);
+  const [isFirstTime, setIsFirstTime] = useState<boolean>(true);
+  const [isInitializing, setIsInitializing] = useState<boolean>(true);
 
   const login = async (email: string) => {
     setIsLoading(true);
@@ -84,7 +87,6 @@ const MagicLoginProvider = ({
   };
 
   const getSavedMetadata = async () => {
-    setIsLoading(true);
     try {
       const metadata = await magicSingleton?.user.getMetadata();
       if (metadata) setUser(metadata);
@@ -92,21 +94,20 @@ const MagicLoginProvider = ({
       const jwt = await magicSingleton?.user.getIdToken();
       if (jwt) setJwt(jwt);
     } catch (err) {
-      setError(err as any);
+      console.log("Get saved metadata: ", err);
     } finally {
-      setIsLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (!isAuthenticated && !isLoading && !!!error) {
-      getSavedMetadata();
-    }
-  });
+  if (!isAuthenticated && isFirstTime) {
+    getSavedMetadata();
+    setIsFirstTime(false);
+    setIsInitializing(false);
+  }
 
   return (
     <MagicLoginContext.Provider
-      value={{ isLoading, isAuthenticated, login, logout, error, user, jwt }}
+      value={{ isLoading, isInitializing, isAuthenticated, login, logout, error, user, jwt }}
     >
       {children}
     </MagicLoginContext.Provider>

@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useMagicLogin } from "context/MagicLoginProvider";
 import { AxiosError } from "axios";
 import { useQuery } from "react-query";
@@ -24,12 +24,17 @@ interface GetBookingQuery {
 }
 
 const BookingSummary = () => {
-    const { isLoading: isAuthLoading, isAuthenticated, user, jwt } =
-        useMagicLogin();
+  const {
+    isLoading: isAuthLoading,
+    isAuthenticated,
+    user,
+    jwt,
+  } = useMagicLogin();
+  const navigate = useNavigate();
   const {
     isLoading: isLocationLoading,
     isError: isLocationError,
-    location
+    location,
   } = useLocation();
   const { bookingId } = useParams();
   const isBookingQueryEnabled = !!user && !!bookingId && !!jwt;
@@ -42,6 +47,11 @@ const BookingSummary = () => {
   >("customer/booking", () => getBooking(getBookingId(), getJwt()), {
     enabled: isBookingQueryEnabled,
   });
+
+  if (error?.response?.status === 410) {
+    // if canceled redirect to listing
+    navigate("/overview", { replace: true });
+  }
 
   if (isLocationError) {
     return <div>Location error. Unable to retrieve current location</div>;

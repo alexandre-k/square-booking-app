@@ -48,6 +48,7 @@ const Login = () => {
             <InputLabel htmlFor="email">Email address</InputLabel>
             <Input
               id="email"
+              readOnly={isLoading}
               aria-describedby="email-text"
               onChange={(e: any) => changeEmail(e)}
             />
@@ -62,12 +63,12 @@ const Login = () => {
             </LoadingButton>
           </FormControl>
         </CardContent>
-        <CardContent id="loginCardContent">
+        {isLoading && <CardContent id="loginCardContent">
           <Alert severity="info">
             <AlertTitle>Check your mailbox</AlertTitle>A mail has been sent to
             you to authenticate.
           </Alert>
-        </CardContent>
+        </CardContent>}
         {!!error && <CardContent>{getError()}</CardContent>}
       </Card>
     </Box>

@@ -24,7 +24,6 @@ const BookingList = () => {
         jwt,
     } = useMagicLogin();
 
-
   const {
     isLoading: isLocationLoading,
     isError: isLocationError,
@@ -37,7 +36,7 @@ const BookingList = () => {
     Array<Booking>,
     AxiosError
   >("customer/bookings", () => getBookingList(getUserEmail(), jwt), {
-    enabled: !!user,
+    enabled: !!jwt,
   });
 
   if (isLocationError) {
