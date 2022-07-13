@@ -50,8 +50,8 @@ const Summary = ({
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [editDialogComponent, setEditDialogComponent] =
     useState<string>("date");
-  const [selectedMemberId, setSelectedMemberId] = useState<string>(
-    teamMember ? teamMember.id : ""
+  const [selectedMemberIds, setSelectedMemberIds] = useState<Array<string>>(
+    teamMember ? [teamMember.id] : []
   );
   const [selectedStartAt, setSelectedStartAt] = useState<string>("");
   const [selectedServices, setSelectedServices] = useState<Array<ServiceID>>(
@@ -77,6 +77,15 @@ const Summary = ({
     }
   );
 
+  const getTeamMemberId = () => {
+      if (selectedMemberIds.length === 0) return "";
+      // TODO: get real team member id
+      if (selectedMemberIds[0] === "anyStaffMember") {
+          return "anyStaffMember";
+      }
+      return selectedMemberIds[0];
+  }
+
   const showEditDialog = (component: string) => {
     setEditDialogComponent(component);
     setOpenEditDialog(true);
@@ -90,7 +99,7 @@ const Summary = ({
         return (
           <DateTimePicker
             selectedServices={selectedServices}
-            memberId={selectedMemberId}
+            memberIds={selectedMemberIds}
             selectedStartAt={selectedStartAt}
             setSelectedStartAt={setSelectedStartAt}
           />
@@ -105,7 +114,7 @@ const Summary = ({
                 services.map((service: Service) => {
                   return {
                     durationMinutes: convertMsToMins(service.duration),
-                    teamMemberId: selectedMemberId,
+                    teamMemberId: getTeamMemberId(),
                     serviceVariationId: service.id,
                     serviceVariationVersion: service.version,
                   };
@@ -118,13 +127,13 @@ const Summary = ({
         return (
           <TeamMembers
             showOwner={false}
-            selectedMemberId={selectedMemberId}
-            onDone={(memberId: string) =>
+            selectedMemberIds={selectedMemberIds}
+            onDone={(teamMemberIds: Array<string>) =>
               mutate({
                 booking,
                 appointmentSegments: appointmentSegments.map(
                   (segment: ShortAppointmentSegment) => {
-                    return { ...segment, teamMemberId: memberId };
+                    return { ...segment, teamMemberIds };
                   }
                 ),
               })

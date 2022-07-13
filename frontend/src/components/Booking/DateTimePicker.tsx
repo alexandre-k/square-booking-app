@@ -33,7 +33,7 @@ interface DateTimePickerProps {
   selectedStartAt: string;
   setSelectedStartAt: (val: string) => void;
   selectedServices: Array<string>;
-  memberId: string | null;
+  memberIds: Array<string>;
 }
 
 const DateTimePicker = ({
@@ -46,7 +46,7 @@ const DateTimePicker = ({
   selectedStartAt,
   setSelectedStartAt,
   selectedServices,
-  memberId,
+  memberIds,
 }: DateTimePickerProps) => {
   // const [availabilities, setAvailabilities] = useState<Array<Availability>>([]);
   const [value, onChange] = useState(new Date());
@@ -127,14 +127,14 @@ const DateTimePicker = ({
           />
         </div>
       </Grid>
-      {location && workingDay && memberId && endDate && date && (
+      {location && workingDay && memberIds && endDate && date && (
         <Grid item xs={12} md={6}>
           <div className="bookingContainer">
             <Availabilities
               selectedStartAt={selectedStartAt}
               setSelectedStartAt={setSelectedStartAt}
               selectedServices={selectedServices}
-              memberId={memberId}
+              memberIds={memberIds}
               endDate={endDate}
               workingDay={workingDay}
               date={date}
@@ -153,7 +153,7 @@ DateTimePicker.defaultProps = {
   startAt: "",
   sellerNote: "Seller note!",
   selectedServices: [],
-  memberId: null,
+  memberIds: [],
 };
 
 export default DateTimePicker;

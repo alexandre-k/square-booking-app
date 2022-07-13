@@ -5,7 +5,7 @@ import { sendRequest } from "utils/request";
 // @ts-ignore
 export const getAvailabilities = async (
   selectedServices: Array<string>,
-  memberId: string,
+  memberIds: Array<string>,
   endDate: dayjs.Dayjs,
   workingDay: Period,
   date: dayjs.Dayjs
@@ -25,7 +25,7 @@ export const getAvailabilities = async (
         segmentFilters: selectedServices.map(serviceId => ({
           serviceVariationId: serviceId,
           teamMemberIdFilter: {
-            any: [memberId],
+            any: memberIds
           },
         })),
       },

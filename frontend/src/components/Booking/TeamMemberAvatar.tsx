@@ -2,6 +2,7 @@ import { TeamMember } from "types/Team";
 import UserAvatar from "components/User/UserAvatar";
 import Typography from "@mui/material/Typography";
 import "./TeamMemberAvatar.css";
+import { getInitials } from "utils/staff";
 
 interface TeamMemberAvatarProps {
   member: TeamMember;
@@ -10,7 +11,7 @@ interface TeamMemberAvatarProps {
 const TeamMemberAvatar = ({ member }: TeamMemberAvatarProps) => (
   <div className="avatarContainer">
     <UserAvatar
-      letters={`${member.givenName}+${member.familyName}`}
+      letters={getInitials(member)}
     />
     <div className="memberButton">
       <Typography  mt={1} >

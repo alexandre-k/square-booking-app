@@ -9,16 +9,6 @@ import { Period } from "types/Location";
 import { useQuery } from "react-query";
 import dayjs from "dayjs";
 
-/* interface GetAvailabilitiesQuery {
- *     selectedStartAt: string;
- *     setSelectedStartAt: (selectedStartAt: string) => void;
- *     selectedServices: Array<string>;
- *     memberId: string;
- *     endDate: dayjs.Dayjs;
- *     workingDay: Period;
- *     date: dayjs.Dayjs;
- * } */
-
 interface GetAvailabilitiesQuery {
   availabilities: Array<Availability>;
 }
@@ -27,7 +17,7 @@ interface AvailabilitiesProps {
   selectedStartAt: string;
   setSelectedStartAt: (selectedStartAt: string) => void;
   selectedServices: Array<string>;
-  memberId: string;
+  memberIds: Array<string>;
   endDate: dayjs.Dayjs;
   workingDay: Period;
   date: dayjs.Dayjs;
@@ -38,7 +28,7 @@ const Availabilities = ({
   selectedStartAt,
   setSelectedStartAt,
   selectedServices,
-  memberId,
+  memberIds,
   endDate,
   workingDay,
   date,
@@ -50,7 +40,7 @@ const Availabilities = ({
     GetAvailabilitiesQuery,
     AxiosError
   >(["availabilities"], () =>
-    getAvailabilities(selectedServices, memberId, endDate, workingDay, date)
+    getAvailabilities(selectedServices, memberIds, endDate, workingDay, date)
   );
   if (isLoading)
     return (

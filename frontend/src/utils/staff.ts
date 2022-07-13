@@ -1,5 +1,7 @@
+import { TeamMember } from "types/Team";
+
 export const anyMember = () => ({
-    id: "",
+    id: "anyStaffMember",
     givenName: "Anyone",
     familyName: "",
     isOwner: false,
@@ -10,3 +12,7 @@ export const anyMember = () => ({
     updatedAt: "",
     avatarUrl: ""
 });
+
+export const getInitials = (member: TeamMember) => {
+    return (member.id === "anyStaffMember") ? "?" : `${member.givenName}+${member.familyName}.jpg`;
+}

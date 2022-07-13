@@ -13,13 +13,13 @@ import { getTeamMembers } from "api/team";
 
 interface TeamMembersProps {
   showOwner: boolean;
-  selectedMemberId: string | null;
-  onDone: (memberId: string) => void;
+  selectedMemberIds: Array<string>;
+  onDone: (memberIds: Array<string>) => void;
 }
 
 const TeamMembers = ({
   showOwner,
-  selectedMemberId,
+  selectedMemberIds,
   onDone,
 }: TeamMembersProps) => {
   const { isLoading, isError, data, error } = useQuery<
@@ -50,7 +50,20 @@ const TeamMembers = ({
         <div>{error.message}</div>
       </>
     );
-  const listItem = data
+  const anyone = {
+    id: "anyStaffMember",
+    isOwner: false,
+    status: "ACTIVE",
+    givenName: "Anyone",
+    familyName: "available",
+    emailAddress: "",
+    phoneNumber: "",
+    createdAt: "",
+    updatedAt: "",
+    avatarUrl: "",
+  } as TeamMember;
+  const dataOrAnyone = [anyone, ...data];
+  const listItem = dataOrAnyone
     .filter((member) => !member.isOwner || showOwner)
     .map((member, index) => (
       <Grid item xs={6} md={3} key={member.id}>
@@ -58,9 +71,15 @@ const TeamMembers = ({
           <ListItemButton
             className="memberButton"
             autoFocus={index === 0}
-            selected={member.id === selectedMemberId}
+            selected={
+              selectedMemberIds.length > 0 && member.id === selectedMemberIds[0]
+            }
             onClick={() => {
-              onDone(member.id);
+              if (member.id === "anyStaffMember") {
+                onDone(data.map((d) => d.id));
+              } else {
+                onDone([member.id]);
+              }
             }}
           >
             <TeamMemberAvatar member={member} />
@@ -79,7 +98,7 @@ const TeamMembers = ({
 
 TeamMembers.defaultProps = {
   showOwner: false,
-  selectedMemberId: null,
+  selectedMemberIds: [],
 };
 
 export default TeamMembers;

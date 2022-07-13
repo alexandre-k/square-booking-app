@@ -28,7 +28,7 @@ interface BookingProps {
 }
 
 const Booking = (props: BookingProps) => {
-  const [selectedMemberId, setSelectedMemberId] = useState<string>("");
+  const [selectedMemberIds, setSelectedMemberIds] = useState<Array<string>>([]);
   const [selectedServices, setSelectedServices] = useState<Array<string>>([]);
   const [selectedStartAt, setSelectedStartAt] = useState<string>("");
   const [customer, setCustomer] = useState<User>({
@@ -54,7 +54,7 @@ const Booking = (props: BookingProps) => {
         customer,
         selectedStartAt,
         selectedServices,
-        selectedMemberId
+        selectedMemberIds
       ),
     {
       // @ts-ignore
@@ -83,23 +83,23 @@ const Booking = (props: BookingProps) => {
       label: "Select a team member",
       component: (
         <TeamMembers
-          selectedMemberId={selectedMemberId}
+          selectedMemberIds={selectedMemberIds}
           showOwner={false}
-          onDone={(memberId: string) => {
-            setSelectedMemberId(memberId);
+          onDone={(memberIds: Array<string>) => {
+            setSelectedMemberIds(memberIds);
             setActiveStep(activeStep + 1);
           }}
         />
       ),
       isNextRequired: false,
-      isFormBlank: () => selectedMemberId === ""
+      isFormBlank: () => selectedMemberIds === []
     },
     {
       label: "Pick a date/time",
       component: (
         <DateTimePicker
           selectedServices={selectedServices}
-          memberId={selectedMemberId}
+          memberIds={selectedMemberIds}
           selectedStartAt={selectedStartAt}
           setSelectedStartAt={setSelectedStartAt}
         />
