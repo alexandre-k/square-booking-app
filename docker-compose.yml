@@ -10,9 +10,9 @@ services:
       - /usr/src/app/node_modules
       - ./frontend:/usr/src/app
     ports:
-      - 5000:5000
+      - 5001:5001
     environment:
-      - PORT=5000
+      - PORT=5001
       - REACT_APP_PUBLISHABLE_API_KEY=$MAGIC_LINK_PUBLISHABLE_API_KEY
       - REACT_APP_LOCATION_ID=$SQUARE_LOCATION_ID
     depends_on:

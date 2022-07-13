@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 COPY package.json ./
 COPY yarn.lock ./
-RUN yarn install --immutable --immutable-cache --check-cache
+RUN yarn install --immutable --immutable-cache --check-cache --network-timeout 1000000
 
 COPY . .
 
