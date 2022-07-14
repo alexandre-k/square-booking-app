@@ -46,7 +46,7 @@ const ExportToCalendar = ({
   const config: CalendarOptions = {
     title: location.name,
     location: location.address.addressLine1,
-    description: "Appointment at " + location.name,
+    description: "Appointment at " + location.name + "\n. For more information visit the page " + window.location.host + "/overview/" + booking.id + "\n",
     start: localizedDate(booking.startAt, location.timezone).toDate(),
     end: addAppointmentDuration(
       localizedDate(booking.startAt, location.timezone),

@@ -9,12 +9,14 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import LoadingButton from "@mui/lab/LoadingButton";
 import Typography from "@mui/material/Typography";
 import CheckIcon from "@mui/icons-material/Check";
 import DateTimePicker from "components/Booking/DateTimePicker";
 import Customer from "components/Booking/Customer";
 import Services from "components/Booking/Services";
 import TeamMembers from "components/Booking/TeamMembers";
+import { useMagicLogin } from "context/MagicLoginProvider";
 import { Service } from "types/Catalog";
 import { User } from "types/Customer";
 import { Booking as BookingT } from "types/Booking";
@@ -28,6 +30,7 @@ interface BookingProps {
 }
 
 const Booking = (props: BookingProps) => {
+  const { isLoading: isAuthLoading, isAuthenticated, error: authError, user, login } = useMagicLogin();
   const [selectedMemberIds, setSelectedMemberIds] = useState<Array<string>>([]);
   const [selectedServices, setSelectedServices] = useState<Array<string>>([]);
   const [selectedStartAt, setSelectedStartAt] = useState<string>("");
@@ -135,16 +138,20 @@ const Booking = (props: BookingProps) => {
         {steps[activeStep].isNextRequired && (
           <div>
             {activeStep === steps.length - 1 ? (
-              <Button
+              <LoadingButton
                 className="businessNameButton"
                 variant="contained"
                 size="large"
-                disabled={isLoading || steps[activeStep].isFormBlank()}
-                onClick={() => mutate()}
+                disabled={steps[activeStep].isFormBlank()}
+                loading={isLoading || isAuthLoading || !isAuthenticated}
+                onClick={async () => {
+                  await login(customer.emailAddress);
+                  mutate()
+                }}
                 endIcon={<CheckIcon />}
               >
                 Book
-              </Button>
+              </LoadingButton>
             ) : (
                 <Button
                     disabled={steps[activeStep].isFormBlank()}

@@ -8,13 +8,14 @@ import CardContent from "@mui/material/CardContent";
 import LoadingButton from "@mui/lab/LoadingButton";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-import Input from "@mui/material/Input";
 import { useMagicLogin } from "context/MagicLoginProvider";
+import CheckYourEmail from "components/Auth/CheckYourEmail";
+import EmailConfirmed from "components/Auth/EmailConfirmed";
+import EmailField from "components/Auth/EmailField";
 import "./Login.css";
 
 const Login = () => {
-  const { isLoading, isAuthenticated, error, user, login } =
-    useMagicLogin();
+  const { isLoading, isAuthenticated, error, user, login } = useMagicLogin();
   const [email, setEmail] = useState<string>("");
   const navigate = useNavigate();
 
@@ -45,30 +46,31 @@ const Login = () => {
       <Card id="loginCard">
         <CardContent id="loginCardContent">
           <FormControl sx={{ width: "100%", maxWidth: "250px" }}>
-            <InputLabel htmlFor="email">Email address</InputLabel>
-            <Input
-              id="email"
-              readOnly={isLoading}
-              aria-describedby="email-text"
-              onChange={(e: any) => changeEmail(e)}
+            <EmailField
+              isLoading={isLoading}
+              email={email}
+              setEmail={setEmail}
             />
-
             <LoadingButton
               id="loginButton"
               loading={isLoading}
-              variant="outlined"
+              variant="contained"
               onClick={() => login(email)}
             >
               Sign in
             </LoadingButton>
           </FormControl>
         </CardContent>
-        {isLoading && <CardContent id="loginCardContent">
-          <Alert severity="info">
-            <AlertTitle>Check your mailbox</AlertTitle>A mail has been sent to
-            you to authenticate.
-          </Alert>
-        </CardContent>}
+        {isLoading && (
+          <CardContent id="loginCardContent">
+            <CheckYourEmail email={email} />
+          </CardContent>
+        )}
+        {isAuthenticated && (
+          <CardContent id="loginCardContent">
+              <EmailConfirmed email={email} />
+          </CardContent>
+        )}
         {!!error && <CardContent>{getError()}</CardContent>}
       </Card>
     </Box>
