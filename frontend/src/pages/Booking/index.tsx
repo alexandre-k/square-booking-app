@@ -37,6 +37,7 @@ const Booking = (props: BookingProps) => {
     error: authError,
     user,
     login,
+    jwt,
   } = useMagicLogin();
 
   const [selectedMemberIds, setSelectedMemberIds] = useState<Array<string>>([]);
@@ -76,7 +77,8 @@ const Booking = (props: BookingProps) => {
         customer,
         selectedStartAt,
         selectedServices,
-        selectedMemberIds
+        selectedMemberIds,
+        jwt
       ),
     {
       // @ts-ignore

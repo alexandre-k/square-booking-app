@@ -5,7 +5,8 @@ export const bookAppointment = async (
   customer: User,
   selectedStartAt: string,
   selectedServices: Array<string>,
-  selectedMemberIds: Array<string>
+  selectedMemberIds: Array<string>,
+  jwt: string
 ) => {
   return await sendRequest("/customer/booking", "POST", {
     booking: {
@@ -25,5 +26,5 @@ export const bookAppointment = async (
         };
       }),
     },
-  });
+  }, jwt);
 };
