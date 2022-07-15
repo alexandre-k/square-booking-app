@@ -1,7 +1,7 @@
 #/bin/bash
 
 function stop_docker () {
-    docker stop $(docker ps -a -q --filter ancestor="$1" --format="{{.ID}}")
+    docker rm $(docker ps -a -q --filter ancestor="$1" --format="{{.ID}}")
 }
 
 function refresh_repo() {
