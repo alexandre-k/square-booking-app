@@ -12,7 +12,7 @@ const InviteLogin = () => {
       <Card id="loginCard">
         <CardHeader title="You need to login first to see this page." />
         <CardContent>
-          <LoginButton />
+          <LoginButton onClick={() => { console.log('Do nothing')}} />
         </CardContent>
       </Card>
     </div>
