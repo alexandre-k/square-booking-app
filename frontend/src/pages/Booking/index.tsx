@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
@@ -21,8 +21,8 @@ import { Service } from "types/Catalog";
 import { User } from "types/Customer";
 import { Booking as BookingT } from "types/Booking";
 import { bookAppointment } from "api/booking";
+import { customerSchema } from "utils/customer";
 import "./index.css";
-// import * as Yup from "yup";
 
 interface BookingProps {
   booking: BookingT | null;
@@ -30,7 +30,15 @@ interface BookingProps {
 }
 
 const Booking = (props: BookingProps) => {
-  const { isLoading: isAuthLoading, isAuthenticated, error: authError, user, login } = useMagicLogin();
+  const {
+    hasSavedMetadata,
+    isLoading: isAuthLoading,
+    isAuthenticated,
+    error: authError,
+    user,
+    login,
+  } = useMagicLogin();
+
   const [selectedMemberIds, setSelectedMemberIds] = useState<Array<string>>([]);
   const [selectedServices, setSelectedServices] = useState<Array<string>>([]);
   const [selectedStartAt, setSelectedStartAt] = useState<string>("");
@@ -41,6 +49,17 @@ const Booking = (props: BookingProps) => {
   });
   const [activeStep, setActiveStep] = useState(0);
   const changeRoute = useNavigate();
+
+  useEffect(() => {
+    if (hasSavedMetadata && customer.emailAddress === "") {
+      setCustomer({
+        givenName: "",
+        familyName: "",
+        emailAddress: user.email !== null ? user.email : "",
+      });
+    }
+  });
+
   const navigate = (step: number) => {
     const nextActiveStep = activeStep + step;
     if (nextActiveStep === -1) {
@@ -80,7 +99,7 @@ const Booking = (props: BookingProps) => {
         />
       ),
       isNextRequired: true,
-      isFormBlank: () => selectedServices.length === 0
+      isFormValid: () => selectedServices.length > 0,
     },
     {
       label: "Select a team member",
@@ -95,7 +114,7 @@ const Booking = (props: BookingProps) => {
         />
       ),
       isNextRequired: false,
-      isFormBlank: () => selectedMemberIds === []
+      isFormValid: () => selectedMemberIds.length > 0,
     },
     {
       label: "Pick a date/time",
@@ -108,13 +127,21 @@ const Booking = (props: BookingProps) => {
         />
       ),
       isNextRequired: true,
-      isFormBlank: () => selectedStartAt === ""
+      isFormValid: () => selectedStartAt !== "",
     },
     {
       label: "Your information",
-      component: <Customer customer={customer} setCustomer={setCustomer} />,
+      component: (
+        <Customer
+          customer={customer}
+          setCustomer={setCustomer}
+          isAuthenticated={isAuthenticated}
+          isAuthLoading={isAuthLoading}
+          hasSavedMetadata={hasSavedMetadata}
+        />
+      ),
       isNextRequired: true,
-      isFormBlank: () => customer.emailAddress === ""
+      isFormValid: () => customerSchema.isValidSync(customer),
     },
   ];
 
@@ -142,29 +169,28 @@ const Booking = (props: BookingProps) => {
                 className="businessNameButton"
                 variant="contained"
                 size="large"
-                disabled={steps[activeStep].isFormBlank()}
+                disabled={!steps[activeStep].isFormValid()}
                 loading={isLoading || isAuthLoading || !isAuthenticated}
                 onClick={async () => {
                   await login(customer.emailAddress);
-                  mutate()
+                  mutate();
                 }}
                 endIcon={<CheckIcon />}
               >
                 Book
               </LoadingButton>
             ) : (
-                <Button
-                    disabled={steps[activeStep].isFormBlank()}
-                    aria-label="next"
-                    color="primary"
-                    size="large"
-                    onClick={() => navigate(+1)}
-                    variant="contained" endIcon={
-
-                    <ArrowForwardIosIcon />
-                    }>
-                    Next
-                </Button>
+              <Button
+                disabled={!steps[activeStep].isFormValid()}
+                aria-label="next"
+                color="primary"
+                size="large"
+                onClick={() => navigate(+1)}
+                variant="contained"
+                endIcon={<ArrowForwardIosIcon />}
+              >
+                Next
+              </Button>
             )}
           </div>
         )}

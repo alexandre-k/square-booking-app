@@ -10,9 +10,10 @@ import "./Services.css";
 interface ServiceLabelProps {
   service: Service;
   selectedServiceIds: Array<string>;
+  onClick: (event: React.FormEvent<HTMLInputElement>) => void;
 }
 
-const ServiceLabel = ({ service, selectedServiceIds }: ServiceLabelProps) => {
+const ServiceLabel = ({ onClick, service, selectedServiceIds }: ServiceLabelProps) => {
   const label = (
     <div className="serviceLabel">
       <div>
@@ -66,6 +67,7 @@ const ServiceLabel = ({ service, selectedServiceIds }: ServiceLabelProps) => {
           ? selectedStyle
           : notSelectedStyle
       }
+      onChange={onClick}
     >
       <FormControlLabel
         key={service.id}

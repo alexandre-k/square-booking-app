@@ -57,11 +57,12 @@ const Services = ({ selectedServices, onDone }: ServicesProps) => {
           <Divider />
           <Grid container>
             {services.map((service, index) => (
-              <Grid key={index} item xs={11} md={6}>
+              <Grid key={index} item xs={11} md={6} onChange={onChange}>
                 <ServiceLabel
                   service={service}
                   selectedServiceIds={selectedServices}
                   key={index}
+                  onClick={onChange}
                 />
               </Grid>
             ))}
@@ -87,8 +88,8 @@ const Services = ({ selectedServices, onDone }: ServicesProps) => {
   };
 
   return (
-    <FormControl>
-      <FormGroup onChange={onChange}>
+      <FormControl>
+      <FormGroup>
         {serviceForms(mainServices, ServiceCategory.MAIN, "Main Services")}
         {serviceForms(optionalServices, ServiceCategory.OPTIONAL, "Options")}
       </FormGroup>

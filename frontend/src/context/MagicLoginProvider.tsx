@@ -1,4 +1,4 @@
-import { Magic, MagicUserMetadata } from "magic-sdk";
+import { Magic, MagicUserMetadata, RPCError, RPCErrorCode } from "magic-sdk";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface Error {
@@ -9,7 +9,7 @@ interface Error {
 
 interface MagicLogin {
   isLoading: boolean;
-  isInitializing: boolean;
+  hasSavedMetadata: boolean;
   isAuthenticated: boolean;
   login: (email: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -30,16 +30,6 @@ const magicSingleton = getMagicSingleton(
   process.env.REACT_APP_PUBLISHABLE_API_KEY
 );
 
-/* const initialContext = {
- *   isLoading: false,
- *   isAuthenticated: false,
- *   login: () => {},
- *   logout: () => {},
- *   error: "",
- *   user: {},
- * }; */
-
-// const MagicLoginContext = createContext<MagicLogin>(initialContext);
 const MagicLoginContext = createContext<MagicLogin>(undefined as any);
 
 interface MagicLoginProviderProps {
@@ -54,8 +44,7 @@ const MagicLoginProvider = ({
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<MagicUserMetadata>(undefined as any);
   const [error, setError] = useState<Error>(null as any);
-  const [isFirstTime, setIsFirstTime] = useState<boolean>(true);
-  const [isInitializing, setIsInitializing] = useState<boolean>(true);
+  const [hasSavedMetadata, setHasSavedMetadata] = useState<boolean>(false);
 
   const login = async (email: string) => {
     setIsLoading(true);
@@ -74,8 +63,19 @@ const MagicLoginProvider = ({
     } catch (err) {
       setError(err as any);
       setIsLoading(false);
+      if (err instanceof RPCError) {
+        switch (err.code) {
+          case RPCErrorCode.MagicLinkFailedVerification:
+          case RPCErrorCode.MagicLinkExpired:
+          case RPCErrorCode.MagicLinkRateLimited:
+          case RPCErrorCode.UserAlreadyLoggedIn:
+            console.log("login fail: ", err, err.code);
+            break;
+        }
+      }
     }
   };
+
   const logout = async () => {
     setIsLoading(true);
     setError(null as any);
@@ -93,21 +93,26 @@ const MagicLoginProvider = ({
       setIsAuthenticated(true);
       const jwt = await magicSingleton?.user.getIdToken();
       if (jwt) setJwt(jwt);
+      return !!jwt;
     } catch (err) {
-      console.log("Get saved metadata: ", err);
-    } finally {
+      return false;
     }
   };
 
-  if (!isAuthenticated && isFirstTime) {
-    getSavedMetadata();
-    setIsFirstTime(false);
-    setIsInitializing(false);
-  }
+  const init = async () => {
+    const found = await getSavedMetadata();
+    setHasSavedMetadata(found);
+  };
+
+  useEffect(() => {
+    if (!isAuthenticated && !hasSavedMetadata) {
+      init();
+    }
+  });
 
   return (
     <MagicLoginContext.Provider
-      value={{ isLoading, isInitializing, isAuthenticated, login, logout, error, user, jwt }}
+      value={{ isLoading, hasSavedMetadata, isAuthenticated, login, logout, error, user, jwt }}
     >
       {children}
     </MagicLoginContext.Provider>
