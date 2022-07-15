@@ -52,7 +52,7 @@ const Booking = (props: BookingProps) => {
   const changeRoute = useNavigate();
 
   useEffect(() => {
-    if (hasSavedMetadata && customer.emailAddress === "") {
+    if (!!user && customer.emailAddress === "") {
       setCustomer({
         givenName: "",
         familyName: "",
@@ -172,7 +172,7 @@ const Booking = (props: BookingProps) => {
                 variant="contained"
                 size="large"
                 disabled={!steps[activeStep].isFormValid()}
-                loading={isLoading || isAuthLoading || !isAuthenticated}
+                loading={isLoading || isAuthLoading}
                 onClick={async () => {
                   await login(customer.emailAddress);
                   mutate();
