@@ -7,7 +7,13 @@ interface AccountProps {
   user: MagicUserMetadata;
 }
 const Account = ({ onClick, user }: AccountProps) => (
-  <Button variant="outlined" onClick={onClick}>{user.email}</Button>
+  <Button
+    style={{ textTransform: "lowercase" }}
+    variant="outlined"
+    onClick={onClick}
+  >
+    {user.email}
+  </Button>
 );
 
 export default Account;

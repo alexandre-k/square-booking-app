@@ -49,7 +49,7 @@ const EditDialog = ({
           </IconButton>
       </DialogTitle>
       <DialogContent>
-        <DialogContentText>{children}</DialogContentText>
+        {children}
       </DialogContent>
       <DialogActions>
         <Button

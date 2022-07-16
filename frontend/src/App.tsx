@@ -14,11 +14,11 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
-import Footer from "components/Footer";
-import "components/Footer/index.css";
+// import Footer from "components/Footer";
+// import "components/Footer/index.css";
 // import ListBookings from "components/ListBookings";
 import EnvironmentError from "pages/Error/EnvironmentError";
 import Home from "pages/Home";
@@ -46,8 +46,7 @@ function App({ isMenuOpenDefault }: AppProps) {
   // @ts-ignore
   const [booking, setBooking] = useState<BookingT>({});
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(isMenuOpenDefault);
-    const { logout } =
-        useMagicLogin();
+  const { logout } = useMagicLogin();
   const requiredEnv = ["REACT_APP_LOCATION_ID"];
   const undefinedVariables = requiredEnv.filter(
     (envVariable) =>
@@ -97,12 +96,14 @@ function App({ isMenuOpenDefault }: AppProps) {
       </List>
       <Divider />
       <List>
-          <ListItem disablePadding>
-            <ListItemButton onClick={() => logout()}>
-              <ListItemIcon><LogoutIcon /></ListItemIcon>
-              <ListItemText primary="Logout" />
-            </ListItemButton>
-          </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => logout()}>
+            <ListItemIcon>
+              <LogoutIcon />
+            </ListItemIcon>
+            <ListItemText primary="Logout" />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );
@@ -127,7 +128,7 @@ function App({ isMenuOpenDefault }: AppProps) {
                   <MenuIcon />
                 </IconButton>
                 <Box sx={{ flexGrow: 1 }} />
-                <LoginButton onClick={toggleDrawer(true) } />
+                <LoginButton onClick={toggleDrawer(true)} />
               </Toolbar>
             </AppBar>
           </div>
@@ -159,10 +160,10 @@ function App({ isMenuOpenDefault }: AppProps) {
               {list()}
             </SwipeableDrawer>
           </div>
-          <div id="footer">
-            <Divider />
-            <Footer routes={routes} />
-          </div>
+          {/* <div id="footer">
+              <Divider />
+              <Footer routes={routes} />
+              </div> */}
         </BrowserRouter>
       </div>
     </Paper>
