@@ -90,13 +90,16 @@ const MagicLoginProvider = ({
 
   const getSavedMetadata = async () => {
     try {
+      setIsLoading(true);
       const metadata = await magicSingleton?.user.getMetadata();
       if (metadata) setUser(metadata);
       setIsAuthenticated(true);
       const jwt = await magicSingleton?.user.getIdToken();
       if (jwt) setJwt(jwt);
+      setIsLoading(false);
       return !!jwt;
     } catch (err) {
+      setIsLoading(false);
       return false;
     }
   };

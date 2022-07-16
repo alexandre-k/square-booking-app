@@ -17,12 +17,12 @@ import { useLocation } from "context/LocationProvider";
 import { localizedDate } from "utils/dateTime";
 
 const BookingList = () => {
-    const {
-        isLoading: isAuthLoading,
-        isAuthenticated,
-        user,
-        jwt,
-    } = useMagicLogin();
+  const {
+    isLoading: isAuthLoading,
+    isAuthenticated,
+    user,
+    jwt,
+  } = useMagicLogin();
 
   const {
     isLoading: isLocationLoading,
@@ -43,12 +43,12 @@ const BookingList = () => {
     return <div>Location error. Unable to retrieve current location</div>;
   }
 
-  if (!isAuthenticated && !isAuthLoading) {
-    return <InviteLogin />;
-  }
-
   if (isLoading || isAuthLoading || isLocationLoading) {
     return <Loading />;
+  }
+
+  if (!jwt) {
+    return <InviteLogin />;
   }
 
   if (isError && !!error) return <NetworkError error={error} />;

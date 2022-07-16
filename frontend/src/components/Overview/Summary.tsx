@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useQueryClient, useMutation } from "react-query";
 import EditDialog from "components/Overview/EditDialog";
 import Services from "components/Booking/Services";
@@ -37,6 +38,11 @@ interface BookingMutation {
   appointmentSegments: Array<ShortAppointmentSegment>;
 }
 
+interface CancelMutation {
+    bookingId: string;
+    jwt: string;
+}
+
 type ServiceID = string;
 
 const Summary = ({
@@ -47,6 +53,7 @@ const Summary = ({
   paymentLink,
   location,
 }: SummaryProps) => {
+  const navigate = useNavigate();
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [editDialogComponent, setEditDialogComponent] =
     useState<string>("date");
@@ -66,7 +73,7 @@ const Summary = ({
 
   const queryClient = useQueryClient();
 
-  const { mutate, isLoading } = useMutation(
+  const updateMutation = useMutation(
     ({ booking, appointmentSegments }: BookingMutation): Promise<Booking> =>
       updateAppointmentSegments(booking, appointmentSegments, jwt),
     {
@@ -76,6 +83,24 @@ const Summary = ({
       onError: (err, variables, context) => console.log("TODO: handle error"),
     }
   );
+
+    const cancelMutation = useMutation(
+        ({ bookingId, jwt }: CancelMutation): Promise<Booking> =>
+            cancelBooking(bookingId, jwt),
+        {
+            mutationKey: "cancel/booking",
+            onSuccess: () => {
+                queryClient.invalidateQueries("customer/booking");
+                navigate("/overview");
+            },
+            onMutate: () => setOpenEditDialog(false),
+            onError: (err, variables, context) => console.log("TODO: handle error"),
+        }
+    );
+
+
+
+  const isLoading = updateMutation.isLoading || cancelMutation.isLoading;
 
   const getTeamMemberId = () => {
       if (selectedMemberIds.length === 0) return "";
@@ -129,7 +154,7 @@ const Summary = ({
             showOwner={false}
             selectedMemberIds={selectedMemberIds}
             onDone={(teamMemberIds: Array<string>) =>
-              mutate({
+              updateMutation.mutate({
                 booking,
                 appointmentSegments: appointmentSegments.map(
                   (segment: ShortAppointmentSegment) => {
@@ -150,7 +175,7 @@ const Summary = ({
           title={editDialogTitle(editDialogComponent)}
           open={openEditDialog}
           setOpen={setOpenEditDialog}
-          save={() => mutate({ booking, appointmentSegments })}
+          save={() => updateMutation.mutate({ booking, appointmentSegments })}
         >
           {editDialogChild(editDialogComponent)}
         </EditDialog>
@@ -161,7 +186,9 @@ const Summary = ({
           booking={booking}
           isLoading={isLoading}
           appointmentSegments={booking.appointmentSegments}
-          cancelBooking={() => cancelBooking(booking.id, jwt)}
+          cancelBooking={async () => {
+              cancelMutation.mutate({ bookingId: booking.id, jwt });
+          }}
           showEditDialog={showEditDialog}
           localTimezone={location.timezone}
         />

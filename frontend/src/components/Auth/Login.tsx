@@ -37,7 +37,7 @@ const Login = () => {
 
   useEffect(() => {
     if (isAuthenticated && !!user) {
-      navigate("/profile");
+      navigate("/");
     }
   });
 
