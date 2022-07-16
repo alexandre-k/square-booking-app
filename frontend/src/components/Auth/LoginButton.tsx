@@ -12,7 +12,8 @@ interface LoginButtonProps {
 const LoginButton = ({ onClick }: LoginButtonProps) => {
   const { isLoading, isAuthenticated, user } = useMagicLogin();
 
-  if (isAuthenticated && user) {
+  // email can be null
+  if (isAuthenticated && user && user.email !== null) {
     return (
       <div>
           <Account onClick={onClick} user={user} />
