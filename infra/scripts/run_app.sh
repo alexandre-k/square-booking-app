@@ -1,6 +1,7 @@
 #/bin/bash
 
 function stop_docker () {
+    docker stop $(docker ps -a -q --filter ancestor="$1" --format="{{.ID}}")
     docker rm $(docker ps -a -q --filter ancestor="$1" --format="{{.ID}}")
 }
 
@@ -14,9 +15,10 @@ function start_backend () {
     docker run \
            -d \
            -p 8000:8000 \
-           --env-file .env \
+           --env-file /home/guest/square-booking-app/.env \
            --hostname unboxed_backend \
            --name unboxed_backend \
+	         --network unboxed \
            -t kmalexandre/square-booking-api:latest
 }
 
@@ -26,9 +28,11 @@ function start_frontend () {
            -d \
            -p 80:80 \
            -p 443:443 \
+           --env-file /home/guest/square-booking-app/.env \
            -v /home/guest/certs:/etc/nginx/certs \
            --hostname unboxed_frontend \
            --name unboxed_frontend \
+	         --network unboxed \
            -t kmalexandre/square-booking-app:latest
 }
 
@@ -39,15 +43,15 @@ function start_database() {
            -p 27017:27017 \
            -p 27018:27018 \
            -p 27019:27019 \
-           --env-file .env \
-           -e MONGO_INITDB_DATABASE=$MONGODB_DATABASE \
-           -e MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER \
-           -e MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD \
+           --env-file /home/guest/square-booking-app/.env \
            -v /home/guest/database:/data/db \
            --hostname unboxed_database \
+	         --network unboxed \
            --name unboxed_database \
            -t mongo
 }
+
+docker network create unboxed
 
 stop_docker "kmalexandre/square-booking-api:latest"
 stop_docker "kmalexandre/square-booking-app:latest"
