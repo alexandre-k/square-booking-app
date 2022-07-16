@@ -37,7 +37,7 @@ const Booking = (props: BookingProps) => {
     error: authError,
     user,
     login,
-    jwt,
+    jwt: savedJwt,
   } = useMagicLogin();
 
   const [selectedMemberIds, setSelectedMemberIds] = useState<Array<string>>([]);
@@ -52,7 +52,7 @@ const Booking = (props: BookingProps) => {
   const changeRoute = useNavigate();
 
   useEffect(() => {
-    if (hasSavedMetadata && customer.emailAddress === "") {
+    if (!!user && !!user.email && customer.emailAddress === "") {
       setCustomer({
         givenName: "",
         familyName: "",
@@ -68,11 +68,8 @@ const Booking = (props: BookingProps) => {
     }
     setActiveStep(nextActiveStep);
   };
-  const { isLoading, isError, isSuccess, mutate, error } = useMutation<
-    BookingT,
-    AxiosError
-  >(
-    () =>
+  const bookingMutation = useMutation(
+    (jwt: string) =>
       bookAppointment(
         customer,
         selectedStartAt,
@@ -172,10 +169,12 @@ const Booking = (props: BookingProps) => {
                 variant="contained"
                 size="large"
                 disabled={!steps[activeStep].isFormValid()}
-                loading={isLoading || isAuthLoading || !isAuthenticated}
+                loading={bookingMutation.isLoading || isAuthLoading}
                 onClick={async () => {
-                  await login(customer.emailAddress);
-                  mutate();
+                  const { jwt: newJwt, metadata: newMetadata } = await login(customer.emailAddress);
+                  const jwt = !!savedJwt ? savedJwt : newJwt;
+                  if (!jwt) throw Error("Unable to authenticate");
+                   bookingMutation.mutate(jwt);
                 }}
                 endIcon={<CheckIcon />}
               >

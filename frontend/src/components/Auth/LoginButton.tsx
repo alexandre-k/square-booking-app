@@ -1,17 +1,22 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Button from "@mui/material/Button";
+import Account from "components/Auth/Account";
 import { useMagicLogin } from "context/MagicLoginProvider";
 
-const LoginButton = () => {
-  const { isLoading, isAuthenticated, user, logout } = useMagicLogin();
+interface LoginButtonProps {
+    onClick: (event: React.KeyboardEvent | React.MouseEvent) => void;
+}
 
-  if (isAuthenticated && user) {
+const LoginButton = ({ onClick }: LoginButtonProps) => {
+  const { isLoading, isAuthenticated, user } = useMagicLogin();
+
+  // email can be null
+  if (isAuthenticated && user && user.email !== null) {
     return (
       <div>
-        <Button variant="outlined" onClick={() => logout()}>
-          Log out
-        </Button>
+          <Account onClick={onClick} user={user} />
       </div>
     );
   } else {

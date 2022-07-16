@@ -14,6 +14,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Footer from "components/Footer";
@@ -32,6 +33,7 @@ import TeamDashboard from "pages/Dashboard";
 import BookingList from "pages/Overview/List";
 import BookingSummary from "pages/Overview/Summary";
 import { Booking as BookingT } from "types/Booking";
+import { useMagicLogin } from "context/MagicLoginProvider";
 import "./App.css";
 import Paper from "@mui/material/Paper";
 
@@ -44,6 +46,8 @@ function App({ isMenuOpenDefault }: AppProps) {
   // @ts-ignore
   const [booking, setBooking] = useState<BookingT>({});
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(isMenuOpenDefault);
+    const { logout } =
+        useMagicLogin();
   const requiredEnv = ["REACT_APP_LOCATION_ID"];
   const undefinedVariables = requiredEnv.filter(
     (envVariable) =>
@@ -93,14 +97,12 @@ function App({ isMenuOpenDefault }: AppProps) {
       </List>
       <Divider />
       <List>
-        {["Access", "About"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon></ListItemIcon>
-              <ListItemText primary={text} />
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => logout()}>
+              <ListItemIcon><LogoutIcon /></ListItemIcon>
+              <ListItemText primary="Logout" />
             </ListItemButton>
           </ListItem>
-        ))}
       </List>
     </Box>
   );
@@ -125,7 +127,7 @@ function App({ isMenuOpenDefault }: AppProps) {
                   <MenuIcon />
                 </IconButton>
                 <Box sx={{ flexGrow: 1 }} />
-                <LoginButton />
+                <LoginButton onClick={toggleDrawer(true) } />
               </Toolbar>
             </AppBar>
           </div>

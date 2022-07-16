@@ -1,15 +1,15 @@
 import { useMagicLogin } from "context/MagicLoginProvider";
+import Button from "@mui/material/Button";
 import React from "react";
 
 const LogoutButton = () => {
     const { logout } =
         useMagicLogin();
-    
 
     return (
-        <button onClick={() => logout()}>
+        <Button onClick={() => logout()}>
             Log Out
-        </button>
+        </Button>
     );
 };
 
