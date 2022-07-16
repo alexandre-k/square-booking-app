@@ -44,7 +44,7 @@ function start_database() {
            -p 27018:27018 \
            -p 27019:27019 \
            --env-file /home/guest/square-booking-app/.env \
-           -v /home/guest/database:/data/db \
+           -v unboxed_db_volume:/data/db \
            --hostname unboxed_database \
 	         --network unboxed \
            --name unboxed_database \
@@ -52,6 +52,7 @@ function start_database() {
 }
 
 docker network create unboxed
+docker volume inspect unboxed_db_volume
 
 stop_docker "kmalexandre/square-booking-api:latest"
 stop_docker "kmalexandre/square-booking-app:latest"
