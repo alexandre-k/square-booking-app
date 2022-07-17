@@ -67,7 +67,7 @@ function App({ isMenuOpenDefault }: AppProps) {
       setIsMenuOpen(open);
     };
 
-  const routes = ["home", "bookings", "appointment"];
+  // const routes = ["home", "bookings", "appointment"];
 
   const menuRoutes = [
     { to: "", name: "Home", icon: <HomeIcon /> },

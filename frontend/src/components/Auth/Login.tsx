@@ -7,7 +7,6 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import LoadingButton from "@mui/lab/LoadingButton";
 import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
 import { useMagicLogin } from "context/MagicLoginProvider";
 import CheckYourEmail from "components/Auth/CheckYourEmail";
 import EmailConfirmed from "components/Auth/EmailConfirmed";
@@ -18,11 +17,6 @@ const Login = () => {
   const { isLoading, isAuthenticated, error, user, login } = useMagicLogin();
   const [email, setEmail] = useState<string>("");
   const navigate = useNavigate();
-
-  const changeEmail = (event: React.FormEvent<HTMLInputElement>) => {
-    const target = event.target as HTMLInputElement;
-    setEmail(target.value);
-  };
 
   const getError = () => {
     if (!!error) {

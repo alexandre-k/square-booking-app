@@ -5,7 +5,10 @@ import Skeleton from "@mui/material/Skeleton";
 import Calendar from "react-calendar";
 import dayjs from "dayjs";
 import { DayOfWeek, LocationType, Period } from "types/Location";
-import { getLocalDateWithTimezoneShift, localizedDate } from "utils/dateTime";
+import {
+  getLocalDateWithTimezoneShift,
+  setUTCTimeFromDate,
+} from "utils/dateTime";
 import Availabilities from "components/Booking/Availabilities";
 import { useLocation } from "context/LocationProvider";
 import NetworkError from "pages/Error/NetworkError";
@@ -126,7 +129,12 @@ const DateTimePicker = ({
         <div className="bookingContainer">
           <Calendar
             onChange={(value: Date) => {
-              setSelectedUTCStartAt(value.toISOString());
+              const dateValue = setUTCTimeFromDate(
+                value.toISOString(),
+                selectedUTCStartAt,
+                location.timezone
+              );
+              setSelectedUTCStartAt(dateValue);
               onDateSelected(value);
             }}
             value={value}

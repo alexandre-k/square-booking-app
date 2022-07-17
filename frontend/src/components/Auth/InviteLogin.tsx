@@ -1,9 +1,7 @@
-import { useMagicLogin } from "context/MagicLoginProvider";
 import LoginButton from "components/Auth/LoginButton";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
-import Button from "@mui/material/Button";
 import "./InviteLogin.css";
 
 const InviteLogin = () => {

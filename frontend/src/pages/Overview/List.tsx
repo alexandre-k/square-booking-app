@@ -19,7 +19,6 @@ import { localizedDate } from "utils/dateTime";
 const BookingList = () => {
   const {
     isLoading: isAuthLoading,
-    isAuthenticated,
     user,
     jwt,
   } = useMagicLogin();

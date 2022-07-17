@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { AxiosError } from "axios";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -36,14 +35,12 @@ const Booking = (props: BookingProps) => {
     hasSavedMetadata,
     isLoading: isAuthLoading,
     isAuthenticated,
-    error: authError,
     user,
     login,
     jwt: savedJwt,
   } = useMagicLogin();
 
   const {
-    isLoading: isLocationLoading,
     isError: isLocationError,
     location,
   } = useLocation();
@@ -60,14 +57,14 @@ const Booking = (props: BookingProps) => {
   const changeRoute = useNavigate();
 
   useEffect(() => {
-    if (!!user && !!user.email && customer.emailAddress === "") {
+    if (!!user && !!user.email) {
       setCustomer({
         givenName: "",
         familyName: "",
         emailAddress: user.email !== null ? user.email : "",
       });
     }
-  });
+  }, [user]);
 
   const navigate = (step: number) => {
     const nextActiveStep = activeStep + step;
@@ -184,7 +181,7 @@ const Booking = (props: BookingProps) => {
                 disabled={!steps[activeStep].isFormValid()}
                 loading={bookingMutation.isLoading || isAuthLoading}
                 onClick={async () => {
-                  const { jwt: newJwt, metadata: newMetadata } = await login(
+                  const { jwt: newJwt } = await login(
                     customer.emailAddress
                   );
                   const jwt = !!savedJwt ? savedJwt : newJwt;

@@ -36,7 +36,6 @@ const BookingSummary = () => {
   } = useMagicLogin();
   const navigate = useNavigate();
   const {
-    isLoading: isLocationLoading,
     isError: isLocationError,
     location,
   } = useLocation();
@@ -45,7 +44,7 @@ const BookingSummary = () => {
   const getBookingId = () => (!!bookingId ? bookingId : "");
   const getJwt = () => (!!jwt ? jwt : "");
 
-  const { isLoading, isSuccess, isError, data, error } = useQuery<
+  const { isLoading, isSuccess, data, error } = useQuery<
     GetBookingQuery,
     AxiosError<ServerError>
   >("customer/booking", () => getBooking(getBookingId(), getJwt()), {
@@ -72,7 +71,6 @@ const BookingSummary = () => {
   if (error) {
     const errorData = error?.response?.data;
     if (!!errorData && "code" in errorData) {
-      const code = errorData?.code;
       return <NoBookingFound title="Page expired. Please reload your tab." />;
     } else {
       return (

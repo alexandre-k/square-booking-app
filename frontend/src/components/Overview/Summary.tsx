@@ -57,9 +57,7 @@ const Summary = ({
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [editDialogComponent, setEditDialogComponent] =
     useState<string>("date");
-  const [selectedMemberIds, setSelectedMemberIds] = useState<Array<string>>(
-    teamMember ? [teamMember.id] : []
-  );
+  const selectedMemberIds = teamMember ? [teamMember.id] : [];
   const [selectedUTCStartAt, setSelectedUTCStartAt] = useState<string>(
     booking.startAt
   );

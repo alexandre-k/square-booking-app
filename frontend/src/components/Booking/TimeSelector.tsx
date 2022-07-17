@@ -3,7 +3,7 @@ import "react-calendar/dist/Calendar.css";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { Availability } from "types/Booking";
-import { changeUTCTime, getTime, localizedDate } from "utils/dateTime";
+import { setUTCTimeFromDate, getTime, localizedDate } from "utils/dateTime";
 import "./TimeSelector.css";
 
 interface TimeSelectorProps {
@@ -39,7 +39,7 @@ const TimeSelector = ({
               }
               onClick={() => {
                 setSelectedUTCStartAt(
-                  changeUTCTime(
+                  setUTCTimeFromDate(
                     selectedUTCStartAt,
                     availability.startAt,
                     locationTimezone

@@ -109,12 +109,15 @@ export const getTime = (utcDate: string | null, timezone: string) => {
   return date.format("hh:mm");
 };
 
-export const changeUTCTime = (
+export const setUTCTimeFromDate = (
   targetUTCDate: string | null,
-  fromUTCDate: string,
+  fromUTCDate: string | null,
   timezone: string
 ) => {
-  const fromDate = localizedDate(fromUTCDate, timezone);
+  const fromDate = localizedDate(
+    !!fromUTCDate ? fromUTCDate : new Date().toISOString(),
+    timezone
+  );
   const targetDate = localizedDate(
     !!targetUTCDate ? targetUTCDate : new Date().toISOString(),
     timezone

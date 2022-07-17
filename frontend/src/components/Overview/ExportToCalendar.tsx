@@ -24,7 +24,6 @@ const ExportToCalendar = ({
 }: ExportToCalendarProps) => {
   const {
     isLoading: isLocationLoading,
-    isError,
     location,
     error,
   } = useLocation();

@@ -6,7 +6,7 @@ import Grid from "@mui/material/Grid";
 import "./Profile.css";
 
 const Profile = () => {
-  const { isLoading, isAuthenticated, error, user, login, logout } =
+  const { isLoading, isAuthenticated, user } =
     useMagicLogin();
 
   if (isLoading) {

@@ -34,7 +34,7 @@ const Availabilities = ({
   date,
   locationTimezone,
 }: AvailabilitiesProps) => {
-  const { isLoading, isError, data, error } = useQuery<
+  const { isLoading, data, error } = useQuery<
     GetAvailabilitiesQuery,
     AxiosError
   >(["availabilities"], () =>

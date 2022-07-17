@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import LoadingButton from "@mui/lab/LoadingButton";
-import Button from "@mui/material/Button";
 import Account from "components/Auth/Account";
 import { useMagicLogin } from "context/MagicLoginProvider";
 

@@ -11,7 +11,10 @@ interface MagicLogin {
   isLoading: boolean;
   hasSavedMetadata: boolean;
   isAuthenticated: boolean;
-  login: (email: string) => Promise<{ jwt: string | null | undefined, metadata: MagicUserMetadata | null | undefined }>;
+  login: (email: string) => Promise<{
+    jwt: string | null | undefined;
+    metadata: MagicUserMetadata | null | undefined;
+  }>;
   logout: () => Promise<void>;
   error: Error | null;
   user: MagicUserMetadata;
@@ -107,17 +110,14 @@ const MagicLoginProvider = ({
   const init = async () => {
     const found = await getSavedMetadata();
     setHasSavedMetadata(found);
+      /* if (isAuthenticated && user.email === null) {
+       *   setIsAuthenticated(false);
+       * } */
   };
 
   useEffect(() => {
-    if (!isAuthenticated && !hasSavedMetadata) {
-      init();
-    }
-
-    if (isAuthenticated && user.email === null) {
-      setIsAuthenticated(false);
-    }
-  });
+    init();
+  }, []);
 
   return (
     <MagicLoginContext.Provider

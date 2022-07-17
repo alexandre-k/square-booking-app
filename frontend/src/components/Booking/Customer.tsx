@@ -1,8 +1,6 @@
-import TextField from "@mui/material/TextField";
 import { User } from "types/Customer";
 import CheckYourEmail from "components/Auth/CheckYourEmail";
 import EmailConfirmed from "components/Auth/EmailConfirmed";
-import EmailField from "components/Auth/EmailField";
 import CustomerField from "components/Booking/CustomerField";
 import "./Customer.css";
 
