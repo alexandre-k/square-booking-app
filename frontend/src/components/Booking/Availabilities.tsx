@@ -34,8 +34,6 @@ const Availabilities = ({
   date,
   locationTimezone,
 }: AvailabilitiesProps) => {
-  // const [availabilities, setAvailabilities] = useState<Array<Availability>>([]);
-  // @ts-ignore
   const { isLoading, isError, data, error } = useQuery<
     GetAvailabilitiesQuery,
     AxiosError

@@ -32,12 +32,19 @@ const TimeSelector = ({
           <div className="timeContainer">
             <Button
               variant={
-                getTime(availability.startAt, locationTimezone) === getTime(selectedUTCStartAt, locationTimezone)
+                getTime(availability.startAt, locationTimezone) ===
+                getTime(selectedUTCStartAt, locationTimezone)
                   ? "contained"
                   : "outlined"
               }
               onClick={() => {
-                setSelectedUTCStartAt(changeUTCTime(selectedUTCStartAt, availability.startAt, locationTimezone));
+                setSelectedUTCStartAt(
+                  changeUTCTime(
+                    selectedUTCStartAt,
+                    availability.startAt,
+                    locationTimezone
+                  )
+                );
               }}
             >
               {startAt.format("HH:mm")}

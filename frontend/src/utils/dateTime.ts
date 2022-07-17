@@ -66,34 +66,64 @@ export const getBrowserTimezone = () => {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
 };
 
+/*
+ * react-calendar is not timezone aware, hence the shift of dates to display it
+ */
+const doShift = (
+  startDate: dayjs.Dayjs,
+  tzStartDate: dayjs.Dayjs,
+  shift: boolean
+) => {
+  if (shift) {
+    return tzStartDate.date() > startDate.date()
+      ? startDate.date() + 1
+      : startDate.date() - 1;
+  } else {
+    return tzStartDate.date() < startDate.date()
+      ? startDate.date() + 1
+      : startDate.date() - 1;
+  }
+};
+
 export const getLocalDateWithTimezoneShift = (
   selectedStartAt: string | null,
-  timezone: string
+  timezone: string,
+  shift: boolean = true
 ) => {
   if (!selectedStartAt) return new Date();
   if (getBrowserTimezone() === timezone) return new Date(selectedStartAt);
   const tzStartDate = localizedDate(selectedStartAt, timezone);
   const startDate = dayjs(selectedStartAt);
   if (startDate.date() !== tzStartDate.date()) {
-    const diffDate = startDate.date(
-      tzStartDate.date() > startDate.date()
-        ? startDate.date() + 1
-        : startDate.date() - 1
-    );
+    const diffDate = startDate.date(doShift(startDate, tzStartDate, shift));
     return diffDate.toDate();
   }
   return startDate.toDate();
 };
 
 export const getTime = (utcDate: string | null, timezone: string) => {
-    const date = localizedDate(!!utcDate ? utcDate : new Date().toISOString(), timezone);
-    return date.format('hh:mm');
-}
+  const date = localizedDate(
+    !!utcDate ? utcDate : new Date().toISOString(),
+    timezone
+  );
+  return date.format("hh:mm");
+};
 
-
-export const changeUTCTime = (targetUTCDate: string | null, fromUTCDate: string, timezone: string) => {
-    const fromDate = localizedDate(fromUTCDate, timezone);
-    const targetDate = localizedDate(!!targetUTCDate ? targetUTCDate : new Date().toISOString(), timezone);
-    const newDate = targetDate.hour(fromDate.hour()).minute(fromDate.minute())
-    return newDate.toISOString();
-}
+export const changeUTCTime = (
+  targetUTCDate: string | null,
+  fromUTCDate: string,
+  timezone: string
+) => {
+  const fromDate = localizedDate(fromUTCDate, timezone);
+  const targetDate = localizedDate(
+    !!targetUTCDate ? targetUTCDate : new Date().toISOString(),
+    timezone
+  );
+  const newDate = targetDate.hour(fromDate.hour()).minute(fromDate.minute());
+  const unshiftedDate = getLocalDateWithTimezoneShift(
+    newDate.toISOString(),
+    timezone,
+    false
+  );
+  return unshiftedDate.toISOString();
+};

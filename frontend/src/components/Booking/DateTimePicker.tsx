@@ -61,7 +61,7 @@ const DateTimePicker = ({
   const [workingDay, setWorkingDay] = useState<Period>();
 
   useEffect(() => {
-    if (!!!endDate)
+    if (!!!endDate && !!selectedUTCStartAt && !!timezone)
       onDateSelected(
         getLocalDateWithTimezoneShift(selectedUTCStartAt, timezone)
       );
