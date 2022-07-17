@@ -61,3 +61,39 @@ export const addAppointmentDuration = (
   );
   return date.add(totalDuration, "m");
 };
+
+export const getBrowserTimezone = () => {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+};
+
+export const getLocalDateWithTimezoneShift = (
+  selectedStartAt: string | null,
+  timezone: string
+) => {
+  if (!selectedStartAt) return new Date();
+  if (getBrowserTimezone() === timezone) return new Date(selectedStartAt);
+  const tzStartDate = localizedDate(selectedStartAt, timezone);
+  const startDate = dayjs(selectedStartAt);
+  if (startDate.date() !== tzStartDate.date()) {
+    const diffDate = startDate.date(
+      tzStartDate.date() > startDate.date()
+        ? startDate.date() + 1
+        : startDate.date() - 1
+    );
+    return diffDate.toDate();
+  }
+  return startDate.toDate();
+};
+
+export const getTime = (utcDate: string | null, timezone: string) => {
+    const date = localizedDate(!!utcDate ? utcDate : new Date().toISOString(), timezone);
+    return date.format('hh:mm');
+}
+
+
+export const changeUTCTime = (targetUTCDate: string | null, fromUTCDate: string, timezone: string) => {
+    const fromDate = localizedDate(fromUTCDate, timezone);
+    const targetDate = localizedDate(!!targetUTCDate ? targetUTCDate : new Date().toISOString(), timezone);
+    const newDate = targetDate.hour(fromDate.hour()).minute(fromDate.minute())
+    return newDate.toISOString();
+}

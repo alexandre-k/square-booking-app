@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "react-calendar/dist/Calendar.css";
 import Grid from "@mui/material/Grid";
 import Skeleton from "@mui/material/Skeleton";
 import Calendar from "react-calendar";
 import dayjs from "dayjs";
 import { DayOfWeek, LocationType, Period } from "types/Location";
+import { getLocalDateWithTimezoneShift, localizedDate } from "utils/dateTime";
 import Availabilities from "components/Booking/Availabilities";
 import { useLocation } from "context/LocationProvider";
 import NetworkError from "pages/Error/NetworkError";
@@ -28,10 +29,11 @@ interface DateTimePickerProps {
   appointmentSegments?: Array<AppointmentSegment>;
   customerNote?: string;
   locationType?: LocationType;
+  timezone: string;
   sellerNote?: string;
   startAt?: string;
-  selectedStartAt: string;
-  setSelectedStartAt: (val: string) => void;
+  selectedUTCStartAt: string | null;
+  setSelectedUTCStartAt: (utcDate: string) => void;
   selectedServices: Array<string>;
   memberIds: Array<string>;
 }
@@ -41,24 +43,29 @@ const DateTimePicker = ({
   appointmentSegments,
   customerNote,
   locationType,
+  timezone,
   sellerNote,
   startAt,
-  selectedStartAt,
-  setSelectedStartAt,
+  selectedUTCStartAt,
+  setSelectedUTCStartAt,
   selectedServices,
   memberIds,
 }: DateTimePickerProps) => {
-  // const [availabilities, setAvailabilities] = useState<Array<Availability>>([]);
-  const [value, onChange] = useState(new Date());
-
-  // const [selectedStartAt, setSelectedStartAt] = useState<string | null>(null);
-  // const [businessHours, setBusinessHours] = useState<Array<Period>>([]);
-
   const { isLoading, isError, location, error } = useLocation();
 
+  const [value, onChange] = useState<Date>(
+    getLocalDateWithTimezoneShift(selectedUTCStartAt, timezone)
+  );
   const [date, setDate] = useState<dayjs.Dayjs>();
   const [endDate, setEndDate] = useState<dayjs.Dayjs>();
   const [workingDay, setWorkingDay] = useState<Period>();
+
+  useEffect(() => {
+    if (!!!endDate)
+      onDateSelected(
+        getLocalDateWithTimezoneShift(selectedUTCStartAt, timezone)
+      );
+  });
 
   if (!!!location) return <div>No location found</div>;
 
@@ -119,9 +126,9 @@ const DateTimePicker = ({
         <div className="bookingContainer">
           <Calendar
             onChange={(value: Date) => {
-                setSelectedStartAt("");
-                onDateSelected(value)}
-            }
+              setSelectedUTCStartAt(value.toISOString());
+              onDateSelected(value);
+            }}
             value={value}
             tileDisabled={tileDisabled}
           />
@@ -131,8 +138,8 @@ const DateTimePicker = ({
         <Grid item xs={12} md={6}>
           <div className="bookingContainer">
             <Availabilities
-              selectedStartAt={selectedStartAt}
-              setSelectedStartAt={setSelectedStartAt}
+              selectedUTCStartAt={selectedUTCStartAt}
+              setSelectedUTCStartAt={setSelectedUTCStartAt}
               selectedServices={selectedServices}
               memberIds={memberIds}
               endDate={endDate}

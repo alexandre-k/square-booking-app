@@ -3,11 +3,12 @@ import { User } from "types/Customer";
 
 export const bookAppointment = async (
   customer: User,
-  selectedStartAt: string,
+  selectedUTCStartAt: string | null,
   selectedServices: Array<string>,
   selectedMemberIds: Array<string>,
   jwt: string
 ) => {
+  if (selectedUTCStartAt === null) throw Error("Start time not set!");
   return await sendRequest("/customer/booking", "POST", {
     booking: {
       ...customer,
@@ -15,7 +16,7 @@ export const bookAppointment = async (
       locationId: process.env.REACT_APP_LOCATION_ID,
       // locationType: LocationType.BUSINESS_LOCATION,
       // sellerNote: "",
-      startAt: selectedStartAt,
+      startAt: selectedUTCStartAt,
       appointmentSegments: selectedServices.map((serviceId) => {
         return {
           // anyTeamMember: selectedMemberIds.length > 1,

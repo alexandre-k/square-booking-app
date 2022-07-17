@@ -3,20 +3,20 @@ import "react-calendar/dist/Calendar.css";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { Availability } from "types/Booking";
-import { localizedDate } from "utils/dateTime";
+import { changeUTCTime, getTime, localizedDate } from "utils/dateTime";
 import "./TimeSelector.css";
 
 interface TimeSelectorProps {
   availabilities: Array<Availability>;
   locationTimezone: string;
-  selectedStartAt: string;
-  setSelectedStartAt: (selectedStartAt: string) => void;
+  selectedUTCStartAt: string | null;
+  setSelectedUTCStartAt: (utcDate: string) => void;
 }
 const TimeSelector = ({
   availabilities,
   locationTimezone,
-  selectedStartAt,
-  setSelectedStartAt,
+  selectedUTCStartAt,
+  setSelectedUTCStartAt,
 }: TimeSelectorProps) => (
   <Grid
     container
@@ -32,12 +32,12 @@ const TimeSelector = ({
           <div className="timeContainer">
             <Button
               variant={
-                availability.startAt === selectedStartAt
+                getTime(availability.startAt, locationTimezone) === getTime(selectedUTCStartAt, locationTimezone)
                   ? "contained"
                   : "outlined"
               }
               onClick={() => {
-                setSelectedStartAt(availability.startAt);
+                setSelectedUTCStartAt(changeUTCTime(selectedUTCStartAt, availability.startAt, locationTimezone));
               }}
             >
               {startAt.format("HH:mm")}

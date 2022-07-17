@@ -14,8 +14,8 @@ interface GetAvailabilitiesQuery {
 }
 
 interface AvailabilitiesProps {
-  selectedStartAt: string;
-  setSelectedStartAt: (selectedStartAt: string) => void;
+  selectedUTCStartAt: string | null;
+  setSelectedUTCStartAt: (utcDate: string) => void;
   selectedServices: Array<string>;
   memberIds: Array<string>;
   endDate: dayjs.Dayjs;
@@ -25,8 +25,8 @@ interface AvailabilitiesProps {
 }
 
 const Availabilities = ({
-  selectedStartAt,
-  setSelectedStartAt,
+  selectedUTCStartAt,
+  setSelectedUTCStartAt,
   selectedServices,
   memberIds,
   endDate,
@@ -60,8 +60,8 @@ const Availabilities = ({
     <TimeSelector
       availabilities={data.availabilities}
       locationTimezone={locationTimezone}
-      selectedStartAt={selectedStartAt}
-      setSelectedStartAt={setSelectedStartAt}
+      selectedUTCStartAt={selectedUTCStartAt}
+      setSelectedUTCStartAt={setSelectedUTCStartAt}
     />
   );
 };

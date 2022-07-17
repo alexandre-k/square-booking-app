@@ -23,6 +23,10 @@ interface GetBookingQuery {
   paymentLink: PaymentLink;
 }
 
+interface ServerError {
+  code: string;
+}
+
 const BookingSummary = () => {
   const {
     isLoading: isAuthLoading,
@@ -43,7 +47,7 @@ const BookingSummary = () => {
 
   const { isLoading, isSuccess, isError, data, error } = useQuery<
     GetBookingQuery,
-    AxiosError
+    AxiosError<ServerError>
   >("customer/booking", () => getBooking(getBookingId(), getJwt()), {
     enabled: isBookingQueryEnabled,
   });
@@ -66,12 +70,18 @@ const BookingSummary = () => {
   }
 
   if (error) {
-    return (
-      <NoBookingFound
-        title="Check your internet connection..."
-        text={error.message}
-      />
-    );
+    const errorData = error?.response?.data;
+    if (!!errorData && "code" in errorData) {
+      const code = errorData?.code;
+      return <NoBookingFound title="Page expired. Please reload your tab." />;
+    } else {
+      return (
+        <NoBookingFound
+          title="Check your internet connection..."
+          text={error.message}
+        />
+      );
+    }
   }
   if (isSuccess && !!location) {
     const { booking, teamMember, objects, relatedObjects, paymentLink } = data;

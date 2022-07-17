@@ -39,8 +39,8 @@ interface BookingMutation {
 }
 
 interface CancelMutation {
-    bookingId: string;
-    jwt: string;
+  bookingId: string;
+  jwt: string;
 }
 
 type ServiceID = string;
@@ -60,16 +60,18 @@ const Summary = ({
   const [selectedMemberIds, setSelectedMemberIds] = useState<Array<string>>(
     teamMember ? [teamMember.id] : []
   );
-  const [selectedStartAt, setSelectedStartAt] = useState<string>("");
+  const [selectedUTCStartAt, setSelectedUTCStartAt] = useState<string>(
+    booking.startAt
+  );
   const [selectedServices, setSelectedServices] = useState<Array<ServiceID>>(
-    relatedObjects ? formatCatalogObjects(relatedObjects).map((service) => service.id) : []
+    relatedObjects
+      ? formatCatalogObjects(relatedObjects).map((service) => service.id)
+      : []
   );
   const [appointmentSegments, setAppointmentSegments] = useState<
     Array<ShortAppointmentSegment>
   >(booking ? booking.appointmentSegments.map(shortenSegment) : []);
-  const {
-    jwt
-  } = useMagicLogin();
+  const { jwt } = useMagicLogin();
 
   const queryClient = useQueryClient();
 
@@ -84,32 +86,30 @@ const Summary = ({
     }
   );
 
-    const cancelMutation = useMutation(
-        ({ bookingId, jwt }: CancelMutation): Promise<Booking> =>
-            cancelBooking(bookingId, jwt),
-        {
-            mutationKey: "cancel/booking",
-            onSuccess: () => {
-                queryClient.invalidateQueries("customer/booking");
-                navigate("/overview");
-            },
-            onMutate: () => setOpenEditDialog(false),
-            onError: (err, variables, context) => console.log("TODO: handle error"),
-        }
-    );
-
-
+  const cancelMutation = useMutation(
+    ({ bookingId, jwt }: CancelMutation): Promise<Booking> =>
+      cancelBooking(bookingId, jwt),
+    {
+      mutationKey: "cancel/booking",
+      onSuccess: () => {
+        queryClient.invalidateQueries("customer/booking");
+        navigate("/overview");
+      },
+      onMutate: () => setOpenEditDialog(false),
+      onError: (err, variables, context) => console.log("TODO: handle error"),
+    }
+  );
 
   const isLoading = updateMutation.isLoading || cancelMutation.isLoading;
 
   const getTeamMemberId = () => {
-      if (selectedMemberIds.length === 0) return "";
-      // TODO: get real team member id
-      if (selectedMemberIds[0] === "anyStaffMember") {
-          return "anyStaffMember";
-      }
-      return selectedMemberIds[0];
-  }
+    if (selectedMemberIds.length === 0) return "";
+    // TODO: get real team member id
+    if (selectedMemberIds[0] === "anyStaffMember") {
+      return "anyStaffMember";
+    }
+    return selectedMemberIds[0];
+  };
 
   const showEditDialog = (component: string) => {
     setEditDialogComponent(component);
@@ -125,8 +125,9 @@ const Summary = ({
           <DateTimePicker
             selectedServices={selectedServices}
             memberIds={selectedMemberIds}
-            selectedStartAt={selectedStartAt}
-            setSelectedStartAt={setSelectedStartAt}
+            selectedUTCStartAt={selectedUTCStartAt}
+            timezone={location.timezone}
+            setSelectedUTCStartAt={setSelectedUTCStartAt}
           />
         );
       case "service":
@@ -175,41 +176,46 @@ const Summary = ({
           title={editDialogTitle(editDialogComponent)}
           open={openEditDialog}
           setOpen={setOpenEditDialog}
-          save={() => updateMutation.mutate({ booking, appointmentSegments })}
+          save={() => {
+            booking.startAt = selectedUTCStartAt;
+            updateMutation.mutate({ booking, appointmentSegments });
+          }}
         >
           {editDialogChild(editDialogComponent)}
         </EditDialog>
       )}
-      {booking && <div className="summaryGrid">
-        <DateTime
-          disabled={isCancelled(booking.status)}
-          booking={booking}
-          isLoading={isLoading}
-          appointmentSegments={booking.appointmentSegments}
-          cancelBooking={async () => {
+      {booking && (
+        <div className="summaryGrid">
+          <DateTime
+            disabled={isCancelled(booking.status)}
+            booking={booking}
+            isLoading={isLoading}
+            appointmentSegments={booking.appointmentSegments}
+            cancelBooking={async () => {
               cancelMutation.mutate({ bookingId: booking.id, jwt });
-          }}
-          showEditDialog={showEditDialog}
-          localTimezone={location.timezone}
-        />
+            }}
+            showEditDialog={showEditDialog}
+            localTimezone={location.timezone}
+          />
 
-        <ExportToCalendar
-          isLoading={isLoading}
-          booking={booking}
-          services={relatedObjects}
-        />
+          <ExportToCalendar
+            isLoading={isLoading}
+            booking={booking}
+            services={relatedObjects}
+          />
 
-        <ServicesOverview
-          isLoading={isLoading}
-          disabled={isCancelled(booking.status)}
-          appointmentSegments={booking.appointmentSegments}
-          catalogObjectItemVariations={objects}
-          catalogObjects={relatedObjects}
-          member={teamMember}
-          showEditDialog={showEditDialog}
-        />
-        <Checkout paymentLink={paymentLink} isCheckedOut={false} />
-      </div>}
+          <ServicesOverview
+            isLoading={isLoading}
+            disabled={isCancelled(booking.status)}
+            appointmentSegments={booking.appointmentSegments}
+            catalogObjectItemVariations={objects}
+            catalogObjects={relatedObjects}
+            member={teamMember}
+            showEditDialog={showEditDialog}
+          />
+          <Checkout paymentLink={paymentLink} isCheckedOut={false} />
+        </div>
+      )}
     </>
   );
 };

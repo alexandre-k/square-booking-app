@@ -22,6 +22,8 @@ import { User } from "types/Customer";
 import { Booking as BookingT } from "types/Booking";
 import { bookAppointment } from "api/booking";
 import { customerSchema } from "utils/customer";
+import { getBrowserTimezone } from "utils/dateTime";
+import { useLocation } from "context/LocationProvider";
 import "./index.css";
 
 interface BookingProps {
@@ -40,9 +42,15 @@ const Booking = (props: BookingProps) => {
     jwt: savedJwt,
   } = useMagicLogin();
 
+  const {
+    isLoading: isLocationLoading,
+    isError: isLocationError,
+    location,
+  } = useLocation();
+
   const [selectedMemberIds, setSelectedMemberIds] = useState<Array<string>>([]);
   const [selectedServices, setSelectedServices] = useState<Array<string>>([]);
-  const [selectedStartAt, setSelectedStartAt] = useState<string>("");
+  const [selectedUTCStartAt, setSelectedUTCStartAt] = useState<string | null>(null);
   const [customer, setCustomer] = useState<User>({
     givenName: "",
     familyName: "",
@@ -72,7 +80,7 @@ const Booking = (props: BookingProps) => {
     (jwt: string) =>
       bookAppointment(
         customer,
-        selectedStartAt,
+        selectedUTCStartAt,
         selectedServices,
         selectedMemberIds,
         jwt
@@ -85,6 +93,10 @@ const Booking = (props: BookingProps) => {
       },
     }
   );
+
+  if (isLocationError) {
+    return <div>Location error. Unable to retrieve current location</div>;
+  }
 
   const steps = [
     {
@@ -121,12 +133,13 @@ const Booking = (props: BookingProps) => {
         <DateTimePicker
           selectedServices={selectedServices}
           memberIds={selectedMemberIds}
-          selectedStartAt={selectedStartAt}
-          setSelectedStartAt={setSelectedStartAt}
+          selectedUTCStartAt={selectedUTCStartAt}
+          setSelectedUTCStartAt={setSelectedUTCStartAt}
+          timezone={!!location ? location.timezone : getBrowserTimezone()}
         />
       ),
       isNextRequired: true,
-      isFormValid: () => selectedStartAt !== "",
+      isFormValid: () => !!selectedUTCStartAt,
     },
     {
       label: "Your information",
@@ -171,10 +184,12 @@ const Booking = (props: BookingProps) => {
                 disabled={!steps[activeStep].isFormValid()}
                 loading={bookingMutation.isLoading || isAuthLoading}
                 onClick={async () => {
-                  const { jwt: newJwt, metadata: newMetadata } = await login(customer.emailAddress);
+                  const { jwt: newJwt, metadata: newMetadata } = await login(
+                    customer.emailAddress
+                  );
                   const jwt = !!savedJwt ? savedJwt : newJwt;
                   if (!jwt) throw Error("Unable to authenticate");
-                   bookingMutation.mutate(jwt);
+                  bookingMutation.mutate(jwt);
                 }}
                 endIcon={<CheckIcon />}
               >
