@@ -3,11 +3,7 @@ import "react-calendar/dist/Calendar.css";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { Availability } from "types/Booking";
-import {
-  setTimeToDate,
-  getTime,
-  localizedDate,
-} from "utils/dateTime";
+import { setTimeToDate, getTime, localizedDate } from "utils/dateTime";
 import "./TimeSelector.css";
 
 interface TimeSelectorProps {
