@@ -4,8 +4,6 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { Availability } from "types/Booking";
 import {
-  getBrowserTimezone,
-  setDateToTimezone,
   setTimeToDate,
   getTime,
   localizedDate,

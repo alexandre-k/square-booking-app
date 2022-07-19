@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useQueryClient } from "react-query";
 import "react-calendar/dist/Calendar.css";
 import Grid from "@mui/material/Grid";
 import Skeleton from "@mui/material/Skeleton";
 import Calendar from "react-calendar";
-import dayjs from "dayjs";
-import { DayOfWeek, LocationType, Period } from "types/Location";
+import { LocationType } from "types/Location";
 import {
-  findWorkingDay,
   getWorkingDay,
-  getBrowserTimezone,
   showDateFromTimezone,
   setDateToTimezone,
   TileDay,

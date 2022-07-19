@@ -1,5 +1,3 @@
-import dayjs from "dayjs";
-import { Period } from "types/Location";
 import { sendRequest } from "utils/request";
 
 // @ts-ignore
