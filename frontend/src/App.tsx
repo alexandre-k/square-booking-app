@@ -6,7 +6,6 @@ import Divider from "@mui/material/Divider";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import HomeIcon from "@mui/icons-material/Home";
 import ViewAgendaIcon from "@mui/icons-material/ViewAgenda";
 import List from "@mui/material/List";
@@ -71,7 +70,7 @@ function App({ isMenuOpenDefault }: AppProps) {
 
   const menuRoutes = [
     { to: "", name: "Home", icon: <HomeIcon /> },
-    { to: "profile", name: "Account", icon: <AccountCircleIcon /> },
+    // { to: "profile", name: "Account", icon: <AccountCircleIcon /> },
     { to: "overview", name: "MyBookings", icon: <ViewAgendaIcon /> },
   ];
 
@@ -128,7 +127,7 @@ function App({ isMenuOpenDefault }: AppProps) {
                   <MenuIcon />
                 </IconButton>
                 <Box sx={{ flexGrow: 1 }} />
-                <LoginButton onClick={toggleDrawer(true)} />
+                <LoginButton isAvatar={true} onClick={toggleDrawer(true)} />
               </Toolbar>
             </AppBar>
           </div>
