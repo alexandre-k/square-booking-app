@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useQueryClient } from "react-query";
 import "react-calendar/dist/Calendar.css";
 import Grid from "@mui/material/Grid";
 import Skeleton from "@mui/material/Skeleton";
@@ -6,19 +7,18 @@ import Calendar from "react-calendar";
 import dayjs from "dayjs";
 import { DayOfWeek, LocationType, Period } from "types/Location";
 import {
-  getLocalDateWithTimezoneShift,
-  setUTCTimeFromDate,
+  findWorkingDay,
+  getWorkingDay,
+  getBrowserTimezone,
+  showDateFromTimezone,
+  setDateToTimezone,
+  TileDay,
+  tileDisabled,
 } from "utils/dateTime";
 import Availabilities from "components/Booking/Availabilities";
 import { useLocation } from "context/LocationProvider";
 import NetworkError from "pages/Error/NetworkError";
 import "./DateTimePicker.css";
-
-interface TileDay {
-  activeStartDate: Date;
-  date: Date;
-  view: string;
-}
 
 interface AppointmentSegment {
   durationMinutes: number;
@@ -55,20 +55,7 @@ const DateTimePicker = ({
   memberIds,
 }: DateTimePickerProps) => {
   const { isLoading, isError, location, error } = useLocation();
-
-  const [value, onChange] = useState<Date>(
-    getLocalDateWithTimezoneShift(selectedUTCStartAt, timezone)
-  );
-  const [date, setDate] = useState<dayjs.Dayjs>();
-  const [endDate, setEndDate] = useState<dayjs.Dayjs>();
-  const [workingDay, setWorkingDay] = useState<Period>();
-
-  useEffect(() => {
-    if (!!!endDate && !!selectedUTCStartAt && !!timezone)
-      onDateSelected(
-        getLocalDateWithTimezoneShift(selectedUTCStartAt, timezone)
-      );
-  });
+  const queryClient = useQueryClient();
 
   if (!!!location) return <div>No location found</div>;
 
@@ -80,42 +67,6 @@ const DateTimePicker = ({
     );
 
   if (isError && !!error) return <NetworkError error={error} />;
-
-  const onDateSelected = async (value: Date) => {
-    onChange(value);
-    const [dayOfWeek] = value.toDateString().split(" ");
-    setDate(dayjs(value));
-    const foundWorkingDay = location.businessHours.periods.find(
-      (obj: Period) => {
-        return obj.dayOfWeek === dayOfWeek.toUpperCase();
-      }
-    );
-    setWorkingDay(foundWorkingDay);
-    if (foundWorkingDay === undefined) {
-      console.log(
-        "Unable to find a working day associated to the date selected"
-      );
-      return null;
-    }
-    if (selectedServices.length < 1) {
-      console.log("No service variation selected");
-      return;
-    }
-    setEndDate(dayjs(value).add(1, "day"));
-    // const availabilities: Array<Availability> = location.availabilities;
-    // setAvailabilities(availabilities);
-  };
-
-  const tileDisabled = ({ activeStartDate, date, view }: TileDay): boolean => {
-    const now = dayjs();
-    const dayjsDate = dayjs(date);
-    if (now.diff(dayjsDate, "s") > 86400) return true;
-    const dayOfWeek = dayjsDate.format("ddd").toUpperCase();
-    const workingDays = location.businessHours.periods.map(
-      (obj: Period) => obj.dayOfWeek
-    );
-    return !workingDays.includes(dayOfWeek as DayOfWeek);
-  };
 
   return (
     <Grid
@@ -129,20 +80,25 @@ const DateTimePicker = ({
         <div className="bookingContainer">
           <Calendar
             onChange={(value: Date) => {
-              const dateValue = setUTCTimeFromDate(
+              const dateValue = setDateToTimezone(
                 value.toISOString(),
-                selectedUTCStartAt,
-                location.timezone
+                timezone
               );
               setSelectedUTCStartAt(dateValue);
-              onDateSelected(value);
+              queryClient.invalidateQueries(["availabilities"]);
             }}
-            value={value}
-            tileDisabled={tileDisabled}
+            value={
+              new Date(
+                showDateFromTimezone(selectedUTCStartAt, location.timezone)
+              )
+            }
+            tileDisabled={({ activeStartDate, date, view }: TileDay) =>
+              tileDisabled({ activeStartDate, date, view }, location)
+            }
           />
         </div>
       </Grid>
-      {location && workingDay && memberIds && endDate && date && (
+      {location && memberIds && (
         <Grid item xs={12} md={6}>
           <div className="bookingContainer">
             <Availabilities
@@ -150,9 +106,16 @@ const DateTimePicker = ({
               setSelectedUTCStartAt={setSelectedUTCStartAt}
               selectedServices={selectedServices}
               memberIds={memberIds}
-              endDate={endDate}
-              workingDay={workingDay}
-              date={date}
+              startAt={getWorkingDay(
+                selectedUTCStartAt || new Date().toUTCString(),
+                timezone,
+                "start"
+              )}
+              endAt={getWorkingDay(
+                selectedUTCStartAt || new Date().toUTCString(),
+                timezone,
+                "end"
+              )}
               locationTimezone={location.timezone}
             />
           </div>

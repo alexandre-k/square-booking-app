@@ -21,7 +21,7 @@ import { localizedDate } from "utils/dateTime";
 interface DateTimeProps {
   booking: Booking;
   appointmentSegments: Array<AppointmentSegment>;
-  localTimezone: string;
+  locationTimezone: string;
   isLoading: boolean;
   disabled: boolean;
   cancelBooking: () => Promise<void>;
@@ -33,7 +33,7 @@ const DateTime = ({
   appointmentSegments,
   isLoading,
   disabled,
-  localTimezone,
+  locationTimezone,
   cancelBooking,
   showEditDialog,
 }: DateTimeProps) => {
@@ -113,7 +113,7 @@ const DateTime = ({
     <Card className="card">
       <Header icon={<CalendarMonthIcon />} title="Your reservation" />
       <CardContent id="dateTime">
-        {displayDateTime(booking.startAt, localTimezone)}
+        {displayDateTime(booking.startAt, locationTimezone)}
         <Status bookingStatus={bookingStatus} />
       </CardContent>
 

@@ -6,26 +6,21 @@ import { sendRequest } from "utils/request";
 export const getAvailabilities = async (
   selectedServices: Array<string>,
   memberIds: Array<string>,
-  endDate: dayjs.Dayjs,
-  workingDay: Period,
-  date: dayjs.Dayjs
+  startAt: string,
+  endAt: string
 ) => {
   return await sendRequest("/booking/availability/search", "POST", {
     query: {
       filter: {
         locationId: process.env.REACT_APP_LOCATION_ID,
         startAtRange: {
-          endAt: `${endDate.year()}-${endDate.format("MM")}-${endDate.format(
-            "DD"
-          )}T${workingDay.startLocalTime}.607Z`,
-          startAt: `${date.year()}-${date.format("MM")}-${date.format("DD")}T${
-            workingDay.startLocalTime
-          }.607Z`,
+          startAt,
+          endAt,
         },
-        segmentFilters: selectedServices.map(serviceId => ({
+        segmentFilters: selectedServices.map((serviceId) => ({
           serviceVariationId: serviceId,
           teamMemberIdFilter: {
-            any: memberIds
+            any: memberIds,
           },
         })),
       },

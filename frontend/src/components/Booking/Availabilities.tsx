@@ -18,9 +18,8 @@ interface AvailabilitiesProps {
   setSelectedUTCStartAt: (utcDate: string) => void;
   selectedServices: Array<string>;
   memberIds: Array<string>;
-  endDate: dayjs.Dayjs;
-  workingDay: Period;
-  date: dayjs.Dayjs;
+  startAt: string;
+  endAt: string;
   locationTimezone: string;
 }
 
@@ -29,26 +28,25 @@ const Availabilities = ({
   setSelectedUTCStartAt,
   selectedServices,
   memberIds,
-  endDate,
-  workingDay,
-  date,
+  startAt,
+  endAt,
   locationTimezone,
 }: AvailabilitiesProps) => {
   const { isLoading, data, error } = useQuery<
     GetAvailabilitiesQuery,
     AxiosError
   >(["availabilities"], () =>
-    getAvailabilities(selectedServices, memberIds, endDate, workingDay, date)
+    getAvailabilities(selectedServices, memberIds, startAt, endAt)
   );
   if (isLoading)
     return (
-        <Grid container>
-          {Array.from(Array(6).keys()).map((key) => (
-            <Grid item xs={3} md={3} key={key}>
-              <Skeleton variant="text" width="70px" height="50px" />
-            </Grid>
-          ))}
-        </Grid>
+      <Grid container>
+        {Array.from(Array(6).keys()).map((key) => (
+          <Grid item xs={3} md={3} key={key}>
+            <Skeleton variant="text" width="70px" height="50px" />
+          </Grid>
+        ))}
+      </Grid>
     );
 
   if (!data || !data.availabilities) return <div>Data undefined</div>;

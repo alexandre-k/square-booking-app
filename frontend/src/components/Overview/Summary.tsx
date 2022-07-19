@@ -193,7 +193,7 @@ const Summary = ({
               cancelMutation.mutate({ bookingId: booking.id, jwt });
             }}
             showEditDialog={showEditDialog}
-            localTimezone={location.timezone}
+            locationTimezone={location.timezone}
           />
 
           <ExportToCalendar
