@@ -132,19 +132,7 @@ const Summary = ({
         return (
           <Services
             selectedServices={selectedServices}
-            onDone={(services: Array<Service>) => {
-              setSelectedServices(services.map((service) => service.id));
-              const newAppointmentSegments: Array<ShortAppointmentSegment> =
-                services.map((service: Service) => {
-                  return {
-                    durationMinutes: convertMsToMins(service.duration),
-                    teamMemberId: getTeamMemberId(),
-                    serviceVariationId: service.id,
-                    serviceVariationVersion: service.version,
-                  };
-                });
-              setAppointmentSegments(newAppointmentSegments);
-            }}
+            setSelectedServices={setSelectedServices}
           />
         );
       case "member":

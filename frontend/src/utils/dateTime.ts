@@ -132,12 +132,13 @@ export const setDateToTimezone = (
 };
 
 export const showDateFromTimezone = (utcDate: string | null, timezone: string) => {
+    const validDate = utcDate || new Date().toISOString()
+    console.log(validDate)
     const fromDate = localizedDate(
-        !!utcDate ? utcDate : new Date().toISOString(),
+        validDate,
         timezone
     );
-    const toDate = dayjs(utcDate);
-    return toDate
+    return dayjs(validDate)
         .date(fromDate.date())
         .month(fromDate.month())
         .year(fromDate.year())

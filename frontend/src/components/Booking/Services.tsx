@@ -15,10 +15,10 @@ import "./Services.css";
 
 interface ServicesProps {
   selectedServices: Array<string>;
-  onDone: (services: Array<Service>) => void;
+  setSelectedServices: (services: Array<string>) => void;
 }
 
-const Services = ({ selectedServices, onDone }: ServicesProps) => {
+const Services = ({ selectedServices, setSelectedServices }: ServicesProps) => {
   const { isLoading, isError, data, error } = useQuery<
     Array<CatalogObject>,
     AxiosError
@@ -57,12 +57,12 @@ const Services = ({ selectedServices, onDone }: ServicesProps) => {
           <Divider />
           <Grid container>
             {services.map((service, index) => (
-              <Grid key={index} item xs={11} md={6} onChange={onChange}>
+              <Grid key={index} item xs={6} md={6}>
                 <ServiceLabel
                   service={service}
-                  selectedServiceIds={selectedServices}
+                  selectedServices={selectedServices}
                   key={index}
-                  onClick={onChange}
+                  setSelectedServices={setSelectedServices}
                 />
               </Grid>
             ))}
@@ -70,21 +70,6 @@ const Services = ({ selectedServices, onDone }: ServicesProps) => {
         </>
       );
     }
-  };
-  const onChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const target = event.target as HTMLInputElement;
-    const selectedServiceId = target.value;
-    // @ts-ignore
-    const newSelectedServices = selectedServices.includes(selectedServiceId)
-      ? selectedServices.filter(
-          (serviceId: string) => serviceId !== selectedServiceId
-        )
-      : [...selectedServices, selectedServiceId];
-    onDone(
-      objects.filter((service: Service) =>
-        newSelectedServices.includes(service.id)
-      )
-    );
   };
 
   return (

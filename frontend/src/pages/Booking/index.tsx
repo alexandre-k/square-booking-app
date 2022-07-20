@@ -101,9 +101,7 @@ const Booking = (props: BookingProps) => {
       component: (
         <Services
           selectedServices={selectedServices}
-          onDone={(services: Array<Service>) =>
-            setSelectedServices(services.map((service) => service.id))
-          }
+          setSelectedServices={setSelectedServices}
         />
       ),
       isNextRequired: true,

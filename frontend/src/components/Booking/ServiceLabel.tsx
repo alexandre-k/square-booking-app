@@ -1,5 +1,6 @@
 import React from "react";
 import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Typography from "@mui/material/Typography";
@@ -9,11 +10,15 @@ import "./Services.css";
 
 interface ServiceLabelProps {
   service: Service;
-  selectedServiceIds: Array<string>;
-  onClick: (event: React.FormEvent<HTMLInputElement>) => void;
+  selectedServices: Array<string>;
+  setSelectedServices: (services: Array<string>) => void;
 }
 
-const ServiceLabel = ({ onClick, service, selectedServiceIds }: ServiceLabelProps) => {
+const ServiceLabel = ({
+  service,
+  selectedServices,
+  setSelectedServices
+}: ServiceLabelProps) => {
   const label = (
     <div className="serviceLabel">
       <div>
@@ -63,22 +68,19 @@ const ServiceLabel = ({ onClick, service, selectedServiceIds }: ServiceLabelProp
     <Card
       className="serviceCard"
       style={
-        selectedServiceIds.includes(service.id)
-          ? selectedStyle
-          : notSelectedStyle
+        selectedServices.includes(service.id) ? selectedStyle : notSelectedStyle
       }
-      onChange={onClick}
+      onClick={() => {
+        const selectedServiceId = service.id;
+        const newSelectedServices = selectedServices.includes(selectedServiceId)
+          ? selectedServices.filter(
+              (serviceId: string) => serviceId !== selectedServiceId
+            )
+          : [...selectedServices, selectedServiceId];
+        setSelectedServices(newSelectedServices);
+      }}
     >
-      <FormControlLabel
-        key={service.id}
-        value={service.id}
-        control={
-          <Checkbox
-            checked={selectedServiceIds.includes(service.id) ? true : false}
-          />
-        }
-        label={label}
-      />
+      <CardContent key={service.id}>{label}</CardContent>
     </Card>
   );
 };
