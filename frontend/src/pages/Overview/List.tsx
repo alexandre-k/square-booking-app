@@ -3,9 +3,12 @@ import { Link } from "react-router-dom";
 import { AxiosError } from "axios";
 import { useQuery } from "react-query";
 import { useMagicLogin } from "context/MagicLoginProvider";
+import IconButton from "@mui/material/IconButton";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Loading from "components/Loading";
 import { Booking } from "types/Booking";
 import "./List.css";
@@ -17,11 +20,7 @@ import { useLocation } from "context/LocationProvider";
 import { localizedDate } from "utils/dateTime";
 
 const BookingList = () => {
-  const {
-    isLoading: isAuthLoading,
-    user,
-    jwt,
-  } = useMagicLogin();
+  const { isLoading: isAuthLoading, user, jwt } = useMagicLogin();
 
   const {
     isLoading: isLocationLoading,
@@ -69,9 +68,16 @@ const BookingList = () => {
                 style={{ textDecoration: "none" }}
               >
                 <Card className="cardList">
-                  {date.format("dddd DD MMMM") +
-                    " | " +
-                    date.format("hh:mm:ss")}
+                  <Stack direction="row">
+                    <div>
+                      {date.format("dddd DD MMMM") +
+                        " | " +
+                        date.format("hh:mm:ss")}
+                    </div>
+                    <IconButton>
+                      <ArrowForwardIosIcon />
+                    </IconButton>
+                  </Stack>
                 </Card>
               </Link>
             </Grid>
