@@ -81,3 +81,7 @@ export const formatCatalogObjects = (catalogObjects: Array<CatalogObject>) =>
         teamMemberIds,
       } as Service;
     });
+
+export const hasServiceIncluded = (services: Array<Service>, service: Service) => {
+    return services.filter(s => s.id === service.id).length !== 0;
+}

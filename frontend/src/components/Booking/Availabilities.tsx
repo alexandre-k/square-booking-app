@@ -4,6 +4,7 @@ import Skeleton from "@mui/material/Skeleton";
 import { AxiosError } from "axios";
 import TimeSelector from "components/Booking/TimeSelector";
 import { Availability } from "types/Booking";
+import { Service } from "types/Catalog";
 import { getAvailabilities } from "api/date";
 import { useQuery } from "react-query";
 
@@ -14,7 +15,7 @@ interface GetAvailabilitiesQuery {
 interface AvailabilitiesProps {
   selectedUTCStartAt: string | null;
   setSelectedUTCStartAt: (utcDate: string) => void;
-  selectedServices: Array<string>;
+  selectedServices: Array<Service>;
   memberIds: Array<string>;
   startAt: string;
   endAt: string;

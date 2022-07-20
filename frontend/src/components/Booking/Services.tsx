@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AxiosError } from "axios";
 import { useQuery } from "react-query";
 import Divider from "@mui/material/Divider";
@@ -7,6 +7,7 @@ import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { CatalogObject, Service, ServiceCategory } from "types/Catalog";
+import ServiceForm from "components/Booking/ServiceForm";
 import ServiceLabel from "components/Booking/ServiceLabel";
 import { formatCatalogObjects } from "utils/service";
 import { getCatalogObjects } from "api/services";
@@ -14,8 +15,8 @@ import Loading from "components/Loading";
 import "./Services.css";
 
 interface ServicesProps {
-  selectedServices: Array<string>;
-  setSelectedServices: (services: Array<string>) => void;
+  selectedServices: Array<Service>;
+  setSelectedServices: (services: Array<Service>) => void;
 }
 
 const Services = ({ selectedServices, setSelectedServices }: ServicesProps) => {
@@ -34,49 +35,24 @@ const Services = ({ selectedServices, setSelectedServices }: ServicesProps) => {
   const optionalServices = objects.filter(
     (service) => service.category === ServiceCategory.OPTIONAL
   );
-  const serviceForms = (
-    services: Array<Service>,
-    category: ServiceCategory,
-    categoryTitle: string
-  ) => {
-    if (services.length === 0 && category === ServiceCategory.MAIN) {
-      return (
-        <Typography variant="h6" component="div">
-          No service found! It is likely that there was a network error or no
-          service available.
-        </Typography>
-      );
-    } else if (services.length === 0) {
-      return <></>;
-    } else {
-      return (
-        <>
-          <Typography variant="h4" component="div">
-            {categoryTitle}
-          </Typography>
-          <Divider />
-          <Grid container>
-            {services.map((service, index) => (
-              <Grid key={index} item xs={6} md={6}>
-                <ServiceLabel
-                  service={service}
-                  selectedServices={selectedServices}
-                  key={index}
-                  setSelectedServices={setSelectedServices}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        </>
-      );
-    }
-  };
 
   return (
-      <FormControl>
+    <FormControl>
       <FormGroup>
-        {serviceForms(mainServices, ServiceCategory.MAIN, "Main Services")}
-        {serviceForms(optionalServices, ServiceCategory.OPTIONAL, "Options")}
+        <ServiceForm
+          selectedServices={selectedServices}
+          setSelectedServices={setSelectedServices}
+          services={mainServices}
+          category={ServiceCategory.MAIN}
+          categoryTitle="Main Services"
+        />
+        <ServiceForm
+          selectedServices={selectedServices}
+          setSelectedServices={setSelectedServices}
+          services={optionalServices}
+          category={ServiceCategory.OPTIONAL}
+          categoryTitle="Options"
+        />
       </FormGroup>
     </FormControl>
   );

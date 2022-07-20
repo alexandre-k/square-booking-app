@@ -6,12 +6,13 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Typography from "@mui/material/Typography";
 import { Service } from "types/Catalog";
 import { convertMsToMins } from "utils/dateTime";
+import { hasServiceIncluded } from "utils/service";
 import "./Services.css";
 
 interface ServiceLabelProps {
   service: Service;
-  selectedServices: Array<string>;
-  setSelectedServices: (services: Array<string>) => void;
+  selectedServices: Array<Service>;
+  setSelectedServices: (services: Array<Service>) => void;
 }
 
 const ServiceLabel = ({
@@ -68,15 +69,15 @@ const ServiceLabel = ({
     <Card
       className="serviceCard"
       style={
-        selectedServices.includes(service.id) ? selectedStyle : notSelectedStyle
+        hasServiceIncluded(selectedServices, service) ? selectedStyle : notSelectedStyle
       }
       onClick={() => {
-        const selectedServiceId = service.id;
-        const newSelectedServices = selectedServices.includes(selectedServiceId)
-          ? selectedServices.filter(
-              (serviceId: string) => serviceId !== selectedServiceId
+        const newSelectedServices = hasServiceIncluded(selectedServices, service) ?
+          selectedServices.filter(
+              s => s.id !== service.id
             )
-          : [...selectedServices, selectedServiceId];
+          : [...selectedServices, service];
+          console.log(newSelectedServices, selectedServices)
         setSelectedServices(newSelectedServices);
       }}
     >

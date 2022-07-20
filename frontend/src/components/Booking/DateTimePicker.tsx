@@ -12,6 +12,7 @@ import {
   TileDay,
   tileDisabled,
 } from "utils/dateTime";
+import { Service } from "types/Catalog";
 import Availabilities from "components/Booking/Availabilities";
 import { useLocation } from "context/LocationProvider";
 import NetworkError from "pages/Error/NetworkError";
@@ -34,7 +35,7 @@ interface DateTimePickerProps {
   startAt?: string;
   selectedUTCStartAt: string | null;
   setSelectedUTCStartAt: (utcDate: string) => void;
-  selectedServices: Array<string>;
+  selectedServices: Array<Service>;
   memberIds: Array<string>;
 }
 

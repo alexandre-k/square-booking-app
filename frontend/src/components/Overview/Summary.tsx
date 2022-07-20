@@ -43,8 +43,6 @@ interface CancelMutation {
   jwt: string;
 }
 
-type ServiceID = string;
-
 const Summary = ({
   booking,
   teamMember,
@@ -61,10 +59,8 @@ const Summary = ({
   const [selectedUTCStartAt, setSelectedUTCStartAt] = useState<string>(
     booking.startAt
   );
-  const [selectedServices, setSelectedServices] = useState<Array<ServiceID>>(
-    relatedObjects
-      ? formatCatalogObjects(relatedObjects).map((service) => service.id)
-      : []
+  const [selectedServices, setSelectedServices] = useState<Array<Service>>(
+    relatedObjects ? formatCatalogObjects(relatedObjects) : []
   );
   const [appointmentSegments, setAppointmentSegments] = useState<
     Array<ShortAppointmentSegment>

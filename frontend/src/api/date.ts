@@ -1,8 +1,9 @@
 import { sendRequest } from "utils/request";
+import { Service } from "types/Catalog";
 
 // @ts-ignore
 export const getAvailabilities = async (
-  selectedServices: Array<string>,
+  selectedServices: Array<Service>,
   memberIds: Array<string>,
   startAt: string,
   endAt: string
@@ -15,8 +16,8 @@ export const getAvailabilities = async (
           startAt,
           endAt,
         },
-        segmentFilters: selectedServices.map((serviceId) => ({
-          serviceVariationId: serviceId,
+        segmentFilters: selectedServices.map((service: Service) => ({
+          serviceVariationId: service.id,
           teamMemberIdFilter: {
             any: memberIds,
           },

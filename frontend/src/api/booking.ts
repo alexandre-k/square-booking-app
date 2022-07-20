@@ -1,10 +1,11 @@
 import { sendRequest } from "utils/request";
 import { User } from "types/Customer";
+import { Service } from "types/Catalog";
 
 export const bookAppointment = async (
   customer: User,
   selectedUTCStartAt: string | null,
-  selectedServices: Array<string>,
+  selectedServices: Array<Service>,
   selectedMemberIds: Array<string>,
   jwt: string
 ) => {
@@ -17,13 +18,13 @@ export const bookAppointment = async (
       // locationType: LocationType.BUSINESS_LOCATION,
       // sellerNote: "",
       startAt: selectedUTCStartAt,
-      appointmentSegments: selectedServices.map((serviceId) => {
+      appointmentSegments: selectedServices.map(service => {
         return {
           // anyTeamMember: selectedMemberIds.length > 1,
-          durationMinutes: 30,
-          serviceVariationId: serviceId,
+          durationMinutes: service.duration,
+          serviceVariationId: service.id,
           teamMemberId: selectedMemberIds[0],
-          serviceVariationVersion: 1,
+          serviceVariationVersion: service.version,
         };
       }),
     },

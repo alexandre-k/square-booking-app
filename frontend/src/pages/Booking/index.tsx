@@ -46,7 +46,7 @@ const Booking = (props: BookingProps) => {
   } = useLocation();
 
   const [selectedMemberIds, setSelectedMemberIds] = useState<Array<string>>([]);
-  const [selectedServices, setSelectedServices] = useState<Array<string>>([]);
+  const [selectedServices, setSelectedServices] = useState<Array<Service>>([]);
   const [selectedUTCStartAt, setSelectedUTCStartAt] = useState<string | null>(null);
   const [customer, setCustomer] = useState<User>({
     givenName: "",
