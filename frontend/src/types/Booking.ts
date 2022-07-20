@@ -70,6 +70,8 @@ export type Booking = {
   };
   source: string;
   locationType: string;
+  // custom
+  serviceNames: Array<string>;
 };
 
 export type TeamMemberBookingProfile = {

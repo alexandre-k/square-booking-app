@@ -1,4 +1,5 @@
 import { sendRequest } from "utils/request";
+import { Service } from "types/Catalog";
 import { ShortAppointmentSegment, Booking } from "types/Booking";
 
 export const getBooking = async (bookingId: string, jwt: string) => {
@@ -16,6 +17,7 @@ export const cancelBooking = async (bookingId: string, jwt: string) => {
 export const updateAppointmentSegments = async (
   booking: Booking | null,
   appointmentSegments: Array<ShortAppointmentSegment>,
+    services: Array<Service>,
   jwt: string
 ) => {
   if (booking === null) throw new Error("Booking not available");
@@ -32,6 +34,7 @@ export const updateAppointmentSegments = async (
         startAt: booking.startAt,
         version: booking.version,
         customerNote: booking.customerNote,
+        serviceNames: services.map(s => s.name)
       },
     },
     jwt

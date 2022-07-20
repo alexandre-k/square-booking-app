@@ -62,17 +62,22 @@ const BookingList = () => {
         {data.map((booking: Booking) => {
           const date = localizedDate(booking.startAt, location.timezone);
           return (
-            <Grid item xs={6} md={6} key={booking.id}>
+            <Grid item xs={10} md={6} key={booking.id}>
               <Link
                 to={"/overview/" + booking.id}
                 style={{ textDecoration: "none" }}
               >
                 <Card className="cardList">
+
+                    <Typography sx={{ fontSize: 14 }} color="text.primary" gutterBottom>
+                    {booking.serviceNames.map((serviceName, idx) => <div>{(idx > 0) ? ' & ' + serviceName : '' + serviceName}</div>)}
+                    </Typography>
                   <Stack direction="row" justifyContent="space-between">
-                    <div>
+                        <Typography sx={{ fontSize: 12 }} color="text.secondary" gutterBottom>
+
                       <div>{date.format("dddd DD MMMM")}</div>
                       <div>{date.format("HH:mm")}</div>
-                    </div>
+                    </Typography>
                     <IconButton>
                       <ArrowForwardIosIcon />
                     </IconButton>

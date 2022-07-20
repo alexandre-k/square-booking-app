@@ -26,6 +26,7 @@ export const bookAppointment = async (
           selectedServices,
           selectedMemberIds
         ),
+        serviceNames: selectedServices.map((s) => s.name),
       },
     },
     jwt

@@ -36,6 +36,7 @@ interface SummaryProps {
 interface BookingMutation {
   booking: Booking;
   segments: Array<ShortAppointmentSegment>;
+  services: Array<Service>;
 }
 
 interface CancelMutation {
@@ -72,8 +73,8 @@ const Summary = ({
   const queryClient = useQueryClient();
 
   const updateMutation = useMutation(
-    ({ booking, segments }: BookingMutation): Promise<Booking> =>
-      updateAppointmentSegments(booking, segments, jwt),
+    ({ booking, segments, services }: BookingMutation): Promise<Booking> =>
+      updateAppointmentSegments(booking, segments, services, jwt),
     {
       mutationKey: "update/booking",
       onSuccess: () => queryClient.invalidateQueries("customer/booking"),
@@ -137,6 +138,7 @@ const Summary = ({
                   selectedServices,
                   teamMemberIds
                 ),
+                services: selectedServices
               });
             }}
           />
@@ -159,6 +161,7 @@ const Summary = ({
                 selectedServices,
                 selectedMemberIds
               ),
+              services: selectedServices
             });
           }}
         >
