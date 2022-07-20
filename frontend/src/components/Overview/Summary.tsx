@@ -70,8 +70,18 @@ const Summary = ({
   const queryClient = useQueryClient();
 
   const updateMutation = useMutation(
-    ({ booking, appointmentSegments }: BookingMutation): Promise<Booking> =>
-      updateAppointmentSegments(booking, appointmentSegments, jwt),
+    ({ booking, appointmentSegments }: BookingMutation): Promise<Booking> => {
+      const newAppointmentSegments: Array<ShortAppointmentSegment> =
+        selectedServices.map((service: Service) => {
+          return {
+            durationMinutes: convertMsToMins(service.duration),
+            teamMemberId: getTeamMemberId(),
+            serviceVariationId: service.id,
+            serviceVariationVersion: service.version,
+          };
+        });
+      return updateAppointmentSegments(booking, appointmentSegments, jwt);
+    },
     {
       mutationKey: "update/booking",
       onSuccess: () => queryClient.invalidateQueries("customer/booking"),

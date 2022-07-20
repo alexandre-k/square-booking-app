@@ -18,7 +18,7 @@ interface ServiceLabelProps {
 const ServiceLabel = ({
   service,
   selectedServices,
-  setSelectedServices
+  setSelectedServices,
 }: ServiceLabelProps) => {
   const label = (
     <div className="serviceLabel">
@@ -69,15 +69,17 @@ const ServiceLabel = ({
     <Card
       className="serviceCard"
       style={
-        hasServiceIncluded(selectedServices, service) ? selectedStyle : notSelectedStyle
+        hasServiceIncluded(selectedServices, service)
+          ? selectedStyle
+          : notSelectedStyle
       }
       onClick={() => {
-        const newSelectedServices = hasServiceIncluded(selectedServices, service) ?
-          selectedServices.filter(
-              s => s.id !== service.id
-            )
+        const newSelectedServices = hasServiceIncluded(
+          selectedServices,
+          service
+        )
+          ? selectedServices.filter((s) => s.id !== service.id)
           : [...selectedServices, service];
-          console.log(newSelectedServices, selectedServices)
         setSelectedServices(newSelectedServices);
       }}
     >

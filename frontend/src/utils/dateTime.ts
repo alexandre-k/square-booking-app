@@ -133,7 +133,6 @@ export const setDateToTimezone = (
 
 export const showDateFromTimezone = (utcDate: string | null, timezone: string) => {
     const validDate = utcDate || new Date().toISOString()
-    console.log(validDate)
     const fromDate = localizedDate(
         validDate,
         timezone
