@@ -69,16 +69,28 @@ const BookingList = () => {
                 style={{ textDecoration: "none" }}
               >
                 <Card className="cardList">
-
-                    <Typography sx={{ fontSize: 14 }} color="text.primary" gutterBottom>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <Stack direction="column">
+                      <Typography
+                        sx={{ fontSize: 14 }}
+                        color="text.primary"
+                        gutterBottom
+                      >
                         <div>{formatServiceNames(booking.serviceNames)}</div>
-                    </Typography>
-                  <Stack direction="row" justifyContent="space-between">
-                        <Typography sx={{ fontSize: 12 }} color="text.secondary" gutterBottom>
-
-                      <div>{date.format("dddd DD MMMM")}</div>
-                      <div>{date.format("HH:mm")}</div>
-                    </Typography>
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: 12 }}
+                        color="text.secondary"
+                        gutterBottom
+                      >
+                        <div>{date.format("dddd DD MMMM")}</div>
+                        <div>{date.format("HH:mm")}</div>
+                      </Typography>
+                    </Stack>
                     <IconButton>
                       <ArrowForwardIosIcon />
                     </IconButton>
