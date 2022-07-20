@@ -28,9 +28,9 @@ export const formatServiceNames = (serviceNames: Array<string>) => {
         if (idx === serviceNames.length - 1) {
             return serviceName;
         } else if (idx === 0) {
-            return ' & ' + serviceName
+            return serviceName + ' & '
         } else {
-            return ', ' + serviceName;
+            return serviceName + ' , ';
         }
     }).join(' ');
 }
