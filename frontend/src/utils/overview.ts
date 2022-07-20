@@ -22,3 +22,15 @@ export const shortenSegment = (segment: AppointmentSegment) => {
     const { intermissionMinutes, anyTeamMember, ...rest } = segment;
     return rest;
 }
+
+export const formatServiceNames = (serviceNames: Array<string>) => {
+    return serviceNames.map((serviceName, idx) => {
+        if (idx === serviceNames.length - 1) {
+            return serviceName;
+        } else if (idx === 0) {
+            return ' & ' + serviceName
+        } else {
+            return ', ' + serviceName;
+        }
+    }).join(' ');
+}
