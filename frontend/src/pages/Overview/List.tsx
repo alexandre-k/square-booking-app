@@ -18,6 +18,7 @@ import InviteLogin from "components/Auth/InviteLogin";
 import { getBookingList } from "api/customer";
 import { useLocation } from "context/LocationProvider";
 import { localizedDate } from "utils/dateTime";
+import { formatServiceNames } from "utils/overview";
 
 const BookingList = () => {
   const { isLoading: isAuthLoading, user, jwt } = useMagicLogin();
@@ -70,7 +71,7 @@ const BookingList = () => {
                 <Card className="cardList">
 
                     <Typography sx={{ fontSize: 14 }} color="text.primary" gutterBottom>
-                    {booking.serviceNames.map((serviceName, idx) => <div>{(idx > 0) ? ' & ' + serviceName : '' + serviceName}</div>)}
+                        <div>{formatServiceNames(booking.serviceNames)}</div>
                     </Typography>
                   <Stack direction="row" justifyContent="space-between">
                         <Typography sx={{ fontSize: 12 }} color="text.secondary" gutterBottom>

@@ -1,4 +1,4 @@
-import { BrowserRouter, Link, Routes, Route } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useMagicLogin } from "context/MagicLoginProvider";
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
@@ -24,7 +24,7 @@ interface MenuProps {
 }
 
 const Menu = ({ menuRoutes, logout, toggleDrawer }: MenuProps) => {
-  const { isLoading, isAuthenticated, user } = useMagicLogin();
+  const { user } = useMagicLogin();
 
   return (
     <Box

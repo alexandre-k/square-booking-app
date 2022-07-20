@@ -19,9 +19,8 @@ import {
   CatalogObjectItemVariation,
   Service,
 } from "types/Catalog";
-import { getTeamMemberId } from "utils/staff";
 import { formatCatalogObjects, toAppointmentSegments } from "utils/service";
-import { isCancelled, editDialogTitle, shortenSegment } from "utils/overview";
+import { isCancelled, editDialogTitle } from "utils/overview";
 import { useMagicLogin } from "context/MagicLoginProvider";
 
 interface SummaryProps {
@@ -65,9 +64,6 @@ const Summary = ({
   const [selectedServices, setSelectedServices] = useState<Array<Service>>(
     relatedObjects ? formatCatalogObjects(relatedObjects) : []
   );
-  const [appointmentSegments, setAppointmentSegments] = useState<
-    Array<ShortAppointmentSegment>
-  >(booking ? booking.appointmentSegments.map(shortenSegment) : []);
   const { jwt } = useMagicLogin();
 
   const queryClient = useQueryClient();

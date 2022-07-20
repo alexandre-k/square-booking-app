@@ -83,9 +83,7 @@ const Booking = (props: BookingProps) => {
         jwt
       ),
     {
-      // @ts-ignore
       onSuccess: (data) => {
-        // @ts-ignore
         changeRoute("/overview/" + data.booking.id);
       },
     }

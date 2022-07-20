@@ -1,7 +1,5 @@
 import { Service, ServiceCategory } from "types/Catalog";
 import Divider from "@mui/material/Divider";
-import FormGroup from "@mui/material/FormGroup";
-import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import ServiceLabel from "components/Booking/ServiceLabel";

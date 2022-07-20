@@ -3,6 +3,7 @@ import Grid from "@mui/material/Grid";
 import { sendRequest } from "utils/request";
 import dayjs from "dayjs";
 import BookingsStats from "components/Dashboard/BookingsStats";
+import { Booking } from "types/Booking";
 
 type MonthlyAppointments = {
   month: string;
@@ -22,8 +23,7 @@ const TeamDashboard = () => {
     return data.bookings;
   };
 
-  // @ts-ignore
-  const monthNums = [...Array(12).keys()];
+  const monthNums = Array.from(Array(12).keys());
   const months = monthNums.map((num) => {
     const now = dayjs();
     const date = dayjs(now.format("YYYY") + "-" + num);
@@ -32,9 +32,8 @@ const TeamDashboard = () => {
 
   useEffect(() => {
     listAppointments().then((appointments) => {
-      // @ts-ignore
-      const appointmentsByMonth = appointments.reduce((acc, appointment) => {
-        const month = dayjs(appointment.start_at).format("MMM");
+      const appointmentsByMonth = appointments.reduce((acc: Record<string, number>, appointment: Booking) => {
+        const month = dayjs(appointment.startAt).format("MMM");
         if (month in acc) {
           acc[month] += 1;
         } else {

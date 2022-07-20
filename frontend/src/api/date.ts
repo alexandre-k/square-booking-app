@@ -1,7 +1,6 @@
 import { sendRequest } from "utils/request";
 import { Service } from "types/Catalog";
 
-// @ts-ignore
 export const getAvailabilities = async (
   selectedServices: Array<Service>,
   memberIds: Array<string>,

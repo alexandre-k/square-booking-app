@@ -1,14 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { AxiosError } from "axios";
 import { useQuery } from "react-query";
-import Divider from "@mui/material/Divider";
 import FormGroup from "@mui/material/FormGroup";
 import FormControl from "@mui/material/FormControl";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import { CatalogObject, Service, ServiceCategory } from "types/Catalog";
 import ServiceForm from "components/Booking/ServiceForm";
-import ServiceLabel from "components/Booking/ServiceLabel";
 import { formatCatalogObjects } from "utils/service";
 import { getCatalogObjects } from "api/services";
 import Loading from "components/Loading";
