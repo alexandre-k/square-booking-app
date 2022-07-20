@@ -54,7 +54,7 @@ const DateTime = ({
       <div className="dateTime">
         <div>{date.format("dddd DD MMMM")}</div>
         <div>
-          {date.format("hh:mm ")} - {endDate.format("hh:mm a")}
+          {date.format("HH:mm ")} - {endDate.format("HH:mm")}
         </div>
       </div>
     );

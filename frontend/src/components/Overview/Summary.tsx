@@ -19,8 +19,8 @@ import {
   CatalogObjectItemVariation,
   Service,
 } from "types/Catalog";
-import { formatCatalogObjects } from "utils/service";
-import { convertMsToMins } from "utils/dateTime";
+import { getTeamMemberId } from "utils/staff";
+import { formatCatalogObjects, toAppointmentSegments } from "utils/service";
 import { isCancelled, editDialogTitle, shortenSegment } from "utils/overview";
 import { useMagicLogin } from "context/MagicLoginProvider";
 
@@ -35,7 +35,7 @@ interface SummaryProps {
 
 interface BookingMutation {
   booking: Booking;
-  appointmentSegments: Array<ShortAppointmentSegment>;
+  segments: Array<ShortAppointmentSegment>;
 }
 
 interface CancelMutation {
@@ -55,7 +55,9 @@ const Summary = ({
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [editDialogComponent, setEditDialogComponent] =
     useState<string>("date");
-  const selectedMemberIds = teamMember ? [teamMember.id] : [];
+  const [selectedMemberIds, setSelectedMemberIds] = useState<Array<string>>(
+    teamMember ? [teamMember.id] : []
+  );
   const [selectedUTCStartAt, setSelectedUTCStartAt] = useState<string>(
     booking.startAt
   );
@@ -70,18 +72,8 @@ const Summary = ({
   const queryClient = useQueryClient();
 
   const updateMutation = useMutation(
-    ({ booking, appointmentSegments }: BookingMutation): Promise<Booking> => {
-      const newAppointmentSegments: Array<ShortAppointmentSegment> =
-        selectedServices.map((service: Service) => {
-          return {
-            durationMinutes: convertMsToMins(service.duration),
-            teamMemberId: getTeamMemberId(),
-            serviceVariationId: service.id,
-            serviceVariationVersion: service.version,
-          };
-        });
-      return updateAppointmentSegments(booking, appointmentSegments, jwt);
-    },
+    ({ booking, segments }: BookingMutation): Promise<Booking> =>
+      updateAppointmentSegments(booking, segments, jwt),
     {
       mutationKey: "update/booking",
       onSuccess: () => queryClient.invalidateQueries("customer/booking"),
@@ -105,15 +97,6 @@ const Summary = ({
   );
 
   const isLoading = updateMutation.isLoading || cancelMutation.isLoading;
-
-  const getTeamMemberId = () => {
-    if (selectedMemberIds.length === 0) return "";
-    // TODO: get real team member id
-    if (selectedMemberIds[0] === "anyStaffMember") {
-      return "anyStaffMember";
-    }
-    return selectedMemberIds[0];
-  };
 
   const showEditDialog = (component: string) => {
     setEditDialogComponent(component);
@@ -146,16 +129,16 @@ const Summary = ({
           <TeamMembers
             showOwner={false}
             selectedMemberIds={selectedMemberIds}
-            onDone={(teamMemberIds: Array<string>) =>
+            onDone={(teamMemberIds: Array<string>) => {
+              setSelectedMemberIds(teamMemberIds);
               updateMutation.mutate({
                 booking,
-                appointmentSegments: appointmentSegments.map(
-                  (segment: ShortAppointmentSegment) => {
-                    return { ...segment, teamMemberIds };
-                  }
+                segments: toAppointmentSegments(
+                  selectedServices,
+                  teamMemberIds
                 ),
-              })
-            }
+              });
+            }}
           />
         );
     }
@@ -170,7 +153,13 @@ const Summary = ({
           setOpen={setOpenEditDialog}
           save={() => {
             booking.startAt = selectedUTCStartAt;
-            updateMutation.mutate({ booking, appointmentSegments });
+            updateMutation.mutate({
+              booking,
+              segments: toAppointmentSegments(
+                selectedServices,
+                selectedMemberIds
+              ),
+            });
           }}
         >
           {editDialogChild(editDialogComponent)}

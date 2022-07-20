@@ -5,6 +5,8 @@ import {
   ServiceCategory,
   PricingType,
 } from "types/Catalog";
+import { convertMsToMins } from "./dateTime";
+import { getTeamMemberId } from "./staff";
 
 export const getItemVariationData = (obj: CatalogObject) => {
   const variations = obj?.itemData?.variations;
@@ -82,6 +84,22 @@ export const formatCatalogObjects = (catalogObjects: Array<CatalogObject>) =>
       } as Service;
     });
 
-export const hasServiceIncluded = (services: Array<Service>, service: Service) => {
-    return services.filter(s => s.id === service.id).length !== 0;
-}
+export const hasServiceIncluded = (
+  services: Array<Service>,
+  service: Service
+) => {
+  return services.filter((s) => s.id === service.id).length !== 0;
+};
+
+export const toAppointmentSegments = (
+  services: Array<Service>,
+  memberIds: Array<string>
+) => {
+  return services.map((service) => ({
+    // anyTeamMember: selectedMemberIds.length > 1,
+    durationMinutes: convertMsToMins(service.duration),
+    serviceVariationId: service.id,
+    teamMemberId: getTeamMemberId(memberIds),
+    serviceVariationVersion: service.version,
+  }));
+};

@@ -1,5 +1,5 @@
 import { sendRequest } from "utils/request";
-import { convertMsToMins } from "utils/dateTime";
+import { toAppointmentSegments } from "utils/service";
 import { User } from "types/Customer";
 import { Service } from "types/Catalog";
 
@@ -22,15 +22,10 @@ export const bookAppointment = async (
         // locationType: LocationType.BUSINESS_LOCATION,
         // sellerNote: "",
         startAt: selectedUTCStartAt,
-        appointmentSegments: selectedServices.map((service) => {
-          return {
-            // anyTeamMember: selectedMemberIds.length > 1,
-            durationMinutes: convertMsToMins(service.duration),
-            serviceVariationId: service.id,
-            teamMemberId: selectedMemberIds[0],
-            serviceVariationVersion: service.version,
-          };
-        }),
+        appointmentSegments: toAppointmentSegments(
+          selectedServices,
+          selectedMemberIds
+        ),
       },
     },
     jwt

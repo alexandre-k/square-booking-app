@@ -16,3 +16,14 @@ export const anyMember = () => ({
 export const getInitials = (member: TeamMember) => {
     return (member.id === "anyStaffMember") ? "?" : `${member.givenName}+${member.familyName}.jpg`;
 }
+
+
+export const getTeamMemberId = (selectedMemberIds: Array<string>) => {
+    if (selectedMemberIds.length === 0) return "";
+    // TODO: get real team member id
+    if (selectedMemberIds[0] === "anyStaffMember") {
+        return "anyStaffMember";
+    }
+    return selectedMemberIds[0];
+};
+
