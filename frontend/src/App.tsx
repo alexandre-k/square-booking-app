@@ -24,6 +24,7 @@ import Home from "pages/Home";
 import LoginButton from "components/Auth/LoginButton";
 import Login from "components/Auth/Login";
 import Logout from "components/Auth/Logout";
+import Menu from "components/Home/Menu";
 import Profile from "pages/Auth/Profile";
 // import SquareCustomer from "components/SquareCustomer";
 // import SquareLocation from "components/Home/SquareLocation";
@@ -74,38 +75,6 @@ function App({ isMenuOpenDefault }: AppProps) {
     { to: "overview", name: "MyBookings", icon: <ViewAgendaIcon /> },
   ];
 
-  const list = () => (
-    <Box
-      sx={{ width: "auto" }}
-      role="presentation"
-      onClick={toggleDrawer(false)}
-      onKeyDown={toggleDrawer(false)}
-    >
-      <List>
-        {menuRoutes.map((route, index) => (
-          <Link key={route.to} to={route.to} style={{ textDecoration: "none" }}>
-            <ListItem key={route.name} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>{route.icon}</ListItemIcon>
-                <ListItemText primary={route.name} />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => logout()}>
-            <ListItemIcon>
-              <LogoutIcon />
-            </ListItemIcon>
-            <ListItemText primary="Logout" />
-          </ListItemButton>
-        </ListItem>
-      </List>
-    </Box>
-  );
   if (undefinedVariables.length > 0)
     return <EnvironmentError variables={undefinedVariables} />;
 
@@ -122,12 +91,15 @@ function App({ isMenuOpenDefault }: AppProps) {
                   color="inherit"
                   aria-label="menu"
                   sx={{ mr: 2 }}
-                  onClick={toggleDrawer(true)}
+                  onClick={() => setIsMenuOpen(true)}
                 >
                   <MenuIcon />
                 </IconButton>
                 <Box sx={{ flexGrow: 1 }} />
-                <LoginButton isAvatar={true} onClick={toggleDrawer(true)} />
+                <LoginButton
+                  isAvatar={true}
+                  onClick={() => setIsMenuOpen(true)}
+                />
               </Toolbar>
             </AppBar>
           </div>
@@ -153,10 +125,14 @@ function App({ isMenuOpenDefault }: AppProps) {
               role="menu"
               anchor={isMobile ? "bottom" : "left"}
               open={isMenuOpen}
-              onClose={toggleDrawer(false)}
-              onOpen={toggleDrawer(true)}
+              onClose={() => setIsMenuOpen(false)}
+              onOpen={() => setIsMenuOpen(true)}
             >
-              {list()}
+              <Menu
+                menuRoutes={menuRoutes}
+                toggleDrawer={setIsMenuOpen}
+                logout={logout}
+              />
             </SwipeableDrawer>
           </div>
           {/* <div id="footer">
