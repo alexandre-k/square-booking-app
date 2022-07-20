@@ -62,17 +62,16 @@ const BookingList = () => {
         {data.map((booking: Booking) => {
           const date = localizedDate(booking.startAt, location.timezone);
           return (
-            <Grid item xs={6} md={3} key={booking.id}>
+            <Grid item xs={6} md={6} key={booking.id}>
               <Link
                 to={"/overview/" + booking.id}
                 style={{ textDecoration: "none" }}
               >
                 <Card className="cardList">
-                  <Stack direction="row">
+                  <Stack direction="row" justifyContent="space-between">
                     <div>
-                      {date.format("dddd DD MMMM") +
-                        " | " +
-                        date.format("hh:mm:ss")}
+                      <div>{date.format("dddd DD MMMM")}</div>
+                      <div>{date.format("HH:mm")}</div>
                     </div>
                     <IconButton>
                       <ArrowForwardIosIcon />

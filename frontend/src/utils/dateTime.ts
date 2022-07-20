@@ -237,3 +237,8 @@ export const tileDisabled = (
   );
   return !workingDays.includes(dayOfWeek as DayOfWeek);
 };
+
+export const getToday = () => {
+    const today = dayjs();
+    return today.format("ddd");
+}

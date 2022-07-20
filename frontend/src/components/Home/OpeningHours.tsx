@@ -1,31 +1,38 @@
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 import { Period } from "types/Location";
-import { formatTime, formatDayOfWeek } from "utils/dateTime";
+import { getToday, formatTime, formatDayOfWeek } from "utils/dateTime";
 
 interface OpeningHoursProps {
   periods: Array<Period>;
 }
 const OpeningHours = ({ periods }: OpeningHoursProps) => (
-  <table style={{ minWidth: "250px", textAlign: "left" }}>
-    <thead>
-      <tr>
-        <th>Day of week</th>
-        <th>Hours</th>
-      </tr>
-    </thead>
-    <tbody>
+    <Table sx={{ minWidth: "250px", textAlign: "left" }} aria-label="openingHours">
+    <TableHead>
+    <TableRow>
+    <TableCell>Day of Week</TableCell>
+    <TableCell>Hours</TableCell>
+    </TableRow>
+    </TableHead>
+    <TableBody>
       {periods.map((period) => {
+        const isToday = getToday() === formatDayOfWeek(period.dayOfWeek)
         return (
-          <tr key={period.dayOfWeek}>
-            <td>{formatDayOfWeek(period.dayOfWeek)} </td>
-            <td>
+        <TableRow style={{ backgroundColor: isToday ? "#e5ffff" : "" }} key={period.dayOfWeek}>
+            <TableCell>{formatDayOfWeek(period.dayOfWeek)} </TableCell>
+            <TableCell>
               {formatTime(period.startLocalTime)} -
               {formatTime(period.endLocalTime)}
-            </td>
-          </tr>
+            </TableCell>
+          </TableRow>
         );
       })}
-    </tbody>
-  </table>
+    </TableBody>
+    </Table>
 );
 
 export default OpeningHours;
