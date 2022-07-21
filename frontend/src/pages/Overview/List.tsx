@@ -54,53 +54,53 @@ const BookingList = () => {
 
   if (isSuccess && !!location) {
     return (
-      <Grid container spacing={2} columnSpacing={3}>
-        <Grid item xs={12} md={12}>
-          <Typography variant="h4" component="div" style={{ margin: "10px" }}>
-            My bookings
-          </Typography>
-        </Grid>
-        {data.map((booking: Booking) => {
-          const date = localizedDate(booking.startAt, location.timezone);
-          return (
-            <Grid item xs={10} md={6} key={booking.id}>
-              <Link
-                to={"/overview/" + booking.id}
-                style={{ textDecoration: "none" }}
-              >
-                <Card className="cardList">
-                  <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                  >
-                    <Stack direction="column">
-                      <Typography
-                        sx={{ fontSize: 14 }}
-                        color="text.primary"
-                        gutterBottom
-                      >
-                        <div>{formatServiceNames(booking.serviceNames)}</div>
-                      </Typography>
-                      <Typography
-                        sx={{ fontSize: 12 }}
-                        color="text.secondary"
-                        gutterBottom
-                      >
-                        <div>{date.format("dddd DD MMMM")}</div>
-                        <div>{date.format("HH:mm")}</div>
-                      </Typography>
+      <>
+        <Typography variant="h4" component="div" style={{ margin: "1em" }}>
+          My bookings
+        </Typography>
+        <Grid container spacing={2} columnSpacing={3}>
+          {data.map((booking: Booking) => {
+            const date = localizedDate(booking.startAt, location.timezone);
+            return (
+              <Grid item xs={10} md={6} key={booking.id}>
+                <Link
+                  to={"/overview/" + booking.id}
+                  style={{ textDecoration: "none" }}
+                >
+                  <Card className="cardList">
+                    <Stack
+                      direction="row"
+                      justifyContent="space-between"
+                      alignItems="center"
+                    >
+                      <Stack direction="column">
+                        <Typography
+                          sx={{ fontSize: 14 }}
+                          color="text.primary"
+                          gutterBottom
+                        >
+                          <span>{formatServiceNames(booking.serviceNames)}</span>
+                        </Typography>
+                        <Typography
+                          sx={{ fontSize: 12 }}
+                          color="text.secondary"
+                          gutterBottom
+                        >
+                          <span>{date.format("dddd DD MMMM")}</span>
+                          <span>{date.format("HH:mm")}</span>
+                        </Typography>
+                      </Stack>
+                      <IconButton>
+                        <ArrowForwardIosIcon />
+                      </IconButton>
                     </Stack>
-                    <IconButton>
-                      <ArrowForwardIosIcon />
-                    </IconButton>
-                  </Stack>
-                </Card>
-              </Link>
-            </Grid>
-          );
-        })}
-      </Grid>
+                  </Card>
+                </Link>
+              </Grid>
+            );
+          })}
+        </Grid>
+      </>
     );
   }
   return <NoBookingFound title="No booking yet!" />;

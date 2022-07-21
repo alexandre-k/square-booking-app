@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient, useMutation } from "react-query";
+import { AxiosError } from "axios";
 import EditDialog from "components/Overview/EditDialog";
 import Services from "components/Booking/Services";
 import TeamMembers from "components/Booking/TeamMembers";
@@ -75,7 +76,11 @@ const Summary = ({
       mutationKey: "update/booking",
       onSuccess: () => queryClient.invalidateQueries("customer/booking"),
       onMutate: () => setOpenEditDialog(false),
-      onError: (err, variables, context) => console.log("TODO: handle error"),
+      onError: (err: AxiosError) => {
+          const error = err?.response?.data;
+          const status = err?.response?.status;
+          console.log('Error > ', error, status)
+      }
     }
   );
 

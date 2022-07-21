@@ -34,8 +34,8 @@ export const updateAppointmentSegments = async (
         startAt: booking.startAt,
         version: booking.version,
         customerNote: booking.customerNote,
-        serviceNames: services.map(s => s.name)
       },
+      serviceNames: services.map(s => s.name)
     },
     jwt
   );

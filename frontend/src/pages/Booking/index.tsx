@@ -86,6 +86,9 @@ const Booking = (props: BookingProps) => {
       onSuccess: (data) => {
         changeRoute("/overview/" + data.booking.id);
       },
+      onError: (error) => {
+          console.log('Error > ', error)
+      }
     }
   );
 
