@@ -141,6 +141,7 @@ const Booking = (props: BookingProps) => {
       component: (
         <Customer
           customer={customer}
+          isLoading={isAuthLoading || bookingMutation.isLoading}
           setCustomer={setCustomer}
           isAuthenticated={isAuthenticated}
           isAuthLoading={isAuthLoading}

@@ -7,6 +7,7 @@ import "./Customer.css";
 interface CustomerProps {
   customer: User;
   setCustomer: (customer: User) => void;
+  isLoading: boolean;
   isAuthenticated: boolean;
   isAuthLoading: boolean;
   hasSavedMetadata: boolean;
@@ -15,6 +16,7 @@ interface CustomerProps {
 const Customer = ({
   customer,
   setCustomer,
+  isLoading,
   isAuthenticated,
   isAuthLoading,
   hasSavedMetadata,
@@ -23,6 +25,7 @@ const Customer = ({
     <CustomerField
       autoComplete="given-name"
       label="First name"
+      disabled={isLoading}
       value={customer.givenName}
       onChange={(e: any) =>
         setCustomer({ ...customer, givenName: e.target.value })
@@ -31,6 +34,7 @@ const Customer = ({
     <CustomerField
       autoComplete="family-name"
       label="Last name"
+      disabled={isLoading}
       value={customer.familyName}
       onChange={(e: any) =>
         setCustomer({ ...customer, familyName: e.target.value })

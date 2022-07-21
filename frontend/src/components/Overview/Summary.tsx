@@ -198,7 +198,7 @@ const Summary = ({
             member={teamMember}
             showEditDialog={showEditDialog}
           />
-          <Checkout paymentLink={paymentLink} isCheckedOut={false} />
+          <Checkout isLoading={isLoading} paymentLink={paymentLink} isCheckedOut={false} />
         </div>
       )}
     </>
