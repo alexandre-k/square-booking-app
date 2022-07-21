@@ -50,7 +50,7 @@ const Booking = (props: BookingProps) => {
   const [customer, setCustomer] = useState<User>({
     givenName: "",
     familyName: "",
-    emailAddress: user.email || "",
+    emailAddress: user?.email || "",
   });
   const [activeStep, setActiveStep] = useState(0);
   const changeRoute = useNavigate();
