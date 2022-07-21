@@ -74,7 +74,7 @@ const Summary = ({
       updateAppointmentSegments(booking, segments, services, jwt),
     {
       mutationKey: "update/booking",
-      onSuccess: () => queryClient.invalidateQueries("customer/booking"),
+      onSuccess: () => queryClient.invalidateQueries(["customer/booking"]),
       onMutate: () => setOpenEditDialog(false),
       onError: (err: AxiosError) => {
           const error = err?.response?.data;
@@ -90,7 +90,7 @@ const Summary = ({
     {
       mutationKey: "cancel/booking",
       onSuccess: () => {
-        queryClient.invalidateQueries("customer/booking");
+        queryClient.invalidateQueries(["customer/booking"]);
         navigate("/overview");
       },
       onMutate: () => setOpenEditDialog(false),

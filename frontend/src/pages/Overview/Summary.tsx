@@ -35,11 +35,9 @@ const BookingSummary = () => {
     jwt,
   } = useMagicLogin();
   const navigate = useNavigate();
-  const {
-    isError: isLocationError,
-    location,
-  } = useLocation();
+  const { isError: isLocationError, location } = useLocation();
   const { bookingId } = useParams();
+
   const isBookingQueryEnabled = !!user && !!bookingId && !!jwt;
   const getBookingId = () => (!!bookingId ? bookingId : "");
   const getJwt = () => (!!jwt ? jwt : "");
@@ -47,7 +45,7 @@ const BookingSummary = () => {
   const { isLoading, isSuccess, data, error } = useQuery<
     GetBookingQuery,
     AxiosError<ServerError>
-  >("customer/booking", () => getBooking(getBookingId(), getJwt()), {
+  >(["customer/booking/" + bookingId], () => getBooking(getBookingId(), getJwt()), {
     enabled: isBookingQueryEnabled,
   });
 
