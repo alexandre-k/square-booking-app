@@ -54,7 +54,7 @@ const BookingList = () => {
 
   if (isSuccess && !!location) {
     return (
-      <>
+      <div>
         <Typography variant="h4" component="div" style={{ margin: "1em" }}>
           My bookings
         </Typography>
@@ -100,7 +100,7 @@ const BookingList = () => {
             );
           })}
         </Grid>
-      </>
+      </div>
     );
   }
   return <NoBookingFound title="No booking yet!" />;
