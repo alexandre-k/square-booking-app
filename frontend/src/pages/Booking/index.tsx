@@ -40,31 +40,30 @@ const Booking = (props: BookingProps) => {
     jwt: savedJwt,
   } = useMagicLogin();
 
-  const {
-    isError: isLocationError,
-    location,
-  } = useLocation();
+  const { isError: isLocationError, location } = useLocation();
 
   const [selectedMemberIds, setSelectedMemberIds] = useState<Array<string>>([]);
   const [selectedServices, setSelectedServices] = useState<Array<Service>>([]);
-  const [selectedUTCStartAt, setSelectedUTCStartAt] = useState<string | null>(null);
+  const [selectedUTCStartAt, setSelectedUTCStartAt] = useState<string | null>(
+    null
+  );
   const [customer, setCustomer] = useState<User>({
     givenName: "",
     familyName: "",
-    emailAddress: "",
+    emailAddress: user.email || "",
   });
   const [activeStep, setActiveStep] = useState(0);
   const changeRoute = useNavigate();
-
-  useEffect(() => {
-    if (!!user && !!user.email) {
-      setCustomer({
-        givenName: "",
-        familyName: "",
-        emailAddress: user.email !== null ? user.email : "",
-      });
-    }
-  }, [user]);
+  /*
+   *   useEffect(() => {
+   *     if (!!user && !!user.email) {
+   *       setCustomer({
+   *         givenName: "",
+   *         familyName: "",
+   *         emailAddress: user.email !== null ? user.email : "",
+   *       });
+   *     }
+   *   }, [user]); */
 
   const navigate = (step: number) => {
     const nextActiveStep = activeStep + step;
@@ -87,8 +86,8 @@ const Booking = (props: BookingProps) => {
         changeRoute("/overview/" + data.booking.id);
       },
       onError: (error) => {
-          console.log('Error > ', error)
-      }
+        console.log("Error > ", error);
+      },
     }
   );
 
@@ -180,9 +179,7 @@ const Booking = (props: BookingProps) => {
                 disabled={!steps[activeStep].isFormValid()}
                 loading={bookingMutation.isLoading || isAuthLoading}
                 onClick={async () => {
-                  const { jwt: newJwt } = await login(
-                    customer.emailAddress
-                  );
+                  const { jwt: newJwt } = await login(customer.emailAddress);
                   const jwt = !!savedJwt ? savedJwt : newJwt;
                   if (!jwt) throw Error("Unable to authenticate");
                   bookingMutation.mutate(jwt);

@@ -53,17 +53,17 @@ const MagicLoginProvider = ({
     setIsLoading(true);
     setError(null as any);
     try {
-      const jwt = await magicSingleton?.auth.loginWithMagicLink({
+      const newJwt = await magicSingleton?.auth.loginWithMagicLink({
         email,
         showUI: false,
       });
 
       const metadata = await magicSingleton?.user.getMetadata();
-      if (jwt) setJwt(jwt);
+      if (newJwt) setJwt(newJwt);
       if (metadata) setUser(metadata);
       setIsLoading(false);
       setIsAuthenticated(true);
-      return { jwt, metadata };
+      return { jwt: newJwt, metadata };
     } catch (err) {
       setError(err as any);
       setIsLoading(false);
