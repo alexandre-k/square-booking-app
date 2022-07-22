@@ -25,7 +25,11 @@ const Checkout = ({ isLoading, paymentLink, isCheckedOut }: CheckoutProps) => {
     socket.on("payment.updated", (data) => {
         setIsCheckingOut(false);
         setIsDisabled(true);
-    })
+    });
+    socket.on("order.updated", (data) => {
+        setIsCheckingOut(false);
+        setIsDisabled(true);
+    });
 
     if (isLoading) {
         return (

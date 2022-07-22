@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMagicLogin } from "context/MagicLoginProvider";
 import { AxiosError } from "axios";
@@ -7,13 +7,14 @@ import Loading from "components/Loading";
 import { Booking } from "types/Booking";
 import { TeamMember } from "types/Team";
 import { PaymentLink } from "types/Checkout";
-import { CatalogObject, CatalogObjectItemVariation } from "types/Catalog";
+import { CatalogObject, CatalogObjectItemVariation, Service } from "types/Catalog";
 import "./Summary.css";
 import Summary from "components/Overview/Summary";
 import NoBookingFound from "components/Overview/NoBookingFound";
 import InviteLogin from "components/Auth/InviteLogin";
 import { getBooking } from "api/customer";
 import { useLocation } from "context/LocationProvider";
+import { formatCatalogObjects } from "utils/service";
 
 interface GetBookingQuery {
   booking: Booking;
@@ -37,17 +38,31 @@ const BookingSummary = () => {
   const navigate = useNavigate();
   const { isError: isLocationError, location } = useLocation();
   const { bookingId } = useParams();
+  const [selectedMemberIds, setSelectedMemberIds] = useState<Array<string>>([]);
+  const [selectedUTCStartAt, setSelectedUTCStartAt] = useState<string>(null as any);
+  const [selectedServices, setSelectedServices] = useState<Array<Service>>([]);
 
   const isBookingQueryEnabled = !!user && !!bookingId && !!jwt;
   const getBookingId = () => (!!bookingId ? bookingId : "");
   const getJwt = () => (!!jwt ? jwt : "");
 
-  const { isLoading, isSuccess, data, error } = useQuery<
+  const { isLoading, isSuccess, isFetching, isPreviousData, data, error } = useQuery<
     GetBookingQuery,
     AxiosError<ServerError>
-  >(["customer/booking/" + bookingId], () => getBooking(getBookingId(), getJwt()), {
-    enabled: isBookingQueryEnabled,
-  });
+  >(
+    ["customer/booking/" + bookingId],
+    () => getBooking(getBookingId(), getJwt()),
+    {
+      onSuccess: (data) => {
+          setSelectedMemberIds(data.teamMember ? [data.teamMember.id] : []);
+          setSelectedUTCStartAt(data.booking.startAt);
+          setSelectedServices(
+              data.relatedObjects ? formatCatalogObjects(data.relatedObjects) : []
+          );
+      },
+      enabled: isBookingQueryEnabled,
+    }
+  );
 
   if (error?.response?.status === 410) {
     // if canceled redirect to listing
@@ -89,8 +104,14 @@ const BookingSummary = () => {
         relatedObjects={relatedObjects}
         paymentLink={paymentLink}
         location={location}
-      />
-    );
+        selectedMemberIds={selectedMemberIds}
+        setSelectedMemberIds={setSelectedMemberIds}
+        selectedUTCStartAt={selectedUTCStartAt}
+        setSelectedUTCStartAt={setSelectedUTCStartAt}
+        selectedServices={selectedServices}
+        setSelectedServices={setSelectedServices}
+        isFetching={isFetching}
+        />);
   }
   return <NoBookingFound title="No booking yet!" />;
 };

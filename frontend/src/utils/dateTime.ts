@@ -5,12 +5,6 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { DayOfWeek, Location, Period } from "types/Location";
 import { AppointmentSegment } from "types/Booking";
 
-// interface TileDay {
-//   activeStartDate: Date;
-//   date: Date;
-//   view: string;
-// }
-
 export const formatTime = (time: string) => {
   dayjs.extend(customParseFormat);
   return dayjs(time, "HH:mm:ss").format("HH:mm");
@@ -19,15 +13,6 @@ export const formatTime = (time: string) => {
 export const formatDayOfWeek = (day: string) => {
   return day[0].toUpperCase() + day.slice(1).toLowerCase();
 };
-
-// const tileDisabled = ({ activeStartDate, date, view }: TileDay): boolean => {
-//   const now = dayjs();
-//   const dayjsDate = dayjs(date);
-//   if (now.diff(dayjsDate, "s") > 86400) return true;
-//   const dayOfWeek = dayjsDate.format("ddd").toUpperCase();
-//   const workingDays = businessHours.map((obj) => obj.dayOfWeek);
-//   return !workingDays.includes(dayOfWeek as DayOfWeek);
-// };
 
 /**
  * Convert a duration in milliseconds to minutes
@@ -131,30 +116,36 @@ export const setDateToTimezone = (
     .toISOString();
 };
 
-export const showDateFromTimezone = (utcDate: string | null, timezone: string) => {
-    const validDate = utcDate || new Date().toISOString()
-    const fromDate = localizedDate(
-        validDate,
-        timezone
-    );
-    return dayjs(validDate)
-        .date(fromDate.date())
-        .month(fromDate.month())
-        .year(fromDate.year())
-        .toISOString();
-}
+export const showDateFromTimezone = (
+  utcDate: string | null,
+  timezone: string
+) => {
+  const validDate = utcDate || dayjs().add(1, "day").toISOString();
+  const fromDate = localizedDate(validDate, timezone);
+  return dayjs(validDate)
+    .date(fromDate.date())
+    .month(fromDate.month())
+    .year(fromDate.year())
+    .toISOString();
+};
 
 export const setTimeToDate = (
-    fromUTCTime: string | null,
-    toUTCDate: string | null,
-    timezone: string
+  fromUTCTime: string | null,
+  toUTCDate: string | null,
+  timezone: string
 ) => {
-    const fromUTCDate = localizedDate(fromUTCTime || new Date().toISOString(), timezone);
-    const toUTCDateTime = localizedDate(toUTCDate || new Date().toISOString(), timezone);
-    return toUTCDateTime
-        .hour(fromUTCDate.hour())
-        .minute(fromUTCDate.minute())
-        .toISOString();
+  const fromUTCDate = localizedDate(
+    fromUTCTime || new Date().toISOString(),
+    timezone
+  );
+  const toUTCDateTime = localizedDate(
+    toUTCDate || new Date().toISOString(),
+    timezone
+  );
+  return toUTCDateTime
+    .hour(fromUTCDate.hour())
+    .minute(fromUTCDate.minute())
+    .toISOString();
 };
 
 export const getWorkingDay = (
@@ -163,7 +154,6 @@ export const getWorkingDay = (
   // workingDay: Period,
   when: "start" | "end" = "start"
 ) => {
-  // const workingDayTime = getWorkingDayTime(workingDay);
   const tzDate = localizedDate(utcDate || new Date().toUTCString(), timezone);
   return when === "start"
     ? tzDate.hour(0).minute(0).toISOString()
@@ -188,33 +178,12 @@ export const getWorkingDayTime = (workingDay: Period) => {
   };
 };
 
-/* useEffect(() => {
- *   if (!!!endDate && !!selectedUTCStartAt && !!timezone)
- *     onDateSelected(
- *       getLocalDateWithTimezoneShift(selectedUTCStartAt, timezone)
- *     );
- * }, [selectedUTCStartAt]); */
-
 export const findWorkingDay = (value: Date, location: Location) => {
   const [dayOfWeek] = value.toDateString().split(" ");
-  // setDate(dayjs(value));
   const foundWorkingDay = location.businessHours.periods.find((obj: Period) => {
     return obj.dayOfWeek === dayOfWeek.toUpperCase();
   });
   return foundWorkingDay;
-  /* if (foundWorkingDay === undefined) {
-   *   console.log(
-   *     "Unable to find a working day associated to the date selected"
-   *   );
-   *   return null;
-   * } */
-  /* if (selectedServices.length < 1) {
-   *   console.log("No service variation selected");
-   *   return;
-   * } */
-  // setEndDate(dayjs(value).add(1, "day"));
-  // const availabilities: Array<Availability> = location.availabilities;
-  // setAvailabilities(availabilities);
 };
 
 export interface TileDay {
@@ -238,6 +207,18 @@ export const tileDisabled = (
 };
 
 export const getToday = () => {
-    const today = dayjs();
-    return today.format("ddd");
-}
+  const today = dayjs();
+  return today.format("ddd");
+};
+
+/*
+ * Check if there is at least 1 hours of gap between the availability and the present.
+ *
+ */
+export const isPastTime = (availability: string, timezone: string) => {
+  const tzDate = localizedDate(availability, timezone);
+  const hours = tzDate.format("HH");
+  const now = dayjs().format("HH");
+  const isToday = dayjs().date() === tzDate.date();
+  return now + 1 > hours && isToday;
+};

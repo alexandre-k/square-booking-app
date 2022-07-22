@@ -31,6 +31,13 @@ interface SummaryProps {
   objects: Array<CatalogObjectItemVariation>;
   paymentLink: PaymentLink;
   location: Location;
+  selectedMemberIds: Array<string>;
+  setSelectedMemberIds: (memberIds: Array<string>) => void;
+  selectedUTCStartAt: string;
+  setSelectedUTCStartAt: (startAt: string) => void;
+  selectedServices: Array<Service>;
+  setSelectedServices: (services: Array<Service>) => void;
+  isFetching: boolean;
 }
 
 interface BookingMutation {
@@ -51,20 +58,19 @@ const Summary = ({
   objects,
   paymentLink,
   location,
+  selectedMemberIds,
+  setSelectedMemberIds,
+  selectedUTCStartAt,
+  setSelectedUTCStartAt,
+  selectedServices,
+  setSelectedServices,
+  isFetching
 }: SummaryProps) => {
   const navigate = useNavigate();
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [editDialogComponent, setEditDialogComponent] =
     useState<string>("date");
-  const [selectedMemberIds, setSelectedMemberIds] = useState<Array<string>>(
-    teamMember ? [teamMember.id] : []
-  );
-  const [selectedUTCStartAt, setSelectedUTCStartAt] = useState<string>(
-    booking.startAt
-  );
-  const [selectedServices, setSelectedServices] = useState<Array<Service>>(
-    relatedObjects ? formatCatalogObjects(relatedObjects) : []
-  );
+
   const { jwt } = useMagicLogin();
 
   const queryClient = useQueryClient();
@@ -74,13 +80,15 @@ const Summary = ({
       updateAppointmentSegments(booking, segments, services, jwt),
     {
       mutationKey: "update/booking",
-      onSuccess: () => queryClient.invalidateQueries(["customer/booking"]),
+      onSuccess: () => {
+        queryClient.invalidateQueries(["customer/booking/" + booking.id]);
+      },
       onMutate: () => setOpenEditDialog(false),
       onError: (err: AxiosError) => {
-          const error = err?.response?.data;
-          const status = err?.response?.status;
-          console.log('Error > ', error, status)
-      }
+        const error = err?.response?.data;
+        const status = err?.response?.status;
+        console.log("Error > ", error, status);
+      },
     }
   );
 
@@ -90,7 +98,7 @@ const Summary = ({
     {
       mutationKey: "cancel/booking",
       onSuccess: () => {
-        queryClient.invalidateQueries(["customer/booking"]);
+        queryClient.invalidateQueries(["customer/booking/" + booking.id]);
         navigate("/overview");
       },
       onMutate: () => setOpenEditDialog(false),
@@ -98,7 +106,7 @@ const Summary = ({
     }
   );
 
-  const isLoading = updateMutation.isLoading || cancelMutation.isLoading;
+  const isLoading = updateMutation.isLoading || cancelMutation.isLoading || isFetching;
 
   const showEditDialog = (component: string) => {
     setEditDialogComponent(component);
@@ -139,7 +147,7 @@ const Summary = ({
                   selectedServices,
                   teamMemberIds
                 ),
-                services: selectedServices
+                services: selectedServices,
               });
             }}
           />
@@ -162,7 +170,7 @@ const Summary = ({
                 selectedServices,
                 selectedMemberIds
               ),
-              services: selectedServices
+              services: selectedServices,
             });
           }}
         >
@@ -198,7 +206,11 @@ const Summary = ({
             member={teamMember}
             showEditDialog={showEditDialog}
           />
-          <Checkout isLoading={isLoading} paymentLink={paymentLink} isCheckedOut={false} />
+          <Checkout
+            isLoading={isLoading}
+            paymentLink={paymentLink}
+            isCheckedOut={false}
+          />
         </div>
       )}
     </>
