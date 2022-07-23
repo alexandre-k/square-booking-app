@@ -80,7 +80,7 @@ export const formatCatalogObjects = (catalogObjects: Array<CatalogObject>) =>
         currency: !!currency ? currency : "USD",
         duration,
         category,
-        teamMemberIds,
+        teamMemberIds
       } as Service;
     });
 

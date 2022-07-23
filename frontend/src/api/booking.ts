@@ -26,7 +26,12 @@ export const bookAppointment = async (
           selectedServices,
           selectedMemberIds
         ),
-        serviceNames: selectedServices.map((s) => s.name),
+        services: selectedServices.map((s) => ({
+          amount: s.price,
+          id: s.id,
+          currency: s.currency,
+          name: s.name,
+        })),
       },
     },
     jwt

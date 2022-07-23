@@ -41,7 +41,7 @@ const Customer = ({
       }
     />
     <CustomerField
-      disabled={isAuthenticated}
+      disabled={isAuthenticated && !!customer.emailAddress}
       autoComplete="email"
       label="Email address"
       type="email"
