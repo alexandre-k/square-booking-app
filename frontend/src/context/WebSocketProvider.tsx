@@ -36,8 +36,7 @@ const WebSocketProvider = ({
 
   useEffect(() => {
     if (!socket) {
-      const sock: Socket<ServerToClientEvents, ClientToServerEvents> =
-        io("/sockjs-node");
+      const sock: Socket<ServerToClientEvents, ClientToServerEvents> = io()
       sock.on("connect", () => {
         setIsConnected(true);
       });
