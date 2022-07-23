@@ -9,6 +9,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import DoneIcon from "@mui/icons-material/Done";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -24,7 +25,7 @@ interface CheckoutProps {
   order: Order;
   paymentLink: PaymentLink;
   isCheckedOut: boolean;
-  setShowConfirmationDialog: (show: true) => void
+  setShowConfirmationDialog: (show: true) => void;
 }
 
 interface MoneyLineProps {
@@ -35,32 +36,39 @@ interface MoneyLineProps {
 
 const MoneyLine = ({ name, money, important }: MoneyLineProps) => (
   <Stack direction="row" justifyContent="space-between">
-      <Typography style={{ fontWeight: important ? 'bold' : '' }} color="text.secondary">{name}</Typography>
-      <Typography style={{ fontWeight: important ? 'bold' : '' }} >{money.amount + " " + money.currency}</Typography>
+    <Typography
+      style={{ fontWeight: important ? "bold" : "" }}
+      color="text.secondary"
+    >
+      {name}
+    </Typography>
+    <Typography style={{ fontWeight: important ? "bold" : "" }}>
+      {money.amount + " " + money.currency}
+    </Typography>
   </Stack>
 );
 
 MoneyLine.defaultProps = {
-    important: false
-}
+  important: false,
+};
 
 const Checkout = ({
   isLoading,
   order,
   paymentLink,
   isCheckedOut,
-  setShowConfirmationDialog
+  setShowConfirmationDialog,
 }: CheckoutProps) => {
   const [isCheckingOut, setIsCheckingOut] = useState<boolean>(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(isCheckedOut);
   const { socket } = useWebSocket();
   socket.on("order.updated", (data) => {
-      // console.log(data, order)
-      // if (data.id === order.id) {
-        setIsCheckingOut(false);
-        setIsDisabled(true);
-        setShowConfirmationDialog(true);
-      //}
+    // console.log(data, order)
+    // if (data.id === order.id) {
+    setIsCheckingOut(false);
+    setIsDisabled(true);
+    setShowConfirmationDialog(true);
+    //}
   });
 
   if (isLoading) {
@@ -74,7 +82,8 @@ const Checkout = ({
     );
   }
 
-  const isOrderCompleted = (order: Order) => order.state === OrderState.COMPLETED;
+  const isOrderCompleted = (order: Order) =>
+    order.state === OrderState.COMPLETED;
 
   return (
     <Card className="card">
@@ -87,44 +96,49 @@ const Checkout = ({
         <List>
           {order.lineItems.map((lineItem: LineItem) => (
             <ListItem key={lineItem.uid}>
-                <Box sx={{ width: '100%' }}><MoneyLine name={lineItem.name} money={lineItem.totalMoney} /></Box>
+              <Box sx={{ width: "100%" }}>
+                <MoneyLine name={lineItem.name} money={lineItem.totalMoney} />
+              </Box>
             </ListItem>
           ))}
         </List>
         <MoneyLine name="Subtotal" money={order.totalMoney} />
         <MoneyLine name="Taxes" money={order.totalTaxMoney} />
-        <Divider style={{ margin: '1em' }}/>
+        <Divider style={{ margin: "1em" }} />
         <MoneyLine name="Total" money={order.totalMoney} important={true} />
       </CardContent>
-      { isOrderCompleted(order) ?
+      {isOrderCompleted(order) ? (
         <CardContent className="paymentContent">
-            Paid
-        </CardContent>
-        :
-      <CardContent className="paymentContent">
-        {isCheckingOut ? (
-          <LoadingButton
-            variant="contained"
-            loading={isCheckingOut}
-            endIcon={<SendIcon />}
-            loadingPosition="end"
-            disabled
-          >
-            Waiting payment...
-          </LoadingButton>
-        ) : (
-          <Button
-            variant="contained"
-            disabled={isDisabled}
-            onClick={() => {
-              setIsCheckingOut(true);
-              window.open(paymentLink.url, "_blank");
-            }}
-          >
-            Checkout
+          <Button color="success" variant="contained" endIcon={<DoneIcon />}>
+            Payment completed
           </Button>
-        )}
-      </CardContent>}
+        </CardContent>
+      ) : (
+        <CardContent className="paymentContent">
+          {isCheckingOut ? (
+            <LoadingButton
+              variant="contained"
+              loading={isCheckingOut}
+              endIcon={<SendIcon />}
+              loadingPosition="end"
+              disabled
+            >
+              Waiting payment...
+            </LoadingButton>
+          ) : (
+            <Button
+              variant="contained"
+              disabled={isDisabled}
+              onClick={() => {
+                setIsCheckingOut(true);
+                window.open(paymentLink.url, "_blank");
+              }}
+            >
+              Checkout
+            </Button>
+          )}
+        </CardContent>
+      )}
     </Card>
   );
 };

@@ -1,8 +1,11 @@
+import Stack from "@mui/material/Stack";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 
 interface ConfirmationDialogProps {
@@ -13,7 +16,6 @@ interface ConfirmationDialogProps {
 const ConfirmationDialog = ({ open, setOpen }: ConfirmationDialogProps) => (
   <Dialog open={open} onClose={() => setOpen(false)}>
     <DialogTitle id="responsive-dialog-title">
-      Payment received
       <IconButton
         aria-label="close"
         onClick={() => {
@@ -28,8 +30,21 @@ const ConfirmationDialog = ({ open, setOpen }: ConfirmationDialogProps) => (
         <CloseIcon />
       </IconButton>
     </DialogTitle>
-    <DialogContent style={{ minWidth: "300px", minHeight: "500px" }}>
-      Payment Received
+    <DialogContent style={{ maxWidth: "300px", minHeight: "400px" }}>
+      <Stack
+        style={{ minHeight: "inherit" }}
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        spacing={2}
+      >
+        <CheckCircleIcon color="success" sx={{ fontSize: 100 }} />
+        <Typography variant="h4">Payment complete</Typography>
+        <Typography style={{ margin: "1em" }} variant="body1">
+          Your order has been placed. You will receive a receipt in your
+          mailbox.
+        </Typography>
+      </Stack>
     </DialogContent>
   </Dialog>
 );
