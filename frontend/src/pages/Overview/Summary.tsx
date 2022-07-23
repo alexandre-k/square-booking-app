@@ -7,7 +7,12 @@ import Loading from "components/Loading";
 import { Booking } from "types/Booking";
 import { TeamMember } from "types/Team";
 import { PaymentLink } from "types/Checkout";
-import { CatalogObject, CatalogObjectItemVariation, Service } from "types/Catalog";
+import { Order } from "types/Order";
+import {
+  CatalogObject,
+  CatalogObjectItemVariation,
+  Service,
+} from "types/Catalog";
 import "./Summary.css";
 import Summary from "components/Overview/Summary";
 import NoBookingFound from "components/Overview/NoBookingFound";
@@ -22,6 +27,7 @@ interface GetBookingQuery {
   relatedObjects: Array<CatalogObject>;
   objects: Array<CatalogObjectItemVariation>;
   paymentLink: PaymentLink;
+  order: Order;
 }
 
 interface ServerError {
@@ -39,30 +45,32 @@ const BookingSummary = () => {
   const { isError: isLocationError, location } = useLocation();
   const { bookingId } = useParams();
   const [selectedMemberIds, setSelectedMemberIds] = useState<Array<string>>([]);
-  const [selectedUTCStartAt, setSelectedUTCStartAt] = useState<string>(null as any);
+  const [selectedUTCStartAt, setSelectedUTCStartAt] = useState<string>(
+    null as any
+  );
   const [selectedServices, setSelectedServices] = useState<Array<Service>>([]);
+  const [order, setOrder] = useState<Order>(null as any);
 
   const isBookingQueryEnabled = !!user && !!bookingId && !!jwt;
   const getBookingId = () => (!!bookingId ? bookingId : "");
   const getJwt = () => (!!jwt ? jwt : "");
 
-  const { isLoading, isSuccess, isFetching, isPreviousData, data, error } = useQuery<
-    GetBookingQuery,
-    AxiosError<ServerError>
-  >(
-    ["customer/booking/" + bookingId],
-    () => getBooking(getBookingId(), getJwt()),
-    {
-      onSuccess: (data) => {
+  const { isLoading, isSuccess, isFetching, isPreviousData, data, error } =
+    useQuery<GetBookingQuery, AxiosError<ServerError>>(
+      ["customer/booking/" + bookingId],
+      () => getBooking(getBookingId(), getJwt()),
+      {
+        onSuccess: (data) => {
           setSelectedMemberIds(data.teamMember ? [data.teamMember.id] : []);
           setSelectedUTCStartAt(data.booking.startAt);
           setSelectedServices(
-              data.relatedObjects ? formatCatalogObjects(data.relatedObjects) : []
+            data.relatedObjects ? formatCatalogObjects(data.relatedObjects) : []
           );
-      },
-      enabled: isBookingQueryEnabled,
-    }
-  );
+          setOrder(data.order);
+        },
+        enabled: isBookingQueryEnabled,
+      }
+    );
 
   if (error?.response?.status === 410) {
     // if canceled redirect to listing
@@ -95,7 +103,8 @@ const BookingSummary = () => {
     }
   }
   if (isSuccess && !!location) {
-    const { booking, teamMember, objects, relatedObjects, paymentLink } = data;
+    const { booking, teamMember, objects, relatedObjects, paymentLink, order } =
+      data;
     return (
       <Summary
         booking={booking}
@@ -103,6 +112,7 @@ const BookingSummary = () => {
         objects={objects}
         relatedObjects={relatedObjects}
         paymentLink={paymentLink}
+        order={order}
         location={location}
         selectedMemberIds={selectedMemberIds}
         setSelectedMemberIds={setSelectedMemberIds}
@@ -111,7 +121,8 @@ const BookingSummary = () => {
         selectedServices={selectedServices}
         setSelectedServices={setSelectedServices}
         isFetching={isFetching}
-        />);
+      />
+    );
   }
   return <NoBookingFound title="No booking yet!" />;
 };

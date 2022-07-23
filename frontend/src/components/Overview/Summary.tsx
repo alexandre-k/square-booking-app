@@ -10,9 +10,11 @@ import ServicesOverview from "components/Overview/Services";
 import Checkout from "components/Overview/Checkout";
 import DateTimePicker from "components/Booking/DateTimePicker";
 import ExportToCalendar from "components/Overview/ExportToCalendar";
+import ConfirmationDialog from "components/Overview/ConfirmationDialog";
 import { cancelBooking, updateAppointmentSegments } from "api/customer";
 import { Booking, ShortAppointmentSegment } from "types/Booking";
 import { Location } from "types/Location";
+import { Order } from "types/Order";
 import { TeamMember } from "types/Team";
 import { PaymentLink } from "types/Checkout";
 import {
@@ -30,6 +32,7 @@ interface SummaryProps {
   relatedObjects: Array<CatalogObject>;
   objects: Array<CatalogObjectItemVariation>;
   paymentLink: PaymentLink;
+  order: Order;
   location: Location;
   selectedMemberIds: Array<string>;
   setSelectedMemberIds: (memberIds: Array<string>) => void;
@@ -57,6 +60,7 @@ const Summary = ({
   relatedObjects,
   objects,
   paymentLink,
+  order,
   location,
   selectedMemberIds,
   setSelectedMemberIds,
@@ -64,12 +68,14 @@ const Summary = ({
   setSelectedUTCStartAt,
   selectedServices,
   setSelectedServices,
-  isFetching
+  isFetching,
 }: SummaryProps) => {
   const navigate = useNavigate();
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [editDialogComponent, setEditDialogComponent] =
     useState<string>("date");
+  const [showConfirmationDialog, setShowConfirmationDialog] =
+    useState<boolean>(false);
 
   const { jwt } = useMagicLogin();
 
@@ -106,7 +112,8 @@ const Summary = ({
     }
   );
 
-  const isLoading = updateMutation.isLoading || cancelMutation.isLoading || isFetching;
+  const isLoading =
+    updateMutation.isLoading || cancelMutation.isLoading || isFetching;
 
   const showEditDialog = (component: string) => {
     setEditDialogComponent(component);
@@ -157,6 +164,10 @@ const Summary = ({
 
   return (
     <>
+      <ConfirmationDialog
+        open={showConfirmationDialog}
+        setOpen={setShowConfirmationDialog}
+      />
       {openEditDialog && (
         <EditDialog
           title={editDialogTitle(editDialogComponent)}
@@ -209,7 +220,9 @@ const Summary = ({
           <Checkout
             isLoading={isLoading}
             paymentLink={paymentLink}
+            order={order}
             isCheckedOut={false}
+            setShowConfirmationDialog={setShowConfirmationDialog}
           />
         </div>
       )}
