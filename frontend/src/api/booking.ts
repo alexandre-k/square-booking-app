@@ -27,9 +27,9 @@ export const bookAppointment = async (
           selectedMemberIds
         ),
         services: selectedServices.map((s) => ({
-          amount: s.price,
+          amount: s.money.amount,
           id: s.id,
-          currency: s.currency,
+          currency: s.money.currency,
           name: s.name,
         })),
       },

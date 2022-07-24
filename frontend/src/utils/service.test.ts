@@ -148,11 +148,10 @@ describe("Interacting with CatalogObject", () => {
     const result = formatCatalogObjects([testCatalogObject]);
     const expectedService: Service = {
       category: "OPTIONAL" as ServiceCategory,
-      currency: "USD",
+      money: { amount: 0, currency: "USD" },
       duration: 3600000,
       id: "5A4NN3ABCOEYIFA35ZCCJAG7",
       name: "Women's Haircut",
-      price: 0,
       teamMemberIds: [
         "TM_C5HCXPk2LajOY",
         "TMbwtPGv72uRGpvX",

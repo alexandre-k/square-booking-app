@@ -1,3 +1,5 @@
+import { BaseMoney } from "types/Order";
+
 export enum ServiceCategory {
   MAIN = "MAIN",
   OPTIONAL = "OPTIONAL",
@@ -7,9 +9,8 @@ export type Service = {
   id: string;
   version: number;
   name: string;
-  price: number;
+  money: BaseMoney;
   duration: number;
-  currency: string;
   category: ServiceCategory;
   teamMemberIds: Array<string>;
 };

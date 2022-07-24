@@ -221,6 +221,7 @@ const Summary = ({
             isLoading={isLoading}
             paymentLink={paymentLink}
             order={order}
+            services={selectedServices}
             isCheckedOut={false}
             setShowConfirmationDialog={setShowConfirmationDialog}
           />

@@ -37,7 +37,7 @@ const ServiceLabel = ({
           color="inherit"
           component="div"
         >
-          {getMoneyAsCurrency(service.price, service.currency)}
+          {getMoneyAsCurrency(service.money)}
         </Typography>
       </div>
       <div>

@@ -16,6 +16,7 @@ import Typography from "@mui/material/Typography";
 import Header from "components/Overview/Header";
 import SendIcon from "@mui/icons-material/Send";
 import Skeleton from "@mui/material/Skeleton";
+import { Service } from "types/Catalog";
 import { PaymentLink } from "types/Checkout";
 import { BaseMoney, LineItem, Order, OrderState } from "types/Order";
 import { getMoneyAsCurrency } from "utils/service";
@@ -23,6 +24,7 @@ import "./Checkout.css";
 
 interface CheckoutProps {
   isLoading: boolean;
+  services: Array<Service>;
   order: Order;
   paymentLink: PaymentLink;
   isCheckedOut: boolean;
@@ -44,7 +46,7 @@ const MoneyLine = ({ name, money, important }: MoneyLineProps) => (
       {name}
     </Typography>
     <Typography style={{ fontWeight: important ? "bold" : "" }}>
-      {getMoneyAsCurrency(money.amount, money.currency)}
+      {getMoneyAsCurrency(money)}
     </Typography>
   </Stack>
 );
@@ -55,6 +57,7 @@ MoneyLine.defaultProps = {
 
 const Checkout = ({
   isLoading,
+  services,
   order,
   paymentLink,
   isCheckedOut,
@@ -95,10 +98,13 @@ const Checkout = ({
       <CardContent className="paymentContent">
         <Typography>Order</Typography>
         <List>
-          {order.lineItems.map((lineItem: LineItem) => (
-            <ListItem key={lineItem.uid}>
+          {services.map((s: Service) => (
+            <ListItem key={s.id}>
               <Box sx={{ width: "100%" }}>
-                <MoneyLine name={lineItem.name} money={lineItem.totalMoney} />
+                <MoneyLine
+                  name={s.name}
+                  money={s.money}
+                />
               </Box>
             </ListItem>
           ))}

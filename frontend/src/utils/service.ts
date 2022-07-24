@@ -5,6 +5,7 @@ import {
   ServiceCategory,
   PricingType,
 } from "types/Catalog";
+import { BaseMoney } from "types/Order";
 import { convertMsToMins } from "./dateTime";
 import { getTeamMemberId } from "./staff";
 
@@ -69,18 +70,20 @@ export const formatCatalogObjects = (catalogObjects: Array<CatalogObject>) =>
       const duration = itemVariationData.serviceDuration;
       const id = itemVariation.id;
       const version = itemVariation.version;
-      const price = itemVariationData.priceMoney?.amount;
+      const amount = itemVariationData.priceMoney?.amount;
       const currency = itemVariationData.priceMoney?.currency;
       const teamMemberIds = itemVariationData.teamMemberIds;
       return {
         id,
         version,
         name: obj!.itemData!.name,
-        price: !!price ? price : 0,
-        currency: !!currency ? currency : "USD",
+        money: {
+          amount: amount || 0,
+          currency: currency || "USD",
+        },
         duration,
         category,
-        teamMemberIds
+        teamMemberIds,
       } as Service;
     });
 
@@ -104,10 +107,9 @@ export const toAppointmentSegments = (
   }));
 };
 
-
-export const getMoneyAsCurrency = (amount: number,  currency: string) => {
-    return new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: currency,
-    }).format(amount);
-}
+export const getMoneyAsCurrency = (money: BaseMoney) => {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: money.currency,
+  }).format(money.amount);
+};
