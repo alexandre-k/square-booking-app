@@ -4,7 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { Service } from "types/Catalog";
 import { convertMsToMins } from "utils/dateTime";
-import { hasServiceIncluded } from "utils/service";
+import { getMoneyAsCurrency, hasServiceIncluded } from "utils/service";
 import "./Services.css";
 
 interface ServiceLabelProps {
@@ -37,10 +37,7 @@ const ServiceLabel = ({
           color="inherit"
           component="div"
         >
-          {new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: service.currency,
-          }).format(service.price)}
+          {getMoneyAsCurrency(service.price, service.currency)}
         </Typography>
       </div>
       <div>

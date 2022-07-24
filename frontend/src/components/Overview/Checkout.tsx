@@ -18,6 +18,7 @@ import SendIcon from "@mui/icons-material/Send";
 import Skeleton from "@mui/material/Skeleton";
 import { PaymentLink } from "types/Checkout";
 import { BaseMoney, LineItem, Order, OrderState } from "types/Order";
+import { getMoneyAsCurrency } from "utils/service";
 import "./Checkout.css";
 
 interface CheckoutProps {
@@ -43,7 +44,7 @@ const MoneyLine = ({ name, money, important }: MoneyLineProps) => (
       {name}
     </Typography>
     <Typography style={{ fontWeight: important ? "bold" : "" }}>
-      {money.amount + " " + money.currency}
+      {getMoneyAsCurrency(money.amount, money.currency)}
     </Typography>
   </Stack>
 );

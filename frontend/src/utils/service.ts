@@ -103,3 +103,11 @@ export const toAppointmentSegments = (
     serviceVariationVersion: service.version,
   }));
 };
+
+
+export const getMoneyAsCurrency = (amount: number,  currency: string) => {
+    return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: currency,
+    }).format(amount);
+}
