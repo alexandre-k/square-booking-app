@@ -7,7 +7,7 @@ import { AppointmentSegment } from "types/Booking";
 
 export const formatTime = (time: string) => {
   dayjs.extend(customParseFormat);
-  return dayjs(time, "HH:mm:ss").format("HH:mm");
+  return dayjs(time, "HH:mm").format("HH:mm");
 };
 
 export const formatDayOfWeek = (day: string) => {
